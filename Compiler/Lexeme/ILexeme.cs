@@ -1,6 +1,4 @@
-﻿using Compiler.Structs;
-
-namespace Compiler.Lexeme
+﻿namespace Compiler.Lexeme
 {
     public interface ILexeme
     {

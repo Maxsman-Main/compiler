@@ -1,5 +1,4 @@
-﻿using Compiler.Lexeme;
-using Compiler.Structs;
+﻿using Compiler.LexicalAnalyzerStateMachine;
 
 namespace Compiler
 {
@@ -7,8 +6,9 @@ namespace Compiler
     {
         public static void Main()
         {
-            ILexeme integer = new Integer(new Coordinate{Line = 0, Column = 0}, "1123123");
-            Console.WriteLine(integer.Description);
+            var analyzer = new LexicalAnalyzer();
+            var lexeme = analyzer.GetNextLexeme();
+            Console.WriteLine(lexeme.Description);
         }  
     }
 }
