@@ -10,9 +10,9 @@ namespace Compiler.LexicalAnalyzerStateMachine
 
         public ILexeme GetNextLexeme(string word)
         {
+            _currentState = new StartState();
             foreach (var letter in word) 
             {
-                _currentState = new StartState();
                 _currentState = _currentState.GetNextState(letter);
             }
 
