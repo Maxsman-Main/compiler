@@ -4,23 +4,23 @@ namespace Compiler.Lexeme
 {
     public class Integer : ILexeme
     {
-        private Coordinate _coordinate;
-        private string _name = "Integer";
-        private int _value = 0;
-        private string _source;
+        private const string Name = "Integer";
+
+        private readonly Coordinate _coordinate;
+        private readonly int _value;
+        private readonly string _source;
 
         public string Description => _coordinate.Line.ToString() + " " +
                                      _coordinate.Column.ToString() + " " +
-                                     _name + " " +
+                                     Name + " " +
                                      _value.ToString() + " " +
                                      _source;
-                                     
 
         public Integer(Coordinate coordinate, string source)
         {
             _coordinate = coordinate;
+            _value = Convert.ToInt32(source);
             _source = source;
-            _value = Convert.ToInt32(_source);
         }
     }
 }
