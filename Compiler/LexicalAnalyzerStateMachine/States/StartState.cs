@@ -1,15 +1,19 @@
-﻿namespace Compiler.LexicalAnalyzerStateMachine.States
+﻿using Compiler.Constants;
+
+namespace Compiler.LexicalAnalyzerStateMachine.States
 {
 
     public class StartState : IState
     {
-        private readonly List<int> _numbers = new List<int>()
-            {'0', '1', '2', '3', '4', '5', '6', '7', '8', '9'};
         public IState GetNextState(char symbol)
         {
-            if (_numbers.Contains(symbol))
+            if (Constant.NumbersDecimal.Contains(symbol))
             {
                 return new DecimalInteger();
+            }
+            if(symbol == Constant.HexSymbol)
+            {
+                return new HexInteger();
             }
 
             return new ErrorState();
