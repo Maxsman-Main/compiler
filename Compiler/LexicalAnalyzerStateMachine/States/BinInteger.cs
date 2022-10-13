@@ -2,13 +2,13 @@
 
 namespace Compiler.LexicalAnalyzerStateMachine.States;
 
-public class HexInteger : IState
+public class BinInteger : IState
 {
     public IState GetNextState(char symbol)
     {
-        if (IntegerConstants.NumbersHex.Contains(symbol))
+        if (IntegerConstants.NumbersBin.Contains(symbol))
         {
-            return new HexInteger();
+            return new BinInteger();
         }
 
         return new ErrorState();

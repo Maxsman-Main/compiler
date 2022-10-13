@@ -6,7 +6,7 @@ namespace Compiler.LexicalAnalyzerStateMachine.States
     {
         public IState GetNextState(char symbol)
         {
-            if (Constant.NumbersDecimal.Contains(symbol))
+            if (IntegerConstants.NumbersDecimal.Contains(symbol))
             {
                 return new DecimalInteger();
             }

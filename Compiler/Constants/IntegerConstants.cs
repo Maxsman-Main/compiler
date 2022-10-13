@@ -1,6 +1,6 @@
 ﻿namespace Compiler.Constants;
 
-public static class Constant
+public static class IntegerConstants
 {
     private static List<char> _numbersDecimal = new()
     {
@@ -18,12 +18,18 @@ public static class Constant
         '0', '1', '2', '3', '4', '5', '6', '7'
     };
 
+    private static List<char> _numbersBin = new()
+    {
+        '0', '1'
+    };
+
     private static char _hexSymbol = '$';
     private static char _octSymbol = '&';
     private static char _binSymbol = '%';
     public static List<char> NumbersDecimal => _numbersDecimal;
     public static List<char> NumbersHex => _numbersHex;
     public static List<char> NumbersOct => _numbersOct;
+    public static List<char> NumbersBin => _numbersBin;
     public static char HexSymbol => _hexSymbol;
     public static char OctSymbol => _octSymbol;
     public static char BinSymbol => _binSymbol;

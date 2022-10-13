@@ -26,6 +26,12 @@ namespace Compiler.LexicalAnalyzerStateMachine
                 return new Integer(coordinate, source, valueForConvert, 8);
             }
 
+            if (state is BinInteger)
+            {
+                var valueForConvert = ReplaceString(source, "%", "");
+                return new Integer(coordinate, source, valueForConvert, 2);
+            }
+
             return new Error(coordinate, "Uncorrected lexeme", source);
         }
 

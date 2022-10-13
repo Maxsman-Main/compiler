@@ -6,7 +6,7 @@ public class OctInteger : IState
 {
     public IState GetNextState(char symbol)
     {
-        if (Constant.NumbersOct.Contains(symbol))
+        if (IntegerConstants.NumbersOct.Contains(symbol))
         {
             return new OctInteger();
         }

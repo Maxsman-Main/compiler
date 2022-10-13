@@ -7,18 +7,23 @@ namespace Compiler.LexicalAnalyzerStateMachine.States
     {
         public IState GetNextState(char symbol)
         {
-            if (Constant.NumbersDecimal.Contains(symbol))
+            if (IntegerConstants.NumbersDecimal.Contains(symbol))
             {
                 return new DecimalInteger();
             }
-            if(symbol == Constant.HexSymbol)
+            if(symbol == IntegerConstants.HexSymbol)
             {
                 return new HexInteger();
             }
 
-            if (symbol == Constant.OctSymbol)
+            if (symbol == IntegerConstants.OctSymbol)
             {
                 return new OctInteger();
+            }
+
+            if (symbol == IntegerConstants.BinSymbol)
+            {
+                return new BinInteger();
             }
 
             return new ErrorState();
