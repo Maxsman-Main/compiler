@@ -9,12 +9,14 @@ namespace Compiler.LexicalAnalyzerStateMachine
         private readonly LexemeFactory _lexemeFactory = new LexemeFactory();
         
         private IState _currentState = new StartState();
+        private IState _lastState = new StartState();
 
         public ILexeme GetNextLexeme(string word)
         {
             _currentState = new StartState();
-            foreach (var letter in word) 
+            foreach (var letter in word)
             {
+                _lastState = _currentState;
                 _currentState = _currentState.GetNextState(letter);
             }
 

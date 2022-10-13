@@ -35,6 +35,11 @@ namespace Compiler.LexicalAnalyzerStateMachine
                 return new Integer(coordinate, source, valueForConvert, 2, sign);
             }
 
+            if (state is FloatState)
+            {
+                return new Float(coordinate, source);
+            }
+            
             return new Error(coordinate, "Uncorrected lexeme", source);
         }
 

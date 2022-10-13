@@ -11,6 +11,11 @@ namespace Compiler.LexicalAnalyzerStateMachine.States
                 return new DecimalInteger();
             }
 
+            if (FloatConstants.FloatSymbol == symbol)
+            {
+                return new FloatState();
+            }
+
             return new ErrorState();
         }
     }

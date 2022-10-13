@@ -7,11 +7,11 @@ namespace Compiler
         public static void Main()
         {
             var analyzer = new LexicalAnalyzer();
-            var lexeme = analyzer.GetNextLexeme("11");
+            var lexeme = analyzer.GetNextLexeme("-0.123");
             Console.WriteLine(lexeme.Description);
-            lexeme = analyzer.GetNextLexeme("$11");
+            lexeme = analyzer.GetNextLexeme("$0.123");
             Console.WriteLine(lexeme.Description);
-            lexeme = analyzer.GetNextLexeme("&11");
+            lexeme = analyzer.GetNextLexeme("1.2512");
             Console.WriteLine(lexeme.Description);
             lexeme = analyzer.GetNextLexeme("%11");
             Console.WriteLine(lexeme.Description);
