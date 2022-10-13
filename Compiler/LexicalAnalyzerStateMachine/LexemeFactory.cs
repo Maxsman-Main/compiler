@@ -1,4 +1,5 @@
-﻿using Compiler.Lexeme;
+﻿using System.Text;
+using Compiler.Lexeme;
 using Compiler.LexicalAnalyzerStateMachine.States;
 using Compiler.Structs;
 
@@ -10,7 +11,15 @@ namespace Compiler.LexicalAnalyzerStateMachine
         {
             if (state is DecimalInteger)
             {
-                return new Integer(coordinate, source);
+                return new Integer(coordinate, source, 10);
+            }
+
+            if (state is HexInteger)
+            {
+                var sb = new StringBuilder(source);
+                sb.Replace("$", "0x");
+                source = sb.ToString();
+                return new Integer(coordinate, source, 16);
             }
 
             return new Error();

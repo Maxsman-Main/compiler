@@ -16,10 +16,10 @@ namespace Compiler.Lexeme
                                      _value.ToString() + " " +
                                      _source;
 
-        public Integer(Coordinate coordinate, string source)
+        public Integer(Coordinate coordinate, string source, int basis)
         {
             _coordinate = coordinate;
-            _value = Convert.ToInt32(source);
+            _value = Convert.ToInt32(source, basis);
             _source = source;
         }
     }
