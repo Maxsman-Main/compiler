@@ -11,25 +11,28 @@ namespace Compiler.LexicalAnalyzerStateMachine
         {
             if (state is DecimalInteger)
             {
-                return new Integer(coordinate, source, source, 10);
+                return new Integer(coordinate, source, source, 10, 1);
             }
 
             if (state is HexInteger)
             {
                 var valueForConvert = ReplaceString(source, "$", "0x");
-                return new Integer(coordinate, source, valueForConvert, 16);
+                var sign = GetSign(source);
+                return new Integer(coordinate, source, valueForConvert, 16, sign);
             }
 
             if (state is OctInteger)
             {
                 var valueForConvert = ReplaceString(source, "&", "");
-                return new Integer(coordinate, source, valueForConvert, 8);
+                var sign = GetSign(source);
+                return new Integer(coordinate, source, valueForConvert, 8, sign);
             }
 
             if (state is BinInteger)
             {
                 var valueForConvert = ReplaceString(source, "%", "");
-                return new Integer(coordinate, source, valueForConvert, 2);
+                var sign = GetSign(source);
+                return new Integer(coordinate, source, valueForConvert, 2, sign);
             }
 
             return new Error(coordinate, "Uncorrected lexeme", source);
@@ -39,7 +42,15 @@ namespace Compiler.LexicalAnalyzerStateMachine
         {
             var sb = new StringBuilder(word);
             sb.Replace(oldString, newString);
+            sb.Replace("+", "");
+            sb.Replace("-", "");
             return sb.ToString();
+        }
+
+        private int GetSign(string word)
+        {
+            var sign = word[0] == '-' ? -1 : 1;
+            return sign;
         }
     }
 }

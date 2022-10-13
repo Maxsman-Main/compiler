@@ -19,10 +19,10 @@ namespace Compiler.Lexeme
                                      _value + " " +
                                      _source;
 
-        public Integer(Coordinate coordinate, string source, string valueForConvert, int basis)
+        public Integer(Coordinate coordinate, string source, string valueForConvert, int basis, int sign)
         {
             _coordinate = coordinate;
-            _value = Convert.ToInt32(valueForConvert, basis).ToString();
+            _value = (Convert.ToInt32(valueForConvert, basis) * sign).ToString();
             _source = source;
         }
     }

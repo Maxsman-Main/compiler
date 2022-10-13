@@ -26,6 +26,11 @@ namespace Compiler.LexicalAnalyzerStateMachine.States
                 return new BinInteger();
             }
 
+            if (symbol == IntegerConstants.MinusSign || symbol == IntegerConstants.PlusSign)
+            {
+                return new IntegerSign();
+            }
+
             return new ErrorState();
         }
     }
