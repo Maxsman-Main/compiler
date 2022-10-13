@@ -6,6 +6,8 @@ namespace Compiler.LexicalAnalyzerStateMachine
 {
     public class LexicalAnalyzer
     {
+        private readonly LexemeFactory _lexemeFactory = new LexemeFactory();
+        
         private IState _currentState = new StartState();
 
         public ILexeme GetNextLexeme(string word)
@@ -16,7 +18,7 @@ namespace Compiler.LexicalAnalyzerStateMachine
                 _currentState = _currentState.GetNextState(letter);
             }
 
-            return LexemeFactory.CreateLexemeByState(_currentState, new Coordinate{Line = 0, Column = 0}, word);
+            return _lexemeFactory.CreateLexemeByState(_currentState, new Coordinate{Line = 0, Column = 0}, word);
         }
     }
 }

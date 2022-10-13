@@ -5,24 +5,35 @@ using Compiler.Structs;
 
 namespace Compiler.LexicalAnalyzerStateMachine
 {
-    public static class LexemeFactory
+    public class LexemeFactory
     {
-        public static ILexeme CreateLexemeByState(IState state, Coordinate coordinate, string source)
+        public ILexeme CreateLexemeByState(IState state, Coordinate coordinate, string source)
         {
             if (state is DecimalInteger)
             {
-                return new Integer(coordinate, source, 10);
+                return new Integer(coordinate, source, source, 10);
             }
 
             if (state is HexInteger)
             {
-                var sb = new StringBuilder(source);
-                sb.Replace("$", "0x");
-                source = sb.ToString();
-                return new Integer(coordinate, source, 16);
+                var valueForConvert = ReplaceString(source, "$", "0x");
+                return new Integer(coordinate, source, valueForConvert, 16);
+            }
+
+            if (state is OctInteger)
+            {
+                var valueForConvert = ReplaceString(source, "&", "");
+                return new Integer(coordinate, source, valueForConvert, 8);
             }
 
             return new Error();
+        }
+
+        private string ReplaceString(string word, string oldString, string newString)
+        {
+            var sb = new StringBuilder(word);
+            sb.Replace(oldString, newString);
+            return sb.ToString();
         }
     }
 }

@@ -16,6 +16,11 @@ namespace Compiler.LexicalAnalyzerStateMachine.States
                 return new HexInteger();
             }
 
+            if (symbol == Constant.OctSymbol)
+            {
+                return new OctInteger();
+            }
+
             return new ErrorState();
         }
     }
