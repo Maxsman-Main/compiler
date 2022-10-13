@@ -26,7 +26,7 @@ namespace Compiler.LexicalAnalyzerStateMachine
                 return new Integer(coordinate, source, valueForConvert, 8);
             }
 
-            return new Error();
+            return new Error(coordinate, "Uncorrected lexeme", source);
         }
 
         private string ReplaceString(string word, string oldString, string newString)
