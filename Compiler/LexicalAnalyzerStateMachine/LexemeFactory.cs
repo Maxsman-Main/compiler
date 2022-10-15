@@ -9,7 +9,7 @@ namespace Compiler.LexicalAnalyzerStateMachine
     {
         public ILexeme CreateLexemeByState(IState state, Coordinate coordinate, string source)
         {
-            if (state is DecimalInteger)
+            if (state is DecimalEndState)
             {
                 return new IntegerLexeme(coordinate, source, source, 10, 1);
             }

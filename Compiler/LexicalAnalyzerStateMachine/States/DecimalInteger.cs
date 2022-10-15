@@ -19,7 +19,7 @@ namespace Compiler.LexicalAnalyzerStateMachine.States
 
             if (LexemesSeparators.ContainSymbol(symbol))
             {
-                return new EndState();
+                return new DecimalEndState();
             }
             return new ErrorState();
         }
