@@ -2,7 +2,7 @@
 
 namespace Compiler.Lexeme;
 
-public class Error : ILexeme
+public class ErrorLexeme : ILexeme
 {
     private const string _name = "Error";
     private Coordinate _coordinate;
@@ -17,7 +17,7 @@ public class Error : ILexeme
                                  _coordinate.Column.ToString() + " " +
                                  _value;
 
-    public Error(Coordinate coordinate, string value, string source)
+    public ErrorLexeme(Coordinate coordinate, string value, string source)
     {
         _coordinate = coordinate;
         _value = value;

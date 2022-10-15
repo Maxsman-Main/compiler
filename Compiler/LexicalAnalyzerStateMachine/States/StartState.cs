@@ -28,7 +28,17 @@ namespace Compiler.LexicalAnalyzerStateMachine.States
 
             if (symbol == IntegerConstants.MinusSign || symbol == IntegerConstants.PlusSign)
             {
-                return new IntegerSign();
+                return new PlusMinusSignState();
+            }
+
+            if (symbol == StringConstants.StringSymbol)
+            {
+                return new StringStartState();
+            }
+
+            if (symbol == LexemesSeparators.SpaceSymbol)
+            {
+                return new StartState();
             }
 
             return new ErrorState();

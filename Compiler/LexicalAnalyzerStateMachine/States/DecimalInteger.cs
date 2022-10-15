@@ -1,4 +1,5 @@
-﻿using Compiler.Constants;
+﻿using System.Text;
+using Compiler.Constants;
 
 namespace Compiler.LexicalAnalyzerStateMachine.States
 {
@@ -16,6 +17,10 @@ namespace Compiler.LexicalAnalyzerStateMachine.States
                 return new FloatState();
             }
 
+            if (LexemesSeparators.ContainSymbol(symbol))
+            {
+                return new EndState();
+            }
             return new ErrorState();
         }
     }

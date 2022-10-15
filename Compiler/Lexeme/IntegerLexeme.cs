@@ -2,7 +2,7 @@
 
 namespace Compiler.Lexeme
 {
-    public class Integer : ILexeme
+    public class IntegerLexeme : ILexeme
     {
         private const string _name = "Integer";
         private readonly Coordinate _coordinate;
@@ -19,7 +19,7 @@ namespace Compiler.Lexeme
                                      _value + " " +
                                      _source;
 
-        public Integer(Coordinate coordinate, string source, string valueForConvert, int basis, int sign)
+        public IntegerLexeme(Coordinate coordinate, string source, string valueForConvert, int basis, int sign)
         {
             _coordinate = coordinate;
             _value = (Convert.ToInt32(valueForConvert, basis) * sign).ToString();

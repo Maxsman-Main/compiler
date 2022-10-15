@@ -6,20 +6,16 @@ namespace Compiler
     {
         public static void Main()
         {
+            var file = "test.txt";
             var analyzer = new LexicalAnalyzer();
-            var lexeme = analyzer.GetNextLexeme("-0.123");
+            analyzer.SetFile(file);
+            var lexeme = analyzer.GetLexeme();
             Console.WriteLine(lexeme.Description);
-            lexeme = analyzer.GetNextLexeme("$0.123");
+            lexeme = analyzer.GetLexeme();
             Console.WriteLine(lexeme.Description);
-            lexeme = analyzer.GetNextLexeme("1.2512");
+            lexeme = analyzer.GetLexeme();
             Console.WriteLine(lexeme.Description);
-            lexeme = analyzer.GetNextLexeme("%11");
-            Console.WriteLine(lexeme.Description);
-            lexeme = analyzer.GetNextLexeme("-$0011");
-            Console.WriteLine(lexeme.Description);
-            lexeme = analyzer.GetNextLexeme("-&0011");
-            Console.WriteLine(lexeme.Description);
-            lexeme = analyzer.GetNextLexeme("-%0011");
+            lexeme = analyzer.GetLexeme();
             Console.WriteLine(lexeme.Description);
         }  
     }

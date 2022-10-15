@@ -3,7 +3,7 @@ using Compiler.Lexeme;
 
 namespace Compiler.LexicalAnalyzerStateMachine.States;
 
-public class IntegerSign : IState
+public class PlusMinusSignState : IState
 {
     public IState GetNextState(char symbol)
     {

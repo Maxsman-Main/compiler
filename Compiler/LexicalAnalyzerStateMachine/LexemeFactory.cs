@@ -11,36 +11,48 @@ namespace Compiler.LexicalAnalyzerStateMachine
         {
             if (state is DecimalInteger)
             {
-                return new Integer(coordinate, source, source, 10, 1);
+                return new IntegerLexeme(coordinate, source, source, 10, 1);
             }
 
             if (state is HexInteger)
             {
                 var valueForConvert = ReplaceString(source, "$", "0x");
                 var sign = GetSign(source);
-                return new Integer(coordinate, source, valueForConvert, 16, sign);
+                return new IntegerLexeme(coordinate, source, valueForConvert, 16, sign);
             }
 
             if (state is OctInteger)
             {
                 var valueForConvert = ReplaceString(source, "&", "");
                 var sign = GetSign(source);
-                return new Integer(coordinate, source, valueForConvert, 8, sign);
+                return new IntegerLexeme(coordinate, source, valueForConvert, 8, sign);
             }
 
             if (state is BinInteger)
             {
                 var valueForConvert = ReplaceString(source, "%", "");
                 var sign = GetSign(source);
-                return new Integer(coordinate, source, valueForConvert, 2, sign);
+                return new IntegerLexeme(coordinate, source, valueForConvert, 2, sign);
             }
 
             if (state is FloatState)
             {
-                return new Float(coordinate, source);
+                return new FloatLexeme(coordinate, source);
             }
             
-            return new Error(coordinate, "Uncorrected lexeme", source);
+            if (state is StringEndState)
+            {
+                var value = ReplaceString(source, "\'", "");
+                return new StringLexeme(coordinate, source, value);
+            }
+
+            if (state is CharState)
+            {
+                var value = ReplaceString(source, "\'", "");
+                return new CharLexeme(coordinate, source, value);
+            }
+            
+            return new ErrorLexeme(coordinate, "Uncorrected lexeme", source);
         }
 
         private string ReplaceString(string word, string oldString, string newString)

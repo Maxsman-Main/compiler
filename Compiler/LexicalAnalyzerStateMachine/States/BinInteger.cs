@@ -11,6 +11,11 @@ public class BinInteger : IState
             return new BinInteger();
         }
 
+        if (LexemesSeparators.ContainSymbol(symbol))
+        {
+            return new EndState();
+        }
+
         return new ErrorState();
     }
 }

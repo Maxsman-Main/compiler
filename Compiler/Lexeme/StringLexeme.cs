@@ -2,9 +2,9 @@
 
 namespace Compiler.Lexeme;
 
-public class Float : ILexeme
+public class StringLexeme : ILexeme
 {
-    private const string _name = "Float";
+    private const string _name = "String";
     private readonly Coordinate _coordinate;
     private readonly string _value;
     private readonly string _source;
@@ -20,10 +20,10 @@ public class Float : ILexeme
                                  _value + " " +
                                  _source;
 
-    public Float(Coordinate coordinate, string source)
+    public StringLexeme(Coordinate coordinate, string source, string value)
     {
         _coordinate = coordinate;
-        _value = source;
         _source = source;
+        _value = value;
     }
 }
