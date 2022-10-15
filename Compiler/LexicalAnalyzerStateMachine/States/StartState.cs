@@ -36,11 +36,12 @@ namespace Compiler.LexicalAnalyzerStateMachine.States
                 return new StringStartState();
             }
 
-            if (symbol == LexemesSeparators.SpaceSymbol)
+            if (LexemesSeparators.ContainSymbol(symbol))
             {
                 return new StartState();
             }
-
+            
+            Console.WriteLine((int)symbol);
             return new ErrorState();
         }
     }

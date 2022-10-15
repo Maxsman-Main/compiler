@@ -2,6 +2,13 @@
 
 namespace Compiler
 {
+    // Исправить:
+    // Строки +
+    // Дестячные целые +
+    // Hex целые 
+    // Oct целые 
+    // Bin целые
+    // Char
     public static class Program
     {
         public static void Main()

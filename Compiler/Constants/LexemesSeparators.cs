@@ -2,9 +2,12 @@
 
 public static class LexemesSeparators
 {
+    private static char _carrigeReturn = (char)13;
+    private static char _newLine = (char)10;
+
     private static readonly List<char> _separators = new()
     {
-        ' ', (char)13 // it is \n
+        ' ', _carrigeReturn, _newLine
     };
 
     public static char SpaceSymbol => ' ';
