@@ -9,10 +9,6 @@ public static class LexemesSeparators
     {
         ' ', _carrigeReturn, _newLine
     };
-
-    public static char SpaceSymbol => ' ';
-    public static char LineBreakSymbol => (char) 13; // it is \n
-
     public static bool ContainSymbol(char symbol)
     {
         foreach(var separator in _separators)

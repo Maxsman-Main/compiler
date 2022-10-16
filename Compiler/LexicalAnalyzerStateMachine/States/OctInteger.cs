@@ -11,6 +11,11 @@ public class OctInteger : IState
             return new OctInteger();
         }
 
+        if (LexemesSeparators.ContainSymbol(symbol))
+        {
+            return new OctEndState();
+        }
+
         return new ErrorState();
     }
 }

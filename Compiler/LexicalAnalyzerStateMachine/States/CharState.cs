@@ -1,9 +1,16 @@
-﻿namespace Compiler.LexicalAnalyzerStateMachine.States;
+﻿using Compiler.Constants;
+
+namespace Compiler.LexicalAnalyzerStateMachine.States;
 
 public class CharState : IState
 {
     public IState GetNextState(char symbol)
     {
-        return new EndState();
+        if (LexemesSeparators.ContainSymbol(symbol))
+        {
+            return new CharEndState();
+        }
+
+        return new ErrorState();
     }
 }

@@ -13,7 +13,7 @@ public class HexInteger : IState
 
         if (LexemesSeparators.ContainSymbol(symbol))
         {
-            return new EndState();
+            return new HexEndState();
         }
 
         return new ErrorState();

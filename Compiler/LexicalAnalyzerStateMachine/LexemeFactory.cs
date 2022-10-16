@@ -14,28 +14,28 @@ namespace Compiler.LexicalAnalyzerStateMachine
                 return new IntegerLexeme(coordinate, source, source, 10, 1);
             }
 
-            if (state is HexInteger)
+            if (state is HexEndState)
             {
                 var valueForConvert = ReplaceString(source, "$", "0x");
                 var sign = GetSign(source);
                 return new IntegerLexeme(coordinate, source, valueForConvert, 16, sign);
             }
 
-            if (state is OctInteger)
+            if (state is OctEndState)
             {
                 var valueForConvert = ReplaceString(source, "&", "");
                 var sign = GetSign(source);
                 return new IntegerLexeme(coordinate, source, valueForConvert, 8, sign);
             }
 
-            if (state is BinInteger)
+            if (state is BinEndState)
             {
                 var valueForConvert = ReplaceString(source, "%", "");
                 var sign = GetSign(source);
                 return new IntegerLexeme(coordinate, source, valueForConvert, 2, sign);
             }
 
-            if (state is FloatState)
+            if (state is FloatEndState)
             {
                 return new FloatLexeme(coordinate, source);
             }
@@ -46,7 +46,7 @@ namespace Compiler.LexicalAnalyzerStateMachine
                 return new StringLexeme(coordinate, source, value);
             }
 
-            if (state is CharState)
+            if (state is CharEndState)
             {
                 var value = ReplaceString(source, "\'", "");
                 return new CharLexeme(coordinate, source, value);

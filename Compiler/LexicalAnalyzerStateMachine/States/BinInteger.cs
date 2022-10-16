@@ -13,7 +13,7 @@ public class BinInteger : IState
 
         if (LexemesSeparators.ContainSymbol(symbol))
         {
-            return new EndState();
+            return new BinEndState();
         }
 
         return new ErrorState();

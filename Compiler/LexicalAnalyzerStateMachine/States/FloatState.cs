@@ -13,7 +13,7 @@ public class FloatState : IState
 
         if (LexemesSeparators.ContainSymbol(symbol))
         {
-            return new EndState();
+            return new FloatEndState();
         }
 
         return new ErrorState();
