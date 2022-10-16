@@ -5,13 +5,18 @@ namespace Compiler.LexicalAnalyzerStateMachine.States
 
     public class StartState : IState
     {
-        public IState GetNextState(char symbol)
+        public IState GetNextState(int symbol)
         {
-            if (IntegerConstants.NumbersDecimal.Contains(symbol))
+            if (symbol == LexemesSeparators.EndOfFile)
+            {
+                return new EndOfFileState();
+            }
+            
+            if (IntegerConstants.NumbersDecimal.Contains((char)symbol))
             {
                 return new DecimalInteger();
             }
-            if(symbol == IntegerConstants.HexSymbol)
+            if (symbol == IntegerConstants.HexSymbol)
             {
                 return new HexInteger();
             }
@@ -41,7 +46,6 @@ namespace Compiler.LexicalAnalyzerStateMachine.States
                 return new StartState();
             }
             
-            Console.WriteLine((int)symbol);
             return new ErrorState();
         }
     }

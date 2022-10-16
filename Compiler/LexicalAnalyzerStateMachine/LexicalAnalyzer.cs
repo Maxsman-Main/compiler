@@ -13,7 +13,7 @@ namespace Compiler.LexicalAnalyzerStateMachine
         private readonly FileReader.FileReader _reader = new();
         
         private IState _currentState = new StartState();
-        private char _symbol;
+        private int _symbol;
 
         private Coordinate _coordinate = new() {Line = 1, Column = 0};
 
@@ -31,18 +31,18 @@ namespace Compiler.LexicalAnalyzerStateMachine
             {
                 _symbol = _reader.ReadSymbol();
                 _currentState = _currentState.GetNextState(_symbol);
-
-                if (_currentState is not StartState)
+                
+                if (_currentState is not IEndState)
                 {
-                    word += _symbol;
+                    _reader.MoveToNextPosition();
+                }
+                
+                if (_currentState is not StartState && _currentState is not IEndState)
+                {
+                    word += (char)_symbol;
                 }
             }
             
-            // We should delete last element, and move file reader iterator back on one pos, cuz
-            // we have stop state, when we get some SeparatorLexeme or symbol, which are another states
-            _reader.MoveIteratorBackOnOneStep();
-            word = DeleteLastElementOnWord(word);
-
             _coordinate.Column += 1;
 
             return _lexemeFactory.CreateLexemeByState(_currentState, _coordinate, word);
@@ -51,13 +51,6 @@ namespace Compiler.LexicalAnalyzerStateMachine
         public void SetFile(string file)
         {
             _reader.SetFile(file);
-        }
-
-        private string DeleteLastElementOnWord(string word)
-        {
-            var builder = new StringBuilder(word);
-            builder.Remove(word.Length - 1, 1);
-            return builder.ToString();
         }
     }
 }

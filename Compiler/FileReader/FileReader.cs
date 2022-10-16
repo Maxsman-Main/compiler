@@ -8,13 +8,24 @@ public class FileReader
 
     public bool IsOpened => _isOpened;
 
-    public char ReadSymbol()
+    public int MoveToNextPosition()
     {
         if (_reader is null)
         {
             throw new FileNotFoundException();
         }
-        return (char) _reader.Read();
+        
+        return _reader.Read();
+    }
+
+    public int ReadSymbol()
+    {
+        if (_reader is null)
+        {
+            throw new FileNotFoundException();
+        }
+        
+        return _reader.Peek();
     }
 
     public void SetFile(string fileName)
@@ -32,10 +43,5 @@ public class FileReader
     {
         _isOpened = true;
         _reader = File.OpenText("../../../" + _path);
-    }
-
-    public void MoveIteratorBackOnOneStep()
-    {
-        _reader.BaseStream.Position -= 1;
     }
 }

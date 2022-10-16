@@ -3,6 +3,6 @@
 
     public interface IState
     {
-        public IState GetNextState(char symbol);
+        public IState GetNextState(int symbol);
     }
 }

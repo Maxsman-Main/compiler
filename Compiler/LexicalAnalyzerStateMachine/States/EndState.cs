@@ -2,7 +2,7 @@
 
 public class EndState : IState
 {
-    public IState GetNextState(char symbol)
+    public IState GetNextState(int symbol)
     {
         return new EndState();
     }

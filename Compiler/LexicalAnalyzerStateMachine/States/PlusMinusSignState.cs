@@ -5,9 +5,9 @@ namespace Compiler.LexicalAnalyzerStateMachine.States;
 
 public class PlusMinusSignState : IState
 {
-    public IState GetNextState(char symbol)
+    public IState GetNextState(int symbol)
     {
-        if (IntegerConstants.NumbersDecimal.Contains(symbol))
+        if (IntegerConstants.NumbersDecimal.Contains((char)symbol))
         {
             return new DecimalInteger();
         }

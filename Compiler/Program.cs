@@ -1,4 +1,5 @@
-﻿using Compiler.LexicalAnalyzerStateMachine;
+﻿using Compiler.Lexeme;
+using Compiler.LexicalAnalyzerStateMachine;
 
 namespace Compiler
 {
@@ -16,14 +17,12 @@ namespace Compiler
             var file = "test.txt";
             var analyzer = new LexicalAnalyzer();
             analyzer.SetFile(file);
-            var lexeme = analyzer.GetLexeme();
-            Console.WriteLine(lexeme.Description);
-            lexeme = analyzer.GetLexeme();
-            Console.WriteLine(lexeme.Description);
-            lexeme = analyzer.GetLexeme();
-            Console.WriteLine(lexeme.Description);
-            lexeme = analyzer.GetLexeme();
-            Console.WriteLine(lexeme.Description);
+            ILexeme lexeme;
+            do
+            {
+                lexeme = analyzer.GetLexeme();
+                Console.WriteLine(lexeme.Description);
+            } while (lexeme is not EndOfFileLexeme);
         }  
     }
 }

@@ -4,9 +4,14 @@ namespace Compiler.LexicalAnalyzerStateMachine.States;
 
 public class BinInteger : IState
 {
-    public IState GetNextState(char symbol)
+    public IState GetNextState(int symbol)
     {
-        if (IntegerConstants.NumbersBin.Contains(symbol))
+        if (symbol == LexemesSeparators.EndOfFile)
+        {
+            return new BinEndState();
+        }
+        
+        if (IntegerConstants.NumbersBin.Contains((char)symbol))
         {
             return new BinInteger();
         }

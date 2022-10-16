@@ -51,6 +51,11 @@ namespace Compiler.LexicalAnalyzerStateMachine
                 var value = ReplaceString(source, "\'", "");
                 return new CharLexeme(coordinate, source, value);
             }
+
+            if (state is EndOfFileState)
+            {
+                return new EndOfFileLexeme(coordinate);
+            }
             
             return new ErrorLexeme(coordinate, "Uncorrected lexeme", source);
         }

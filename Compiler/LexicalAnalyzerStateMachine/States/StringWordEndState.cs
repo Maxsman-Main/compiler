@@ -4,7 +4,7 @@ namespace Compiler.LexicalAnalyzerStateMachine.States;
 
 public class StringWordEndState : IState
 {
-    public IState GetNextState(char symbol)
+    public IState GetNextState(int symbol)
     {
         if (LexemesSeparators.ContainSymbol(symbol))
         {

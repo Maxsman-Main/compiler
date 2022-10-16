@@ -4,9 +4,14 @@ namespace Compiler.LexicalAnalyzerStateMachine.States;
 
 public class HexInteger : IState
 {
-    public IState GetNextState(char symbol)
+    public IState GetNextState(int symbol)
     {
-        if (IntegerConstants.NumbersHex.Contains(symbol))
+        if (symbol == LexemesSeparators.EndOfFile)
+        {
+            return new HexEndState();
+        }
+        
+        if (IntegerConstants.NumbersHex.Contains((char)symbol))
         {
             return new HexInteger();
         }

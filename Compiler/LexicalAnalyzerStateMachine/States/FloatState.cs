@@ -4,9 +4,14 @@ namespace Compiler.LexicalAnalyzerStateMachine.States;
 
 public class FloatState : IState
 {
-    public IState GetNextState(char symbol)
+    public IState GetNextState(int symbol)
     {
-        if (FloatConstants.NumbersFloat.Contains(symbol))
+        if (symbol == LexemesSeparators.EndOfFile)
+        {
+            return new FloatEndState();
+        }
+        
+        if (FloatConstants.NumbersFloat.Contains((char)symbol))
         {
             return new FloatState();
         }
