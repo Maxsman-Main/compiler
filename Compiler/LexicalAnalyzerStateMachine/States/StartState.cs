@@ -41,6 +41,16 @@ namespace Compiler.LexicalAnalyzerStateMachine.States
                 return new StringStartState();
             }
 
+            if (IdentifierConstants.StartSymbols.Contains((char)symbol))
+            {
+                return new IdentifierStartState();
+            }
+
+            if (symbol == CommentsConstants.CommentSymbol)
+            {
+                return new CommentState();
+            }
+
             if (LexemesSeparators.ContainSymbol(symbol))
             {
                 return new StartState();

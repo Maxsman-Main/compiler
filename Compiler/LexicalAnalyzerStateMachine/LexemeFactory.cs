@@ -56,6 +56,11 @@ namespace Compiler.LexicalAnalyzerStateMachine
             {
                 return new EndOfFileLexeme(coordinate);
             }
+
+            if (state is IdentifierEndState)
+            {
+                return new IdentifierLexeme(coordinate, source);
+            }
             
             return new ErrorLexeme(coordinate, "Uncorrected lexeme", source);
         }

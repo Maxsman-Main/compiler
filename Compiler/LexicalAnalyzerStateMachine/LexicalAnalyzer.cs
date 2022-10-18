@@ -31,6 +31,14 @@ namespace Compiler.LexicalAnalyzerStateMachine
             {
                 _symbol = _reader.ReadSymbol();
                 _currentState = _currentState.GetNextState(_symbol);
+
+                if (_currentState is CommentEndState)
+                {
+                    _currentState = new StartState();
+                    _coordinate.Column += 1;
+                    word = "";
+                    continue;
+                }
                 
                 if (_currentState is not IEndState)
                 {
@@ -41,11 +49,13 @@ namespace Compiler.LexicalAnalyzerStateMachine
                 {
                     word += (char)_symbol;
                 }
+
             }
             
             _coordinate.Column += 1;
 
-            return _lexemeFactory.CreateLexemeByState(_currentState, _coordinate, word);
+            var lexeme = _lexemeFactory.CreateLexemeByState(_currentState, _coordinate, word);
+            return lexeme;
         }
 
         public void SetFile(string file)

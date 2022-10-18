@@ -2,16 +2,22 @@
 
 public static class LexemesSeparators
 {
-    private static char _carrigeReturn = (char)13;
+    private static char _carriageReturn = (char)13;
     private static char _newLine = (char)10;
-
+    private static int _endOfFile = -1;
+    
     private static readonly List<char> _separators = new()
     {
-        ' ', _carrigeReturn, _newLine
+        ' ', _carriageReturn, _newLine
     };
 
-    public static int EndOfFile => -1;
-    
+    private static readonly List<char> _newLineSeparator = new()
+    {
+        _carriageReturn, _newLine
+    };
+
+    public static List<char> NewLineSeparators => _newLineSeparator;
+    public static int EndOfFile => _endOfFile;
     public static bool ContainSymbol(char symbol)
     {
         foreach(var separator in _separators)
