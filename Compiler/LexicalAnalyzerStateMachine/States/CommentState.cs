@@ -6,7 +6,12 @@ public class CommentState : IState
 {
     public IState GetNextState(int symbol)
     {
-        if (LexemesSeparators.NewLineSeparators.Contains((char)symbol) || symbol == LexemesSeparators.EndOfFile)
+        if (symbol == LexemesSeparators.EndOfFile)
+        {
+            return new CommentEndState();
+        }
+        
+        if (LexemesSeparators.NewLineSeparators.Contains((char)symbol))
         {
             return new CommentEndState();
         }

@@ -1,4 +1,5 @@
 ﻿using System.Text;
+using Compiler.Constants;
 using Compiler.Lexeme;
 using Compiler.LexicalAnalyzerStateMachine.States;
 using Compiler.Structs;
@@ -59,6 +60,10 @@ namespace Compiler.LexicalAnalyzerStateMachine
 
             if (state is IdentifierEndState)
             {
+                if (KeyWordsConstants.KeyWords.Contains(source))
+                {
+                    return new KeyWordLexeme(coordinate, source);
+                }
                 return new IdentifierLexeme(coordinate, source);
             }
             
