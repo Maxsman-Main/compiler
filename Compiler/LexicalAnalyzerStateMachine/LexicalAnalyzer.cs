@@ -8,7 +8,6 @@ namespace Compiler.LexicalAnalyzerStateMachine
 {
     public class LexicalAnalyzer
     {
-        //Разделить тестовую систему и обычные файлы
         private readonly LexemeFactory _lexemeFactory = new();
         private readonly FileReader.FileReader _reader = new();
         
@@ -61,6 +60,11 @@ namespace Compiler.LexicalAnalyzerStateMachine
         public void SetFile(string file)
         {
             _reader.SetFile(file);
+        }
+
+        public void AnalyzeFile(string file)
+        {
+            
         }
     }
 }
