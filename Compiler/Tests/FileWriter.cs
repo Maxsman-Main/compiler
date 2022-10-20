@@ -21,6 +21,6 @@ public class FileWriter
     public void OpenFile()
     {
         _isOpened = true;
-        _writer = new StreamWriter("../../../Tests/result.txt", true);
+        _writer = new StreamWriter("../../../Tests/result.txt", false);
     }
 }

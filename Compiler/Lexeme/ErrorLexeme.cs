@@ -15,7 +15,7 @@ public class ErrorLexeme : ILexeme
     public string Source => _source;
     public string Description => _coordinate.Line.ToString() + "\t" +
                                  _coordinate.Column.ToString() + "\t" +
-                                 _value + "\t" + _source;
+                                 _value;
 
     public ErrorLexeme(Coordinate coordinate, string value, string source)
     {
