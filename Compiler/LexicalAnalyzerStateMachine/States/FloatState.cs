@@ -25,6 +25,11 @@ public class FloatState : IState
         {
             return new FloatEndState();
         }
+        
+        if (OperatorConstants.Operators.Contains((char)symbol))
+        {
+            return new FloatEndState();
+        }
 
         return new ErrorState();
     }

@@ -16,6 +16,16 @@ public class CharState : IState
             return new CharEndState();
         }
 
+        if (LexemesSeparators.VisibleSeparators.Contains((char) symbol))
+        {
+            return new CharEndState();
+        }
+        
+        if (OperatorConstants.Operators.Contains((char)symbol))
+        {
+            return new CharEndState();
+        }
+        
         return new ErrorState();
     }
 }

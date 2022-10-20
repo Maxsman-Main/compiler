@@ -20,6 +20,11 @@ public class IdentifierStartState : IState
         {
             return new IdentifierEndState();
         }
+        
+        if (OperatorConstants.Operators.Contains((char)symbol))
+        {
+            return new IdentifierEndState();
+        }
 
         return new ErrorState();
     }

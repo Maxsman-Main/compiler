@@ -42,6 +42,6 @@ public class FileReader
     public void OpenFile()
     {
         _isOpened = true;
-        _reader = File.OpenText("../../../" + _path);
+        _reader = File.OpenText("../../../Tests/" + _path);
     }
 }

@@ -1,0 +1,19 @@
+﻿program test;
+var
+  a : int;
+  b : int;
+begin
+   print(a + b);
+   while a > b do
+   begin
+     a = a - b;
+     counter = 2 * 7 - $FFFF / 24 %1001 + &91 > a
+    'a'; + 'bebra1'; 'dadad popa'
+   end;
+end.
+
+
+
+
+
+

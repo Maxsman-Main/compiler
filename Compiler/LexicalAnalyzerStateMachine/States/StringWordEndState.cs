@@ -10,6 +10,16 @@ public class StringWordEndState : IState
         {
             return new StringEndState();
         }
+        
+        if (LexemesSeparators.VisibleSeparators.Contains((char) symbol))
+        {
+            return new StringEndState();
+        }
+        
+        if (OperatorConstants.Operators.Contains((char)symbol))
+        {
+            return new StringEndState();
+        }
 
         return new ErrorState();
     }

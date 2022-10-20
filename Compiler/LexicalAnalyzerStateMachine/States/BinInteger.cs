@@ -26,6 +26,11 @@ public class BinInteger : IState
             return new BinEndState();
         }
 
+        if (OperatorConstants.Operators.Contains((char)symbol))
+        {
+            return new BinEndState();
+        }
+        
         return new ErrorState();
     }
 }

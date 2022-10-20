@@ -31,11 +31,6 @@ namespace Compiler.LexicalAnalyzerStateMachine.States
                 return new BinInteger();
             }
 
-            if (symbol == IntegerConstants.MinusSign || symbol == IntegerConstants.PlusSign)
-            {
-                return new PlusMinusSignState();
-            }
-
             if (symbol == StringConstants.StringSymbol)
             {
                 return new StringStartState();
@@ -44,6 +39,21 @@ namespace Compiler.LexicalAnalyzerStateMachine.States
             if (symbol == OperatorConstants.Column)
             {
                 return new ColumnOperatorState();
+            }
+
+            if (symbol == OperatorConstants.MoreSign)
+            {
+                return new MoreOperatorState();
+            }
+            
+            if (symbol == OperatorConstants.LessSign)
+            {
+                return new LessOperatorState();
+            }
+            
+            if (OperatorConstants.Operators.Contains((char)symbol))
+            {
+                return new OperatorState();
             }
 
             if (IdentifierConstants.StartSymbols.Contains((char)symbol))

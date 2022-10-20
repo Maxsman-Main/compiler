@@ -25,6 +25,11 @@ public class OctInteger : IState
         {
             return new OctEndState();
         }
+        
+        if (OperatorConstants.Operators.Contains((char)symbol))
+        {
+            return new OctEndState();
+        }
 
         return new ErrorState();
     }

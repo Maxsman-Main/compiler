@@ -25,6 +25,11 @@ public class HexInteger : IState
         {
             return new HexEndState();
         }
+        
+        if (OperatorConstants.Operators.Contains((char)symbol))
+        {
+            return new HexEndState();
+        }
 
         return new ErrorState();
     }

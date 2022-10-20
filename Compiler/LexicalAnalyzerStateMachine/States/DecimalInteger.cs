@@ -31,6 +31,12 @@ namespace Compiler.LexicalAnalyzerStateMachine.States
             {
                 return new DecimalEndState();
             }
+            
+            if (OperatorConstants.Operators.Contains((char)symbol))
+            {
+                return new DecimalEndState();
+            }
+            
             return new ErrorState();
         }
     }
