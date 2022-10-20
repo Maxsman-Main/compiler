@@ -13,8 +13,8 @@ public class ErrorLexeme : ILexeme
     public string Name => _name;
     public string Value => _value;
     public string Source => _source;
-    public string Description => _coordinate.Line.ToString() + " " +
-                                 _coordinate.Column.ToString() + " " +
+    public string Description => _coordinate.Line.ToString() + "\t" +
+                                 _coordinate.Column.ToString() + "\t" +
                                  _value + " " + _source;
 
     public ErrorLexeme(Coordinate coordinate, string value, string source)

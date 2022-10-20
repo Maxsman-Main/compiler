@@ -14,8 +14,8 @@ public class IdentifierLexeme : ILexeme
     public string Value => _value;
     public string Source => _source;
 
-    public string Description => _position.Line.ToString() + " " +
-                                 _position.Column.ToString() + " " +
+    public string Description => _position.Line.ToString() + "\t" +
+                                 _position.Column.ToString() + "\t" +
                                  _name + " " +
                                  _value + " " +
                                  _source;

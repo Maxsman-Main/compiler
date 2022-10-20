@@ -14,8 +14,8 @@ public class EndOfFileLexeme : ILexeme
     public string Value => _value;
     public string Source => _source;
 
-    public string Description => Position.Line.ToString() + " " +
-                                 Position.Column.ToString() + " " +
+    public string Description => Position.Line.ToString() + "\t" +
+                                 Position.Column.ToString() + "\t" +
                                  _name;
 
     public EndOfFileLexeme(Coordinate coordinate)
