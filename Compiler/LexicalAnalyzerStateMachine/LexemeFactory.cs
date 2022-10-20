@@ -71,6 +71,11 @@ namespace Compiler.LexicalAnalyzerStateMachine
             {
                 return new SeparatorLexeme(coordinate, source);
             }
+
+            if (state is OperatorEndState)
+            {
+                return new OperatorLexeme(coordinate, source);
+            }
             
             return new ErrorLexeme(coordinate, "Uncorrected lexeme", source);
         }

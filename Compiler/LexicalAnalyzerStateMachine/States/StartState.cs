@@ -41,6 +41,11 @@ namespace Compiler.LexicalAnalyzerStateMachine.States
                 return new StringStartState();
             }
 
+            if (symbol == OperatorConstants.Column)
+            {
+                return new ColumnOperatorState();
+            }
+
             if (IdentifierConstants.StartSymbols.Contains((char)symbol))
             {
                 return new IdentifierStartState();
