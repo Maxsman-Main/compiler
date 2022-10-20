@@ -16,8 +16,8 @@ public class FloatLexeme : ILexeme
     
     public string Description => _coordinate.Line.ToString() + "\t" +
                                  _coordinate.Column.ToString() + "\t" +
-                                 _name + " " +
-                                 _value + " " +
+                                 _name + "\t" +
+                                 _value + "\t" +
                                  _source;
 
     public FloatLexeme(Coordinate coordinate, string source)

@@ -16,9 +16,9 @@ public class KeyWordLexeme : ILexeme
 
     public string Description => _coordinate.Line.ToString() + "\t" +
                                  _coordinate.Column.ToString() + "\t" +
-                                 _name + " " +
-                                 _value + " " +
-                                 _source + " ";
+                                 _name + "\t" + "\t" + 
+                                 _value + "\t" +
+                                 _source + "\t";
 
     public KeyWordLexeme(Coordinate coordinate, string source)
     {

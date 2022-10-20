@@ -16,7 +16,7 @@ public class StringLexeme : ILexeme
     
     public string Description => _coordinate.Line.ToString() + "\t" +
                                  _coordinate.Column.ToString() + "\t" +
-                                 _name + "\t" +
+                                 _name + "\t" + "\t" +
                                  _value + "\t" +
                                  _source;
 

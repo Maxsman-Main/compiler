@@ -15,8 +15,8 @@ namespace Compiler.Lexeme
         public string Source => _source;
         public string Description => _coordinate.Line.ToString() + "\t" +
                                      _coordinate.Column.ToString() + "\t" +
-                                     _name + " " +
-                                     _value + " " +
+                                     _name + "\t" + "\t" +
+                                     _value + "\t" +
                                      _source;
 
         public IntegerLexeme(Coordinate coordinate, string source, string valueForConvert, int basis, int sign)
