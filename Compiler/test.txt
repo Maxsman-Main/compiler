@@ -1,6 +1,13 @@
-﻿program test
+﻿program test;
 var
-  a = 1
+  a : int;
+  b : int;
 begin
-   a = a + 1
-end
+   sm := a + b;
+end.
+
+
+
+
+
+

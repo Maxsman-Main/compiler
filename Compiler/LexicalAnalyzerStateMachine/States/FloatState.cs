@@ -11,6 +11,11 @@ public class FloatState : IState
             return new FloatEndState();
         }
         
+        if(LexemesSeparators.VisibleSeparators.Contains((char)symbol))
+        {
+            return new FloatEndState();
+        }
+        
         if (FloatConstants.NumbersFloat.Contains((char)symbol))
         {
             return new FloatState();

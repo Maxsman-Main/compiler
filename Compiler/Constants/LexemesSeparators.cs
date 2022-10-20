@@ -16,8 +16,15 @@ public static class LexemesSeparators
         _carriageReturn, _newLine
     };
 
+    private static readonly List<char> _visibleSeparators = new()
+    {
+        '.', ';', ',', '(', ')'
+    };
+    
     public static List<char> NewLineSeparators => _newLineSeparator;
     public static int EndOfFile => _endOfFile;
+    public static List<char> VisibleSeparators => _visibleSeparators;
+    
     public static bool ContainSymbol(char symbol)
     {
         foreach(var separator in _separators)

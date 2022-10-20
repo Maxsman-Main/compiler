@@ -12,6 +12,11 @@ namespace Compiler.LexicalAnalyzerStateMachine.States
                 return new DecimalEndState();
             }
             
+            if(LexemesSeparators.VisibleSeparators.Contains((char)symbol))
+            {
+                return new DecimalEndState();
+            }
+            
             if (IntegerConstants.NumbersDecimal.Contains((char)symbol))
             {
                 return new DecimalInteger();

@@ -51,6 +51,11 @@ namespace Compiler.LexicalAnalyzerStateMachine.States
                 return new CommentState();
             }
 
+            if (LexemesSeparators.VisibleSeparators.Contains((char)symbol))
+            {
+                return new SeparatorState();
+            }
+
             if (LexemesSeparators.ContainSymbol(symbol))
             {
                 return new StartState();

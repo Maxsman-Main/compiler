@@ -66,6 +66,11 @@ namespace Compiler.LexicalAnalyzerStateMachine
                 }
                 return new IdentifierLexeme(coordinate, source);
             }
+
+            if (state is SeparatorEndState)
+            {
+                return new SeparatorLexeme(coordinate, source);
+            }
             
             return new ErrorLexeme(coordinate, "Uncorrected lexeme", source);
         }

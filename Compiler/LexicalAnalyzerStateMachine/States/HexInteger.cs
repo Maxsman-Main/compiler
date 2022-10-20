@@ -11,6 +11,11 @@ public class HexInteger : IState
             return new HexEndState();
         }
         
+        if(LexemesSeparators.VisibleSeparators.Contains((char)symbol))
+        {
+            return new HexEndState();
+        }
+        
         if (IntegerConstants.NumbersHex.Contains((char)symbol))
         {
             return new HexInteger();
