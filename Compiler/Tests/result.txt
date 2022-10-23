@@ -1,78 +1,79 @@
 1 	1 	Integer 	12345 	12345
-2 	2 	Uncorrected lexeme
-3 	2 	Integer 	65535 	$FFFF
-4 	2 	Uncorrected lexeme
-5 	2 	Integer 	57 	&71
-6 	2 	Uncorrected lexeme
-7 	2 	Integer 	5 	%101
-8 	2 	Uncorrected lexeme
-9 	2 	Operator 	+ 	+ 	
-9 	3 	Integer 	1234 	1234
-10 	2 	Identifier 	_test 	_test
-11 	2 	Identifier 	test 	test
-12 	2 	Uncorrected lexeme
-13 	2 	KeyWord 	NOT 	NOT 	
-14 	2 	KeyWord 	not 	not 	
-15 	2 	Identifier 	is 	is
-16 	2 	Identifier 	IS 	IS
-17 	2 	Char 	a 	'a'
-18 	2 	Char 	b 	'b'
-19 	2 	Uncorrected lexeme
-20 	2 	Uncorrected lexeme
-21 	2 	String 	some_word 	'some_word'
-22 	2 	Uncorrected lexeme
-23 	2 	Uncorrected lexeme
-24 	2 	Uncorrected lexeme
-25 	2 	Uncorrected lexeme
-26 	2 	Char 	 	''
-27 	2 	String 	    	'   '
-28 	2 	Operator 	+ 	+ 	
+2 	1 	Uncorrected lexeme
+3 	1 	Integer 	65535 	$FFFF
+4 	1 	Uncorrected lexeme
+5 	1 	Integer 	57 	&71
+6 	1 	Uncorrected lexeme
+7 	1 	Integer 	5 	%101
+8 	1 	Uncorrected lexeme
+9 	1 	Operator 	+ 	+ 	
+9 	2 	Integer 	1234 	1234
+10 	1 	Identifier 	_test 	_test
+11 	1 	Identifier 	test 	test
+12 	1 	Uncorrected lexeme
+13 	1 	KeyWord 	NOT 	NOT 	
+14 	1 	KeyWord 	not 	not 	
+15 	1 	Identifier 	is 	is
+16 	1 	Identifier 	IS 	IS
+17 	1 	Char 	a 	'a'
+18 	1 	Char 	b 	'b'
+19 	1 	Uncorrected lexeme
+20 	1 	Uncorrected lexeme
+21 	1 	String 	some_word 	'some_word'
+22 	1 	Uncorrected lexeme
+23 	1 	Uncorrected lexeme
+24 	1 	Uncorrected lexeme
+25 	1 	Uncorrected lexeme
+26 	1 	Char 	 	''
+27 	1 	String 	    	'   '
+28 	1 	Operator 	+ 	+ 	
+29 	1 	Operator 	- 	- 	
 29 	2 	Operator 	- 	- 	
 29 	3 	Operator 	- 	- 	
-29 	4 	Operator 	- 	- 	
-30 	2 	Operator 	+ 	+ 	
-31 	2 	Operator 	* 	* 	
-32 	2 	Operator 	= 	= 	
-33 	2 	Operator 	: 	: 	
-34 	2 	Operator 	:= 	:= 	
-35 	2 	Operator 	/ 	/ 	
-35 	3 	Operator 	- 	- 	
-35 	4 	Operator 	+ 	+ 	
+30 	1 	Operator 	+ 	+ 	
+31 	1 	Operator 	* 	* 	
+32 	1 	Operator 	= 	= 	
+33 	1 	Operator 	: 	: 	
+34 	1 	Operator 	:= 	:= 	
+35 	1 	Operator 	/ 	/ 	
+35 	2 	Operator 	- 	- 	
+35 	3 	Operator 	+ 	+ 	
+36 	1 	Operator 	* 	* 	
 36 	2 	Operator 	* 	* 	
 36 	3 	Operator 	* 	* 	
-36 	4 	Operator 	* 	* 	
-37 	2 	Operator 	:= 	:= 	
-37 	3 	Operator 	* 	* 	
-37 	4 	Integer 	1 	1
-38 	2 	Identifier 	abs 	abs
-38 	3 	Operator 	:= 	:= 	
-38 	4 	Identifier 	abs 	abs
-38 	5 	Operator 	+ 	+ 	
-38 	6 	Integer 	1 	1
-38 	7 	Separator 	; 	;
-39 	2 	Separator 	; 	;
+37 	1 	Operator 	:= 	:= 	
+37 	2 	Operator 	* 	* 	
+37 	3 	Integer 	1 	1
+38 	1 	Identifier 	abs 	abs
+38 	2 	Operator 	:= 	:= 	
+38 	3 	Identifier 	abs 	abs
+38 	4 	Operator 	+ 	+ 	
+38 	5 	Integer 	1 	1
+38 	6 	Separator 	; 	;
+39 	1 	Separator 	; 	;
+40 	1 	Separator 	; 	;
 40 	2 	Separator 	; 	;
-40 	3 	Separator 	; 	;
-41 	2 	Separator 	( 	(
-41 	3 	Integer 	123 	123
-41 	4 	Separator 	) 	)
-42 	2 	Separator 	( 	(
-42 	3 	Integer 	123 	123
-42 	4 	Separator 	, 	,
-42 	5 	Integer 	2 	2
-42 	6 	Separator 	, 	,
-42 	7 	Integer 	5 	5
-42 	8 	Separator 	) 	)
-43 	2 	Float       123.123 	123.123
-44 	2 	Separator 	. 	.
-44 	3 	Integer 	123123 	0123123
-45 	2 	Float 	    1123. 	1123.
-46 	2 	Float 	    555.0123 	555.0123
-47 	2 	Uncorrected lexeme
-48 	2 	String 	    15124.2 	'15124.2'
-49 	2 	String 	    $ffff 	'$ffff'
-50 	2 	Integer 	65530 	$fffA
-51 	2 	Separator 	. 	.
-51 	3 	Separator 	. 	.
-51 	4 	Separator 	. 	.
-51 	5 	EndOfFile
+41 	1 	Separator 	( 	(
+41 	2 	Integer 	123 	123
+41 	3 	Separator 	) 	)
+42 	1 	Separator 	( 	(
+42 	2 	Integer 	123 	123
+42 	3 	Separator 	, 	,
+42 	4 	Integer 	2 	2
+42 	5 	Separator 	, 	,
+42 	6 	Integer 	5 	5
+42 	7 	Separator 	) 	)
+43 	1 	Float 	123.123 	123.123
+44 	1 	Separator 	. 	.
+44 	2 	Integer 	123123 	0123123
+45 	1 	Float 	1123. 	1123.
+46 	1 	Float 	555.0123 	555.0123
+47 	1 	Identifier 	acd 	acd
+48 	1 	Uncorrected lexeme
+49 	1 	String 	15124.2 	'15124.2'
+50 	1 	String 	$ffff 	'$ffff'
+51 	1 	Integer 	65530 	$fffA
+52 	1 	Separator 	. 	.
+52 	2 	Separator 	. 	.
+52 	3 	Separator 	. 	.
+53 	2 	EndOfFile

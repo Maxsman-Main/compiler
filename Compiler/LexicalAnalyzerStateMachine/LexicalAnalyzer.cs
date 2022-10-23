@@ -44,7 +44,7 @@ namespace Compiler.LexicalAnalyzerStateMachine
                     if (_symbol == LexemesSeparators.EndOfLine)
                     {
                         _coordinate.Line += 1;
-                        _coordinate.Column = 1;
+                        _coordinate.Column = 0;
                     }
                     _reader.MoveToNextPosition();
                 }
