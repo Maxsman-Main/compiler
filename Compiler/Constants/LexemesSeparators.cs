@@ -20,7 +20,8 @@ public static class LexemesSeparators
     {
         '.', ';', ',', '(', ')'
     };
-    
+
+    public static char EndOfLine => _newLine;
     public static List<char> NewLineSeparators => _newLineSeparator;
     public static int EndOfFile => _endOfFile;
     public static List<char> VisibleSeparators => _visibleSeparators;

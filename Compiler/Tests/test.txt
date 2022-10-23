@@ -1,27 +1,51 @@
-﻿-$FFFF
-01231313
-$qweqe123
-;;;;12312;;;;
-+123131+++313123
--123123+123123, ,, ,, ; ;
-ABC
-not
-not
+﻿12345
+1f2345
+$FFFF
+$FQE12
+&71
+&91
+%101
+%1f01
++1234
+_test
+test
+123batrest
 NOT
-NOT
-'abasdq'qqwd
-'asdqwdq'
-'asdqwd'
-'da'
-;qe131
-qwe213
-1231awq
-_12213asdqw
-zuka
-231231.12313
-$fff.123
-123.1230123
-0123.1231
-0....1
-1314.312310,f
----.----
+not
+is
+IS
+'a'
+'b'
+'a'abcqwer
+qwdqw'a'
+'some_word'
+'some_word'abasd
+asbaasd'some_word'
+2998adwdqw
+jaja123_d123'
+''
+'   '
++
+---
++
+*
+=
+:
+:=
+/ - +
+* * *
+:= * 1
+abs := abs + 1;
+;
+;;
+(123)
+(123, 2, 5)
+123.123
+.0123123
+1123.
+555.0123
+5123.f
+'15124.2'
+'$ffff'
+$fffA
+. . .

@@ -11,6 +11,11 @@ namespace Compiler.LexicalAnalyzerStateMachine.States
             {
                 return new DecimalEndState();
             }
+
+            if (FloatConstants.FloatSymbol == symbol)
+            {
+                return new FloatState();
+            }
             
             if(LexemesSeparators.VisibleSeparators.Contains((char)symbol))
             {
@@ -20,11 +25,6 @@ namespace Compiler.LexicalAnalyzerStateMachine.States
             if (IntegerConstants.NumbersDecimal.Contains((char)symbol))
             {
                 return new DecimalInteger();
-            }
-
-            if (FloatConstants.FloatSymbol == symbol)
-            {
-                return new FloatState();
             }
 
             if (LexemesSeparators.ContainSymbol(symbol))

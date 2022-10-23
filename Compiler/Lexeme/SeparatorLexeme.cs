@@ -14,9 +14,10 @@ public class SeparatorLexeme : ILexeme
     public string Value => _value;
     public string Source => _source;
 
-    public string Description => _coordinate.Line.ToString() + "\t" + _coordinate.Column.ToString() + "\t" +
-                                 _name + "\t" +
-                                 _value + "\t" +
+    public string Description => _coordinate.Line.ToString() + " " + "\t" + 
+                                 _coordinate.Column.ToString() + " " + "\t" +
+                                 _name + " " + "\t" +
+                                 _value + " " + "\t" +
                                  _source;
 
     public SeparatorLexeme(Coordinate coordinate, string source)

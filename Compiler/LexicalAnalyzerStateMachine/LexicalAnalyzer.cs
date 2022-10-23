@@ -26,7 +26,7 @@ namespace Compiler.LexicalAnalyzerStateMachine
             _currentState = new StartState();
             var word = "";
 
-            while (_currentState is not IEndState && _currentState is not ErrorState)
+            while (_currentState is not IEndState)
             {
                 _symbol = _reader.ReadSymbol();
                 _currentState = _currentState.GetNextState(_symbol);
@@ -41,6 +41,11 @@ namespace Compiler.LexicalAnalyzerStateMachine
                 
                 if (_currentState is not IEndState)
                 {
+                    if (_symbol == LexemesSeparators.EndOfLine)
+                    {
+                        _coordinate.Line += 1;
+                        _coordinate.Column = 1;
+                    }
                     _reader.MoveToNextPosition();
                 }
                 

@@ -14,11 +14,11 @@ public class KeyWordLexeme : ILexeme
     public string Value => _value;
     public string Source => _source;
 
-    public string Description => _coordinate.Line.ToString() + "\t" +
-                                 _coordinate.Column.ToString() + "\t" +
-                                 _name + "\t" + "\t" + 
-                                 _value + "\t" +
-                                 _source + "\t";
+    public string Description => _coordinate.Line.ToString() + " " + "\t" +
+                                 _coordinate.Column.ToString() + " " + "\t" +
+                                 _name + " " + "\t" + 
+                                 _value + " " + "\t" +
+                                 _source + " " + "\t";
 
     public KeyWordLexeme(Coordinate coordinate, string source)
     {

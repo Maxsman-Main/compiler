@@ -14,10 +14,10 @@ public class IdentifierLexeme : ILexeme
     public string Value => _value;
     public string Source => _source;
 
-    public string Description => _position.Line.ToString() + "\t" +
-                                 _position.Column.ToString() + "\t" +
-                                 _name + "\t" +
-                                 _value + "\t" +
+    public string Description => _position.Line.ToString() + " " + "\t" +
+                                 _position.Column.ToString() + " " + "\t" +
+                                 _name + " " + "\t" +
+                                 _value + " " + "\t" +
                                  _source;
 
     public IdentifierLexeme(Coordinate coordinate, string source)
