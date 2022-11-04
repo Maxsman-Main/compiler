@@ -36,12 +36,14 @@ public class FileReader
     public void CloseFile()
     {
         _isOpened = false;
+        Console.WriteLine(_reader);
         _reader?.Close();
+        Console.WriteLine(_reader);
     }
     
     public void OpenFile()
     {
         _isOpened = true;
-        _reader = File.OpenText("../../../Tests/" + _path);
+        _reader = File.OpenText("../../../Tests/In/" + _path);
     }
 }

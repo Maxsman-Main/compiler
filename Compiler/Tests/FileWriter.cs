@@ -2,6 +2,7 @@
 
 public class FileWriter
 {
+    private const string _pathToResultFile = "../../../Tests/result.txt";
     private StreamWriter? _writer;
     private bool _isOpened = false;
 
@@ -21,6 +22,6 @@ public class FileWriter
     public void OpenFile()
     {
         _isOpened = true;
-        _writer = new StreamWriter("../../../Tests/result.txt", false);
+        _writer = new StreamWriter(_pathToResultFile, false);
     }
 }
