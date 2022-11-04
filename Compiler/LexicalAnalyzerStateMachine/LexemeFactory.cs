@@ -13,7 +13,7 @@ namespace Compiler.LexicalAnalyzerStateMachine
         {
             switch (state)
             {
-                case DecimalInteger:
+                case DecimalEndState:
                 {
                     var value = Convert.ToInt32(source, 10);
                     return new IntegerLexeme(coordinate, source, value);
