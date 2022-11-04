@@ -21,8 +21,12 @@ public class TestSystem
         do
         {
             lexeme = analyzer.GetLexeme();
+            if (lexeme is EndOfFileLexeme)
+            {
+                break;
+            }
             _writer.WriteLine(lexeme.Description);
-        } while (lexeme is not EndOfFileLexeme);
+        } while (true);
         _writer.CloseFile();
         CompareFiles(exceptedResult);
     }
