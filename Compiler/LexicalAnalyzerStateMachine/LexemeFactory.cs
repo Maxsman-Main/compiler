@@ -1,4 +1,5 @@
-﻿using System.Text;
+﻿using System.Globalization;
+using System.Text;
 using Compiler.Constants;
 using Compiler.Lexeme;
 using Compiler.LexicalAnalyzerStateMachine.States;
@@ -12,33 +13,38 @@ namespace Compiler.LexicalAnalyzerStateMachine
         {
             if (state is DecimalEndState)
             {
-                return new IntegerLexeme(coordinate, source, source, 10, 1);
+                var value = Convert.ToInt32(source, 10);
+                return new IntegerLexeme(coordinate, source, value);
             }
 
             if (state is HexEndState)
             {
                 var valueForConvert = ReplaceString(source, "$", "0x");
-                var sign = GetSign(source);
-                return new IntegerLexeme(coordinate, source, valueForConvert, 16, sign);
+                var value = Convert.ToInt32(valueForConvert, 16);
+                return new IntegerLexeme(coordinate, source, value);
             }
 
             if (state is OctEndState)
             {
                 var valueForConvert = ReplaceString(source, "&", "");
-                var sign = GetSign(source);
-                return new IntegerLexeme(coordinate, source, valueForConvert, 8, sign);
+                var value = Convert.ToInt32(valueForConvert, 8);
+                return new IntegerLexeme(coordinate, source, value);
             }
 
             if (state is BinEndState)
             {
                 var valueForConvert = ReplaceString(source, "%", "");
-                var sign = GetSign(source);
-                return new IntegerLexeme(coordinate, source, valueForConvert, 2, sign);
+                var value = Convert.ToInt32(valueForConvert, 2);
+                return new IntegerLexeme(coordinate, source, value);
             }
 
             if (state is FloatEndState)
             {
-                return new FloatLexeme(coordinate, source);
+                var tempCulture = Thread.CurrentThread.CurrentCulture;
+                Thread.CurrentThread.CurrentCulture = CultureInfo.CreateSpecificCulture("en-US");
+                var value = double.Parse(source);
+                Thread.CurrentThread.CurrentCulture = tempCulture;
+                return new FloatLexeme(coordinate, source, value);
             }
             
             if (state is StringEndState)
@@ -87,12 +93,6 @@ namespace Compiler.LexicalAnalyzerStateMachine
             sb.Replace("+", "");
             sb.Replace("-", "");
             return sb.ToString();
-        }
-
-        private int GetSign(string word)
-        {
-            var sign = word[0] == '-' ? -1 : 1;
-            return sign;
         }
     }
 }

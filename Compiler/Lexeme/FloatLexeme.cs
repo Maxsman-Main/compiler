@@ -2,16 +2,16 @@
 
 namespace Compiler.Lexeme;
 
-public class FloatLexeme : ILexeme
+public class FloatLexeme : ILexeme, IFloatLexeme
 {
     private const string _name = "Float";
     private readonly Coordinate _coordinate;
-    private readonly string _value;
+    private readonly double _value;
     private readonly string _source;
 
     public Coordinate Position => _coordinate;
     public string Name => _name;
-    public string Value => _value;
+    public double Value => _value;
     public string Source => _source;
     
     public string Description => _coordinate.Line.ToString() + " " + "\t" +
@@ -20,10 +20,10 @@ public class FloatLexeme : ILexeme
                                  _value + " " + "\t" +
                                  _source;
 
-    public FloatLexeme(Coordinate coordinate, string source)
+    public FloatLexeme(Coordinate coordinate, string source, double value)
     {
         _coordinate = coordinate;
-        _value = source;
+        _value = value;
         _source = source;
     }
 }
