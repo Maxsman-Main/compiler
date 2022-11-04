@@ -77,7 +77,7 @@ namespace Compiler.LexicalAnalyzerStateMachine
                 return new OperatorLexeme(coordinate, source);
             }
             
-            return new ErrorLexeme(coordinate, "Uncorrected lexeme", source);
+            return new ErrorLexeme(coordinate, "IncorrectLexeme", source);
         }
 
         private string ReplaceString(string word, string oldString, string newString)

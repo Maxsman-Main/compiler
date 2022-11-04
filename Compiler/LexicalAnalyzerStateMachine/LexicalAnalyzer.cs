@@ -66,10 +66,5 @@ namespace Compiler.LexicalAnalyzerStateMachine
         {
             _reader.SetFile(file);
         }
-
-        public void AnalyzeFile(string file)
-        {
-            
-        }
     }
 }
