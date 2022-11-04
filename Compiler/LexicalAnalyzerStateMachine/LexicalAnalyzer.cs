@@ -14,8 +14,6 @@ namespace Compiler.LexicalAnalyzerStateMachine
         private IState _currentState = new StartState();
         private int _symbol;
 
-        private Coordinate _coordinate = new() {Line = 1, Column = 0};
-
         public ILexeme GetLexeme()
         {
             if (_reader.IsOpened == false)
@@ -34,7 +32,7 @@ namespace Compiler.LexicalAnalyzerStateMachine
                 if (_currentState is CommentEndState)
                 {
                     _currentState = new StartState();
-                    _coordinate.Column += 1;
+                    _reader.IncreaseColumn();
                     word = "";
                     continue;
                 }
@@ -43,8 +41,7 @@ namespace Compiler.LexicalAnalyzerStateMachine
                 {
                     if (_symbol == LexemesSeparators.EndOfLine)
                     {
-                        _coordinate.Line += 1;
-                        _coordinate.Column = 0;
+                        _reader.IncreaseLine();
                     }
                     _reader.MoveToNextPosition();
                 }
@@ -56,9 +53,9 @@ namespace Compiler.LexicalAnalyzerStateMachine
 
             }
             
-            _coordinate.Column += 1;
-
-            var lexeme = _lexemeFactory.CreateLexemeByState(_currentState, _coordinate, word);
+            _reader.IncreaseColumn();
+            
+            var lexeme = _lexemeFactory.CreateLexemeByState(_currentState, _reader.Coordinate, word);
             return lexeme;
         }
 
