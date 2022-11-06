@@ -6,6 +6,8 @@ public class StringWordEndState : IState
 {
     public IState GetNextState(int symbol)
     {
+        return new StringEndState();
+        /*
         if (LexemesSeparators.ContainSymbol(symbol))
         {
             return new StringEndState();
@@ -22,5 +24,6 @@ public class StringWordEndState : IState
         }
 
         return new ErrorState("Incorrect lexeme " + (char)symbol + " found in end of string word");
+        */
     }
 }

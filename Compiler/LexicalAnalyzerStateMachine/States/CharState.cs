@@ -6,6 +6,8 @@ public class CharState : IState
 {
     public IState GetNextState(int symbol)
     {
+        return new CharEndState();
+        /*
         if (symbol == LexemesSeparators.EndOfFile)
         {
             return new CharEndState();
@@ -27,5 +29,6 @@ public class CharState : IState
         }
         
         return new ErrorState("Incorrect lexeme, some separator excepted, but " +(char)symbol + " found");
+        */
     }
 }
