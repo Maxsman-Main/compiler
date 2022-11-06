@@ -9,6 +9,9 @@ namespace Compiler.LexicalAnalyzerStateMachine
 {
     public class LexemeFactory
     {
+        private readonly int _maxInt =  2147483647;
+        private readonly int _minInt = -2147483648;
+        
         public ILexeme CreateLexemeByState(IState state, Coordinate coordinate, string source)
         {
             switch (state)
@@ -16,24 +19,40 @@ namespace Compiler.LexicalAnalyzerStateMachine
                 case DecimalEndState:
                 {
                     var value = Convert.ToInt32(source, 10);
+                    if (value < _minInt || value > _maxInt)
+                    {
+                        throw new Exception("Int overflow");
+                    }
                     return new IntegerLexeme(coordinate, source, value);
                 }
                 case HexEndState:
                 {
                     var valueForConvert = ReplaceString(source, "$", "0x");
                     var value = Convert.ToInt32(valueForConvert, 16);
+                    if (value < _minInt || value > _maxInt)
+                    {
+                        throw new Exception("Int overflow");
+                    }
                     return new IntegerLexeme(coordinate, source, value);
                 }
                 case OctEndState:
                 {
                     var valueForConvert = ReplaceString(source, "&", "");
                     var value = Convert.ToInt32(valueForConvert, 8);
+                    if (value < _minInt || value > _maxInt)
+                    {
+                        throw new Exception("Int overflow");
+                    }
                     return new IntegerLexeme(coordinate, source, value);
                 }
                 case BinEndState:
                 {
                     var valueForConvert = ReplaceString(source, "%", "");
                     var value = Convert.ToInt32(valueForConvert, 2);
+                    if (value < _minInt || value > _maxInt)
+                    {
+                        throw new Exception("Int overflow");
+                    }
                     return new IntegerLexeme(coordinate, source, value);
                 }
                 case FloatEndState:
