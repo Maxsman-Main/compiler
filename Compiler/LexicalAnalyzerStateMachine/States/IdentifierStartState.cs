@@ -26,6 +26,6 @@ public class IdentifierStartState : IState
             return new IdentifierEndState();
         }
 
-        return new ErrorState();
+        return new ErrorState("Incorrect lexeme " + (char)symbol + " found in start of identifier");
     }
 }

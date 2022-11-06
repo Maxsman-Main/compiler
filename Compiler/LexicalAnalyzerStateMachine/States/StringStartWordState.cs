@@ -8,7 +8,7 @@ public class StringStartWordState : IState
     {
         if (symbol == LexemesSeparators.EndOfFile)
         {
-            return new ErrorState();
+            return new ErrorState("Incorrect lexeme found in start of string word");
         }
         
         if (symbol == StringConstants.StringSymbol)

@@ -37,7 +37,7 @@ namespace Compiler.LexicalAnalyzerStateMachine.States
                 return new DecimalEndState();
             }
             
-            return new ErrorState();
+            return new ErrorState("Incorrect lexeme excepted 0-9 or '.' or some separator, but " + (char)symbol + " found");
         }
     }
 }

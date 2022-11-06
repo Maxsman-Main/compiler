@@ -31,6 +31,6 @@ public class FloatState : IState
             return new FloatEndState();
         }
 
-        return new ErrorState();
+        return new ErrorState("Incorrect lexeme, excepted 0-9 or some separator, but " + (char)symbol + " found");
     }
 }

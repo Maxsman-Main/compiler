@@ -31,6 +31,6 @@ public class HexInteger : IState
             return new HexEndState();
         }
 
-        return new ErrorState();
+        return new ErrorState("Incorrect lexeme, excepted 0-f or 0-F or some separator, but " + (char)symbol + " found");
     }
 }

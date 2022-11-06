@@ -26,6 +26,6 @@ public class CharState : IState
             return new CharEndState();
         }
         
-        return new ErrorState();
+        return new ErrorState("Incorrect lexeme, some separator excepted, but " +(char)symbol + " found");
     }
 }

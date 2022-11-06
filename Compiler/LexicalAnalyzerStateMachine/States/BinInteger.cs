@@ -31,6 +31,6 @@ public class BinInteger : IState
             return new BinEndState();
         }
         
-        return new ErrorState();
+        return new ErrorState("Incorrect lexeme, 0-1 or some separator excepted, but " +(char)symbol + " found");
     }
 }

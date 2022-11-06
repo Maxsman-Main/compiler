@@ -31,6 +31,6 @@ public class OctInteger : IState
             return new OctEndState();
         }
 
-        return new ErrorState();
+        return new ErrorState("Incorrect lexeme, excepted 0-7 or some separator, but " + (char)symbol + " found");
     }
 }

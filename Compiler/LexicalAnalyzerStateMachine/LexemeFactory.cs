@@ -75,7 +75,8 @@ namespace Compiler.LexicalAnalyzerStateMachine
                     return new SeparatorLexeme(coordinate, source);   
                 }
                 default:
-                    return new ErrorLexeme(coordinate, "IncorrectLexeme", source);
+                    var errorState = (IErrorState) state;
+                    return new ErrorLexeme(coordinate, errorState.Message, source);
             }
         }
 

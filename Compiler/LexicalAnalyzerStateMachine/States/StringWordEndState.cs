@@ -21,6 +21,6 @@ public class StringWordEndState : IState
             return new StringEndState();
         }
 
-        return new ErrorState();
+        return new ErrorState("Incorrect lexeme " + (char)symbol + " found in end of string word");
     }
 }

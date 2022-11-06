@@ -76,7 +76,7 @@ namespace Compiler.LexicalAnalyzerStateMachine.States
                 return new StartState();
             }
             
-            return new ErrorState();
+            return new ErrorState("Cannot find start state in lexeme analyzer for " + (char)symbol);
         }
     }
 }

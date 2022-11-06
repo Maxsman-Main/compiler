@@ -17,10 +17,11 @@ public class ErrorLexeme : ILexeme
                                  _coordinate.Column.ToString() + " " + "\t" +
                                  _value;
 
-    public ErrorLexeme(Coordinate coordinate, string value, string source)
+    public ErrorLexeme(Coordinate coordinate, string message, string source)
     {
         _coordinate = coordinate;
-        _value = value;
+        _value = message;
         _source = source;
     }
+
 }
