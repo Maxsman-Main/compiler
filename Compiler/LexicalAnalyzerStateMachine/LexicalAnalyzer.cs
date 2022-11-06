@@ -1,8 +1,6 @@
-﻿using System.Text;
-using Compiler.Constants;
+﻿using Compiler.Constants;
 using Compiler.Lexeme;
 using Compiler.LexicalAnalyzerStateMachine.States;
-using Compiler.Structs;
 
 namespace Compiler.LexicalAnalyzerStateMachine
 {
@@ -13,6 +11,7 @@ namespace Compiler.LexicalAnalyzerStateMachine
         
         private IState _currentState = new StartState();
         private int _symbol;
+        private string _wordBuffer = "";
 
         public ILexeme GetLexeme()
         {
@@ -23,16 +22,17 @@ namespace Compiler.LexicalAnalyzerStateMachine
 
             _currentState = new StartState();
             var word = "";
-
+            
             while (_currentState is not IEndState)
             {
                 _symbol = _reader.ReadSymbol();
                 _currentState = _currentState.GetNextState(_symbol);
-
+                
                 if (_currentState is CommentEndState)
                 {
                     _currentState = new StartState();
                     _reader.IncreaseColumn();
+                    _wordBuffer = word;
                     word = "";
                     continue;
                 }
@@ -48,9 +48,9 @@ namespace Compiler.LexicalAnalyzerStateMachine
                 
                 if (_currentState is not StartState && _currentState is not IEndState)
                 {
+                    _wordBuffer = word;
                     word += (char)_symbol;
                 }
-
             }
             
             _reader.IncreaseColumn();

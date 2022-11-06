@@ -18,7 +18,7 @@ public static class LexemesSeparators
 
     private static readonly List<char> _visibleSeparators = new()
     {
-        '.', ';', ',', '(', ')'
+        '.', ';', ',', '(', ')', '[', ']'
     };
 
     public static char EndOfLine => _newLine;
