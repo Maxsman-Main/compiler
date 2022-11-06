@@ -42,12 +42,12 @@ public class TestSystem
             {
                 string? firstFileString = firstFileReader.ReadLine();
                 string? secondFileString = secondFileReader.ReadLine();
-                testCounter += 1;
-                correctTestCounter += 1;
                 if (firstFileString == null && secondFileString == null)
                 {
                     break;
                 }
+                testCounter += 1;
+                correctTestCounter += 1;
 
                 if (firstFileString == null || secondFileString == null || !firstFileString.Equals(secondFileString))
                 {

@@ -7,15 +7,15 @@ namespace Compiler
     {
         public static void Main(string[] args)
         {
-            if (args[1] == "a")
+            if (args[0] == "a")
             {
                 var analyzer = new LexicalAnalyzer();
             }
             
-            else if (args[2] == "t")
+            else if (args[0] == "t")
             {
                 var testSystem = new TestSystem();
-                testSystem.TestLexicalAnalyze(args[0], args[1]);
+                testSystem.TestLexicalAnalyze(args[1], args[2]);
             }
         }  
     }
