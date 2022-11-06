@@ -6,6 +6,11 @@ public class IdentifierStartState : IState
 {
     public IState GetNextState(int symbol)
     {
+        if (symbol == LexemesSeparators.EndOfFile)
+        {
+            return new IdentifierEndState();
+        }
+        
         if(LexemesSeparators.VisibleSeparators.Contains((char)symbol))
         {
             return new IdentifierEndState();

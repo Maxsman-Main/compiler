@@ -50,6 +50,11 @@ namespace Compiler.LexicalAnalyzerStateMachine.States
             {
                 return new LessOperatorState();
             }
+
+            if ((char)symbol == '/')
+            {
+                return new SlashState();
+            }
             
             if (OperatorConstants.Operators.Contains((char)symbol))
             {
@@ -59,11 +64,6 @@ namespace Compiler.LexicalAnalyzerStateMachine.States
             if (IdentifierConstants.StartSymbols.Contains((char)symbol))
             {
                 return new IdentifierStartState();
-            }
-
-            if (symbol == CommentsConstants.CommentSymbol)
-            {
-                return new CommentState();
             }
 
             if (LexemesSeparators.VisibleSeparators.Contains((char)symbol))

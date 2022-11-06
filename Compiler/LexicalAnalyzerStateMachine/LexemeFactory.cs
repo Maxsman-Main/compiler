@@ -103,8 +103,6 @@ namespace Compiler.LexicalAnalyzerStateMachine
         {
             var sb = new StringBuilder(word);
             sb.Replace(oldString, newString);
-            sb.Replace("+", "");
-            sb.Replace("-", "");
             return sb.ToString();
         }
     }
