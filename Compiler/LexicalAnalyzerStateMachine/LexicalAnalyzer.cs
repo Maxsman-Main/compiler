@@ -1,6 +1,7 @@
 ﻿using Compiler.Constants;
 using Compiler.Lexeme;
 using Compiler.LexicalAnalyzerStateMachine.States;
+using Compiler.Structs;
 
 namespace Compiler.LexicalAnalyzerStateMachine
 {
@@ -10,7 +11,7 @@ namespace Compiler.LexicalAnalyzerStateMachine
         private readonly FileReader.FileReader _reader = new();
         
         private IState _currentState = new StartState();
-        private int _symbol;
+        private int _symbol = '@';
         private string _wordBuffer = "";
 
         public ILexeme GetLexeme()
@@ -18,6 +19,13 @@ namespace Compiler.LexicalAnalyzerStateMachine
             if (_reader.IsOpened == false)
             {
                 _reader.OpenFile();
+            }
+            
+            if (_wordBuffer != "")
+            {
+                _reader.IncreaseColumn();
+                _wordBuffer = "";
+                return _lexemeFactory.CreateLexemeByState(new OperatorEndState(), _reader.Coordinate, "..");
             }
 
             _currentState = new StartState();
@@ -27,12 +35,28 @@ namespace Compiler.LexicalAnalyzerStateMachine
             {
                 _symbol = _reader.ReadSymbol();
                 _currentState = _currentState.GetNextState(_symbol);
+
+                if (_currentState is RangeState)
+                {
+                    _reader.MoveToNextPosition();
+                    _wordBuffer = word + (char)_symbol;
+                    var decimalPart = "";
+                    foreach(var lit in _wordBuffer)
+                    {
+                        if (lit != '.')
+                        {
+                            decimalPart += lit;
+                        }
+                    }
+
+                    _reader.IncreaseColumn();
+                    return _lexemeFactory.CreateLexemeByState(new DecimalEndState(), _reader.Coordinate, decimalPart);
+                }
                 
                 if (_currentState is CommentEndState)
                 {
                     _currentState = new StartState();
                     _reader.IncreaseColumn();
-                    _wordBuffer = word;
                     word = "";
                     continue;
                 }
@@ -48,7 +72,6 @@ namespace Compiler.LexicalAnalyzerStateMachine
                 
                 if (_currentState is not StartState && _currentState is not IEndState)
                 {
-                    _wordBuffer = word;
                     word += (char)_symbol;
                 }
             }

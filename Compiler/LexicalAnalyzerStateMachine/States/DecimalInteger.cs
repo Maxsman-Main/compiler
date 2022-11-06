@@ -14,7 +14,7 @@ namespace Compiler.LexicalAnalyzerStateMachine.States
 
             if (FloatConstants.FloatSymbol == symbol)
             {
-                return new FloatState();
+                return new IntWithDotState();
             }
             
             if(LexemesSeparators.VisibleSeparators.Contains((char)symbol))
