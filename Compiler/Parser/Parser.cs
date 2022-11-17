@@ -1,4 +1,5 @@
-﻿using Compiler.Lexeme;
+﻿using Compiler.Constants;
+using Compiler.Lexeme;
 using Compiler.LexicalAnalyzerStateMachine;
 using Compiler.Parser.Tree;
 
@@ -18,7 +19,7 @@ public class Parser
     {
         var left = ParseTerm();
         var lexeme = _lexer.CurrentLexeme;
-        while (lexeme is IOperatorLexeme {Value: "+" or "-"} operatorLexeme)
+        while (lexeme is IOperatorLexeme {Value: OperatorValue.Plus or OperatorValue.Minus} operatorLexeme)
         {
             _lexer.GetLexeme();
             left = new BinOperation(operatorLexeme.Value, left, ParseTerm());
@@ -32,7 +33,7 @@ public class Parser
     {
         var left = ParseFactor();
         var lexeme = _lexer.CurrentLexeme;
-        while (lexeme is IOperatorLexeme {Value: "*" or "/"} operatorLexeme)
+        while (lexeme is IOperatorLexeme {Value: OperatorValue.Multiplication or OperatorValue.Div} operatorLexeme)
         {
             _lexer.GetLexeme();
             left = new BinOperation(operatorLexeme.Value, left, ParseFactor());

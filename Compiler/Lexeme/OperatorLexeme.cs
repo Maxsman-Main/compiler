@@ -1,4 +1,5 @@
-﻿using Compiler.Structs;
+﻿using Compiler.Constants;
+using Compiler.Structs;
 
 namespace Compiler.Lexeme;
 
@@ -6,12 +7,12 @@ public class OperatorLexeme : ILexeme, IOperatorLexeme
 {
     private string _name = "Operator";
     private Coordinate _coordinate = new Coordinate {Line = 0, Column = 0};
-    private string _value = "";
+    private OperatorValue _value;
     private string _source = "";
 
     public Coordinate Position => _coordinate;
     public string Name => _name;
-    public string Value => _value;
+    public OperatorValue Value => _value;
     public string Source => _source;
 
     public string Description => _coordinate.Line.ToString() + " " + "\t" + 
@@ -20,10 +21,10 @@ public class OperatorLexeme : ILexeme, IOperatorLexeme
                                  _value + " " + "\t" +
                                  _source + " " + "\t";
 
-    public OperatorLexeme(Coordinate coordinate, string source)
+    public OperatorLexeme(Coordinate coordinate, string source, OperatorValue value)
     {
         _coordinate = coordinate;
         _source = source;
-        _value = source;
+        _value = value;
     }
 }

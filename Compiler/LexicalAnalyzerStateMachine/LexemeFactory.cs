@@ -87,7 +87,7 @@ namespace Compiler.LexicalAnalyzerStateMachine
                 }
                 case OperatorEndState:
                 {
-                    return new OperatorLexeme(coordinate, source);
+                    return new OperatorLexeme(coordinate, source, OperatorConstants.OperatorValues[source]);
                 }
                 case SeparatorEndState:
                 {

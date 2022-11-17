@@ -25,20 +25,8 @@ public static class LexemesSeparators
     public static List<char> NewLineSeparators => _newLineSeparator;
     public static int EndOfFile => _endOfFile;
     public static List<char> VisibleSeparators => _visibleSeparators;
-    
-    public static bool ContainSymbol(char symbol)
-    {
-        foreach(var separator in _separators)
-        {
-            if (separator == symbol)
-            {
-                return true;
-            }
-        }
+    public static List<char> InvisibleSeparators => _separators;
 
-        return false;
-    }
-    
     public static bool ContainSymbol(int symbol)
     {
         foreach(var separator in _separators)

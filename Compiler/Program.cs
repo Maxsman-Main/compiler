@@ -23,6 +23,7 @@ namespace Compiler
                     var analyzer = new LexicalAnalyzer();
                     analyzer.SetFile(args[1]);
                     var lexeme = analyzer.GetLexeme();
+                    Console.WriteLine(lexeme.Description);
                     while (lexeme is not EndOfFileLexeme)
                     {
                         lexeme = analyzer.GetLexeme();
@@ -39,7 +40,7 @@ namespace Compiler
                     var lexer = new LexicalAnalyzer();
                     lexer.SetFile(args[1]);
                     var parser = new Parser.Parser(lexer);
-                    Console.WriteLine(parser.ParseExpression().Calc());
+                    Console.WriteLine(parser.ParseExpression().GetPrint(0));
                     break;  
             }
         }  

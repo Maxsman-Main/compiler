@@ -73,7 +73,7 @@ namespace Compiler.LexicalAnalyzerStateMachine
                     _reader.MoveToNextPosition();
                 }
                 
-                if (_currentState is not StartState && _currentState is not IEndState)
+                if (_currentState is not StartState && _currentState is not IEndState && !LexemesSeparators.InvisibleSeparators.Contains((char)_symbol))
                 {
                     word += (char)_symbol;
                 }

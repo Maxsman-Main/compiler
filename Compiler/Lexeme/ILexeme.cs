@@ -1,4 +1,5 @@
-﻿using Compiler.Structs;
+﻿using Compiler.Constants;
+using Compiler.Structs;
 
 namespace Compiler.Lexeme
 {
@@ -22,7 +23,7 @@ namespace Compiler.Lexeme
 
     public interface IOperatorLexeme
     {
-        public string Value { get; }
+        public OperatorValue Value { get; }
     }
 
     public interface IIdentifierLexeme

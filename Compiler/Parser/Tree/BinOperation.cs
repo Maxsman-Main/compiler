@@ -1,12 +1,14 @@
-﻿namespace Compiler.Parser.Tree;
+﻿using Compiler.Constants;
+
+namespace Compiler.Parser.Tree;
 
 public class BinOperation : Node
 {
-    private string _operation;
+    private OperatorValue _operation;
     private Node _left;
     private Node _right;
 
-    public BinOperation(string operation, Node left, Node right)
+    public BinOperation(OperatorValue operation, Node left, Node right)
     {
         _operation = operation;
         _left = left;
@@ -17,13 +19,13 @@ public class BinOperation : Node
     {
         switch (_operation)
         {
-            case "+":
+            case OperatorValue.Plus:
                 return _left.Calc() + _right.Calc();
-            case "-":
+            case OperatorValue.Minus:
                 return _left.Calc() - _right.Calc();
-            case "*":
+            case OperatorValue.Multiplication:
                 return _left.Calc() * _right.Calc();
-            case "/":
+            case OperatorValue.Div:
                 return _left.Calc() / _right.Calc();
             default:
                 return 0;
@@ -33,12 +35,12 @@ public class BinOperation : Node
     public override string GetPrint(int level)
     {
         var value = "";
-        for (int i = 0; i < level; i++)
+        for (int i = 0; i < level * 4; i++)
         {
-            value += "\t";
+            value += " ";
         }
 
-        value += _operation;
+        value += OperatorConstants.OperatorSymbols[_operation];
         value += "\n";
         value += _left.GetPrint(level + 1);
         value += "\n";

@@ -17,9 +17,9 @@ public class Number : Node
     public override string GetPrint(int level)
     {
         var value = "";
-        for (int i = 0; i < level; i++)
+        for (int i = 0; i < level * 4; i++)
         {
-            value += "\t";
+            value += " ";
         }
 
         value += _value.ToString();
