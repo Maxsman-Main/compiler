@@ -2,7 +2,7 @@
 
 namespace Compiler.Lexeme;
 
-public class IdentifierLexeme : ILexeme
+public class IdentifierLexeme : ILexeme, IIdentifierLexeme
 {
     private const string _name = "Identifier"; 
     private Coordinate _position = new Coordinate{Line =  0, Column = 0};

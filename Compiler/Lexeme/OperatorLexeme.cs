@@ -2,7 +2,7 @@
 
 namespace Compiler.Lexeme;
 
-public class OperatorLexeme : ILexeme
+public class OperatorLexeme : ILexeme, IOperatorLexeme
 {
     private string _name = "Operator";
     private Coordinate _coordinate = new Coordinate {Line = 0, Column = 0};

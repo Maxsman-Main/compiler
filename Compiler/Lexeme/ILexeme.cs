@@ -19,4 +19,14 @@ namespace Compiler.Lexeme
     {
         public double Value { get; }
     }
+
+    public interface IOperatorLexeme
+    {
+        public string Value { get; }
+    }
+
+    public interface IIdentifierLexeme
+    {
+        public string Value { get; }
+    }
 }

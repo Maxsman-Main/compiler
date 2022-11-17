@@ -1,10 +1,1 @@
-﻿program Test;
-var
-    a : string;
-    b : string;
-    c : int;
-begin
-    z = [0..10];
-    answer = a + b;
-    print(z[5], answer);
-end.
+﻿(2 + 5)

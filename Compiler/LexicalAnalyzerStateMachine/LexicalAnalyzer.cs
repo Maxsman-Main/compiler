@@ -10,10 +10,13 @@ namespace Compiler.LexicalAnalyzerStateMachine
         private readonly LexemeFactory _lexemeFactory = new();
         private readonly FileReader.FileReader _reader = new();
         
+        private ILexeme _currentLexeme = new ErrorLexeme(new Coordinate{Line = 0, Column = 0}, "You must call GetLexeme first time, before get currentLexeme", "");
         private IState _currentState = new StartState();
         private int _symbol = '@';
         private string _wordBuffer = "";
 
+        public ILexeme CurrentLexeme => _currentLexeme;
+        
         public ILexeme GetLexeme()
         {
             if (_reader.IsOpened == false)
@@ -79,6 +82,7 @@ namespace Compiler.LexicalAnalyzerStateMachine
             _reader.IncreaseColumn();
             
             var lexeme = _lexemeFactory.CreateLexemeByState(_currentState, _reader.Coordinate, word);
+            _currentLexeme = lexeme;
             return lexeme;
         }
 
