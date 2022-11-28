@@ -20,10 +20,10 @@ Declarations
 <type_declaration> ::= "type" <one_type_declaration> {<one_type_declaration>}
 <one_type_declaration> ::= <id> "=" <type> "
 
-<function_declaration> ::= <function_header> {<const_declaration> | <var_declaration> | <type_declaration>} <stmts>
+<function_declaration> ::= <function_header> {<const_declaration> | <var_declaration> | <type_declaration>} <statement>
 <function_header> ::= "function" <id> "(" <parameters> ")" ":" <type> ";"
 
-<procedure_declaration> ::= <procedure_header> {<const_declaration> | <var_declaration> | <type_declaration>} <stmts>
+<procedure_declaration> ::= <procedure_header> {<const_declaration> | <var_declaration> | <type_declaration>} <statement>
 <procedure_header> ::= "procedure" <id> "(" <parameters> ")" ";"
 
 <parameters> ::= <parameter> {"," <parameter>}
