@@ -40,7 +40,7 @@ namespace Compiler
                     var lexer = new LexicalAnalyzer();
                     lexer.SetFile(args[1]);
                     var parser = new Parser.Parser(lexer);
-                    Console.WriteLine(parser.ParseExpression().GetPrint(0));
+                    Console.WriteLine(parser.ParseProgram().GetPrint(0));
                     break;
                 default:
                     Console.WriteLine("No keys");

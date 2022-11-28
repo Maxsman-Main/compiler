@@ -56,7 +56,7 @@ public class TestSystem
         var parser = new Parser.Parser(analyzer);
         while (analyzer.CurrentLexeme is not EndOfFileLexeme)
         {
-            _writer.WriteLine(parser.ParseExpression().GetPrint(0));
+            _writer.WriteLine(parser.ParseProgram().GetPrint(0));
         }
         _writer.CloseFile();
         CompareFilesParser(exceptedResult);

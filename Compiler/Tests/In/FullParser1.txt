@@ -1,0 +1,4 @@
+﻿program abc;
+type
+    test1 = integer;
+    test2 = INTEGER;

@@ -14,3 +14,23 @@ public interface INodeStatement : INode
 {
     
 }
+
+public interface INodeType : INode
+{
+    
+}
+
+public interface INodeDeclaration : INode
+{
+    
+}
+
+public interface INodeProgram : INode
+{
+    
+}
+
+public interface IMainBlockNode : INode
+{
+    
+}
