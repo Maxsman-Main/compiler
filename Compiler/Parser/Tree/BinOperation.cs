@@ -2,7 +2,7 @@
 
 namespace Compiler.Parser.Tree;
 
-public class BinOperation : INode
+public class BinOperation : INodeExpression
 {
     private readonly OperatorValue _operation;
     private readonly INode _left;

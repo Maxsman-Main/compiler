@@ -1,6 +1,6 @@
 ﻿namespace Compiler.Parser.Tree;
 
-public class Call : INode
+public class Call : INodeExpression
 {
     private readonly string _name;
     private readonly List<INode> _arguments;

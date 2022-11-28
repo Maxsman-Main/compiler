@@ -1,6 +1,6 @@
 ﻿namespace Compiler.Parser.Tree;
 
-public class Variable : INode
+public class Variable : INodeExpression
 {
     private readonly string _name;
 

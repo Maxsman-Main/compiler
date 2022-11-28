@@ -2,7 +2,7 @@
 
 namespace Compiler.Parser.Tree;
 
-public class UnaryOperation : INode
+public class UnaryOperation : INodeExpression
 {
     private readonly OperatorValue _operation;
     private readonly INode _argument;

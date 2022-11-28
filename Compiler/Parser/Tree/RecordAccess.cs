@@ -2,13 +2,19 @@
 
 namespace Compiler.Parser.Tree;
 
-public class RecordAccess : INode
+public class RecordAccess : INodeExpression
 {
     private readonly OperatorValue _operation;
     private readonly INode _left;
     private readonly string _right;
 
-
+    public RecordAccess(INode left, string right)
+    {
+        _operation = OperatorValue.Point;
+        _left = left;
+        _right = right;
+    }
+    
     public string GetPrint(int level)
     {
         var value = "";
