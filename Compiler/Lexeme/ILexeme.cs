@@ -30,4 +30,14 @@ namespace Compiler.Lexeme
     {
         public string Value { get; }
     }
+
+    public interface ISeparatorLexeme
+    {
+        public SeparatorValue Value { get; }
+    }
+
+    public interface IKeyWordLexeme
+    {
+        public KeyWordValue Value { get; }
+    }
 }

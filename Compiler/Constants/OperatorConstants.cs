@@ -6,6 +6,13 @@ public enum OperatorValue
     Minus,
     Div,
     Multiplication,
+    Equal,
+    Assignment,
+    DoublePoint,
+    More,
+    Less,
+    MoreEqual,
+    LessEqual,
     Null
 }
 
@@ -25,7 +32,14 @@ public static class OperatorConstants
         {"+", OperatorValue.Plus},
         {"-", OperatorValue.Minus},
         {"*", OperatorValue.Multiplication},
-        {"/", OperatorValue.Div}
+        {"/", OperatorValue.Div},
+        {"=", OperatorValue.Equal},
+        {":=", OperatorValue.Assignment},
+        {":", OperatorValue.DoublePoint},
+        {">", OperatorValue.More},
+        {"<", OperatorValue.Less},
+        {"<=", OperatorValue.LessEqual},
+        {">=", OperatorValue.MoreEqual}
     };
     
     private static Dictionary<OperatorValue, string> _operatorSymbols = new Dictionary<OperatorValue, string>
@@ -33,7 +47,14 @@ public static class OperatorConstants
         {OperatorValue.Plus, "+"},
         {OperatorValue.Minus, "-"},
         {OperatorValue.Multiplication, "*"},
-        {OperatorValue.Div, "/"}
+        {OperatorValue.Div, "/"},
+        {OperatorValue.Equal, "="},
+        {OperatorValue.Assignment, ":="},
+        {OperatorValue.DoublePoint, ":"},
+        {OperatorValue.More, ":"},
+        {OperatorValue.Less, "<"},
+        {OperatorValue.MoreEqual, ">="},
+        {OperatorValue.LessEqual, "<="}
     };
 
     public static char Column => _column;

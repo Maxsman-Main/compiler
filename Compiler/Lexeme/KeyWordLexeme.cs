@@ -1,17 +1,18 @@
-﻿using Compiler.Structs;
+﻿using Compiler.Constants;
+using Compiler.Structs;
 
 namespace Compiler.Lexeme;
 
-public class KeyWordLexeme : ILexeme
+public class KeyWordLexeme : ILexeme, IKeyWordLexeme
 {
     private const string _name = "KeyWord";
     private Coordinate _coordinate;
-    private string _value;
+    private KeyWordValue _value;
     private string _source;
 
     public Coordinate Position => _coordinate;
     public string Name => _name;
-    public string Value => _value;
+    public KeyWordValue Value => _value;
     public string Source => _source;
 
     public string Description => _coordinate.Line.ToString() + " " + "\t" +
@@ -20,10 +21,10 @@ public class KeyWordLexeme : ILexeme
                                  _value + " " + "\t" +
                                  _source + " " + "\t";
 
-    public KeyWordLexeme(Coordinate coordinate, string source)
+    public KeyWordLexeme(Coordinate coordinate, string source, KeyWordValue value)
     {
         _coordinate = coordinate;
         _source = source;
-        _value = source;
+        _value = value;
     }
 }

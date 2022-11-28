@@ -1,17 +1,18 @@
-﻿using Compiler.Structs;
+﻿using Compiler.Constants;
+using Compiler.Structs;
 
 namespace Compiler.Lexeme;
 
-public class SeparatorLexeme : ILexeme
+public class SeparatorLexeme : ILexeme, ISeparatorLexeme
 {
     private const string _name = "Separator";
     private Coordinate _coordinate = new Coordinate{Line = 0, Column = 0};
-    private string _value = "";
+    private SeparatorValue _value;
     private string _source = "";
 
     public Coordinate Position => Position;
     public string Name => _name;
-    public string Value => _value;
+    public SeparatorValue Value => _value;
     public string Source => _source;
 
     public string Description => _coordinate.Line.ToString() + " " + "\t" + 
@@ -20,10 +21,10 @@ public class SeparatorLexeme : ILexeme
                                  _value + " " + "\t" +
                                  _source;
 
-    public SeparatorLexeme(Coordinate coordinate, string source)
+    public SeparatorLexeme(Coordinate coordinate, string source, SeparatorValue value)
     {
         _coordinate = coordinate;
         _source = source;
-        _value = source;
+        _value = value;
     }
 }

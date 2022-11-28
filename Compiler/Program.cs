@@ -41,7 +41,10 @@ namespace Compiler
                     lexer.SetFile(args[1]);
                     var parser = new Parser.Parser(lexer);
                     Console.WriteLine(parser.ParseExpression().GetPrint(0));
-                    break;  
+                    break;
+                default:
+                    Console.WriteLine("No keys");
+                    break;
             }
         }  
     }

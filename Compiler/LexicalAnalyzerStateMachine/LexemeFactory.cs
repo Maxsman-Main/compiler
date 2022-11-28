@@ -81,7 +81,7 @@ namespace Compiler.LexicalAnalyzerStateMachine
                 {
                     if (KeyWordsConstants.KeyWords.Contains(source))
                     {
-                        return new KeyWordLexeme(coordinate, source);
+                        return new KeyWordLexeme(coordinate, source, KeyWordsConstants.KeyWordValues[source]);
                     }
                     return new IdentifierLexeme(coordinate, source);
                 }
@@ -91,7 +91,7 @@ namespace Compiler.LexicalAnalyzerStateMachine
                 }
                 case SeparatorEndState:
                 {
-                    return new SeparatorLexeme(coordinate, source);   
+                    return new SeparatorLexeme(coordinate, source, LexemesSeparators.SeparatorValues[source]);
                 }
                 default:
                     var errorState = (IErrorState) state;

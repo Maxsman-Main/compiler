@@ -11,11 +11,13 @@ enum TestCompareKey
 
 public class TestSystem
 {
+    private string[] _files = Directory.GetFiles("C:/Users/NITRO/RiderProjects/Compiler/Compiler/Tests/In");
     private FileWriter _writer = new();
     private List<string> _tests = new();
     
     public void TestLexicalAnalyze(string testFile, string exceptedResult)
     {
+
         if (_writer.IsOpened == false)
         {
             _writer.OpenFile();
@@ -45,6 +47,10 @@ public class TestSystem
             _writer.OpenFile();
         }
 
+        //for (int i = 0; i < _files.Length; i++)
+        //{
+        //    testFile = 
+        //}
         var analyzer = new LexicalAnalyzer();
         analyzer.SetFile(testFile);
         var parser = new Parser.Parser(analyzer);

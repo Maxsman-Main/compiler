@@ -57,7 +57,6 @@ public class Parser
             default:
                 if (lexeme.Source != "(")
                 {
-                    Console.WriteLine(lexeme.Source);
                     throw new Exception("Factor excepted");
                 }
                 _lexer.GetLexeme();
