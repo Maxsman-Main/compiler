@@ -55,14 +55,14 @@ public class Parser
                 _lexer.GetLexeme();
                 return new Variable(identifierLexeme.Value);
             default:
-                if (lexeme.Source != "(")
+                if (lexeme is not ISeparatorLexeme {Value: SeparatorValue.LeftBracket})
                 {
                     throw new Exception("Factor excepted");
                 }
                 _lexer.GetLexeme();
                 var expression = ParseExpression();
                 var nextToken = _lexer.CurrentLexeme;
-                if (nextToken.Source != ")")
+                if (nextToken is not ISeparatorLexeme {Value: SeparatorValue.RightBracket})
                 {
                     throw new Exception("No right bracket");
                 }
