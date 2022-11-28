@@ -50,7 +50,7 @@ Expressions
 <expression> ::= <simple_expression> ["=" | "<>" | "<" | "<=" | ">" | ">=" | "in" <simple_expression>]
 <simple_expression> ::= ["+" | "-"] <term> {"+" | "-" | "or" <term>}
 <term> ::= <factor> {"*" | "/" | "div" | "mod" | "and" | <factor>}
-<factor> ::= <identifier> | <number> | <string> | "("<expression>")" | not <factor>
+<factor> ::= <identifier> | <number> | <string> | "("<expression>")" | "not" <factor>
 
 Types
 <type> ::=  <primitive_type> | <array_type>
