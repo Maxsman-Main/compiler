@@ -39,7 +39,7 @@ Statements
 <procedure_statement> ::= <id> | ["(" <id_list> ")"]
 <structured_statement> ::= <compound_statement> | <repetitive_statement> | <if_statement>
 
-<compound_statement> ::= "begin" <statement_sequence> "end"
+<compound_statement> ::= "begin" <statement_sequence> "end" ";"
 <assignment_statement> ::= <id> <assignment_operators> <expression>
 <repetitive_statement> ::= <for_statement> | <while_statement>
 <while_statement> ::= "while" <expression> "do" <statement>
