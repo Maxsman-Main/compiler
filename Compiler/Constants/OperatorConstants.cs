@@ -13,6 +13,7 @@ public enum OperatorValue
     Less,
     MoreEqual,
     LessEqual,
+    Point,
     Null
 }
 
@@ -39,7 +40,8 @@ public static class OperatorConstants
         {">", OperatorValue.More},
         {"<", OperatorValue.Less},
         {"<=", OperatorValue.LessEqual},
-        {">=", OperatorValue.MoreEqual}
+        {">=", OperatorValue.MoreEqual},
+        {".", OperatorValue.Point}
     };
     
     private static Dictionary<OperatorValue, string> _operatorSymbols = new Dictionary<OperatorValue, string>
@@ -54,7 +56,8 @@ public static class OperatorConstants
         {OperatorValue.More, ":"},
         {OperatorValue.Less, "<"},
         {OperatorValue.MoreEqual, ">="},
-        {OperatorValue.LessEqual, "<="}
+        {OperatorValue.LessEqual, "<="},
+        {OperatorValue.Point, "."}
     };
 
     public static char Column => _column;

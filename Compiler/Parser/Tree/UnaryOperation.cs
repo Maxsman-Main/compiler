@@ -2,19 +2,17 @@
 
 namespace Compiler.Parser.Tree;
 
-public class BinOperation : INode
+public class UnaryOperation : INode
 {
     private readonly OperatorValue _operation;
-    private readonly INode _left;
-    private readonly INode _right;
+    private readonly INode _argument;
 
-    public BinOperation(OperatorValue operation, INode left, INode right)
+    public UnaryOperation(OperatorValue operation, INode argument)
     {
         _operation = operation;
-        _left = left;
-        _right = right;
+        _argument = argument;
     }
-
+    
     public string GetPrint(int level)
     {
         var value = "";
@@ -25,9 +23,7 @@ public class BinOperation : INode
 
         value += OperatorConstants.OperatorSymbols[_operation];
         value += "\n";
-        value += _left.GetPrint(level + 1);
-        value += "\n";
-        value += _right.GetPrint(level + 1);
+        value += _argument.GetPrint(level + 1);
         return value;
     }
 }

@@ -2,18 +2,12 @@
 
 namespace Compiler.Parser.Tree;
 
-public class BinOperation : INode
+public class RecordAccess : INode
 {
     private readonly OperatorValue _operation;
     private readonly INode _left;
-    private readonly INode _right;
+    private readonly string _right;
 
-    public BinOperation(OperatorValue operation, INode left, INode right)
-    {
-        _operation = operation;
-        _left = left;
-        _right = right;
-    }
 
     public string GetPrint(int level)
     {
@@ -27,7 +21,7 @@ public class BinOperation : INode
         value += "\n";
         value += _left.GetPrint(level + 1);
         value += "\n";
-        value += _right.GetPrint(level + 1);
+        value += _right;
         return value;
     }
 }

@@ -1,0 +1,34 @@
+﻿namespace Compiler.Parser.Tree;
+
+public class Call : INode
+{
+    private readonly string _name;
+    private readonly List<INode> _arguments;
+
+    public Call(string name, List<INode> arguments)
+    {
+        _name = name;
+        _arguments = arguments;
+    }
+    
+    public string GetPrint(int level)
+    {
+        var value = "";
+        for (int i = 0; i < level * 4; i++)
+        {
+            value += " ";
+        }
+
+        value += _name;
+        value += "\n";
+        for(int i = 0; i < _arguments.Count; i++)
+        {
+            value += _arguments[i].GetPrint(level + 1);
+            if (i != _arguments.Count - 1)
+            {
+                value += "\n";
+            }
+        }
+        return value;
+    }
+}

@@ -1,20 +1,14 @@
 ﻿namespace Compiler.Parser.Tree;
 
-public class Number : Node
+public class Number : INode
 {
-    private int _value;
+    private readonly int _value;
 
     public Number(int value)
     {
         _value = value;
     }
-
-    public override int Calc()
-    {
-        return _value;
-    }
-
-    public override string GetPrint(int level)
+    public string GetPrint(int level)
     {
         var value = "";
         for (int i = 0; i < level * 4; i++)

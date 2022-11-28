@@ -1,20 +1,15 @@
 ﻿namespace Compiler.Parser.Tree;
 
-public class Variable : Node
+public class Variable : INode
 {
-    private string _name;
+    private readonly string _name;
 
     public Variable(string name)
     {
         _name = name;
     }
-    
-    public override int Calc()
-    {
-        return 0;
-    }
 
-    public override string GetPrint(int level)
+    public string GetPrint(int level)
     {
         var value = "";
         for (int i = 0; i < level * 4; i++)

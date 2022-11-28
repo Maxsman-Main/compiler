@@ -15,7 +15,7 @@ public class Parser
         _lexer.GetLexeme();
     }
     
-    public Node ParseExpression()
+    public INode ParseExpression()
     {
         var left = ParseTerm();
         var lexeme = _lexer.CurrentLexeme;
@@ -29,7 +29,7 @@ public class Parser
         return left;
     }
 
-    private Node ParseTerm()
+    private INode ParseTerm()
     {
         var left = ParseFactor();
         var lexeme = _lexer.CurrentLexeme;
@@ -43,7 +43,7 @@ public class Parser
         return left;
     }
 
-    private Node ParseFactor()
+    private INode ParseFactor()
     {
         var lexeme = _lexer.CurrentLexeme;
         switch (lexeme)
