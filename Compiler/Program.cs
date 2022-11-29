@@ -1,7 +1,5 @@
 ﻿using Compiler.Lexeme;
 using Compiler.LexicalAnalyzerStateMachine;
-using Compiler.Parser;
-using Compiler.Parser.Tree;
 using Compiler.Tests;
 
 namespace Compiler
@@ -10,7 +8,7 @@ namespace Compiler
     {
         public static void Main(string[] args)
         {
-         switch (args[0])
+           switch (args[0])
             {
                 case "-a" when args[1] == "-t":
                 {

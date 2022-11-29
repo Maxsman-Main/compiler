@@ -1,0 +1,4 @@
+﻿program abc;
+function abc(a : integer) : integer;
+const
+    abc : integer = 1;

@@ -36,10 +36,7 @@ public class ConstDeclaration : INodeDeclaration
             result += _constDeclarations[i].Type.GetPrint(0);
             result += "\n";
             result += _constDeclarations[i].Expression.GetPrint(level + 2);
-            if (i != _constDeclarations.Count - 1)
-            {
-                result += "\n";
-            }
+            result += "\n";
         }
 
         return result;

@@ -78,6 +78,9 @@ public class Parser
             case IKeyWordLexeme{Value: KeyWordValue.Var}:
                 _lexer.GetLexeme();
                 return ParseVarDeclaration();
+            case IKeyWordLexeme {Value: KeyWordValue.Function}:
+                _lexer.GetLexeme();
+                return ParseFunctionDeclaration();
             default:
                 throw new Exception("keyword type was expected");
         }
@@ -131,6 +134,7 @@ public class Parser
         var constDeclarations = new List<ConstDeclarationData>();
         do
         {
+
             lexeme = _lexer.CurrentLexeme;
             if (lexeme is not IIdentifierLexeme identifierLexeme)
             {
@@ -307,6 +311,176 @@ public class Parser
         return new VarDeclaration(varDeclarations);
     }
 
+    private INodeDeclaration ParseFunctionDeclaration()
+    {
+        var lexeme = _lexer.CurrentLexeme;
+        if (lexeme is not IIdentifierLexeme identifierLexeme)
+        {
+            throw new Exception("identifier was expected");
+        }
+        _lexer.GetLexeme();
+
+        var identifier = new Variable(identifierLexeme.Value);
+
+        lexeme = _lexer.CurrentLexeme;
+        if (lexeme is not ISeparatorLexeme {Value: SeparatorValue.LeftBracket})
+        {
+            throw new Exception("( was expected");
+        }
+        _lexer.GetLexeme();
+
+        var parameters = ParseParameters();
+        
+        lexeme = _lexer.CurrentLexeme;
+        if (lexeme is not ISeparatorLexeme {Value: SeparatorValue.RightBracket})
+        {
+            throw new Exception(") was expected");
+        }
+        _lexer.GetLexeme();
+
+        lexeme = _lexer.CurrentLexeme;
+        if (lexeme is not IOperatorLexeme {Value: OperatorValue.DoublePoint})
+        {
+            throw new Exception(": was expected");
+        }
+        _lexer.GetLexeme();
+        
+        var type = ParseType();
+
+        lexeme = _lexer.CurrentLexeme;
+        if (lexeme is not ISeparatorLexeme {Value: SeparatorValue.Semicolon})
+        {
+            throw new Exception("; was expected");
+        }
+        _lexer.GetLexeme();
+
+        lexeme = _lexer.CurrentLexeme;
+        List<INodeDeclaration> declarations = new();
+        while (lexeme is IKeyWordLexeme {Value: KeyWordValue.Const or KeyWordValue.Var or KeyWordValue.Type})
+        {
+            switch (lexeme)
+            {
+                case IKeyWordLexeme {Value: KeyWordValue.Const}:
+                {
+                    _lexer.GetLexeme();
+                    var declaration = ParseConstDeclaration();
+                    declarations.Add(declaration);
+                    break;
+                }
+                case IKeyWordLexeme {Value: KeyWordValue.Var}:
+                {
+                    _lexer.GetLexeme();
+                    var declaration = ParseVarDeclaration();
+                    declarations.Add(declaration);
+                    break;
+                }
+                case IKeyWordLexeme {Value: KeyWordValue.Type}:
+                {
+                    _lexer.GetLexeme();
+                    var declaration = ParseTypeDeclaration();
+                    declarations.Add(declaration);
+                    break;
+                }
+            }
+
+            lexeme = _lexer.CurrentLexeme;
+        }
+
+        var statement = ParseStatement();
+        return new FunctionDeclaration(identifier, parameters, type, declarations, statement);
+    }
+
+    private List<Parameter> ParseParameters()
+    {
+        List<Parameter> parametersResult = new();
+        
+        var parameters = ParseParameter();
+        if (parameters.Count == 0)
+        {
+            return parametersResult;
+        }
+        
+        foreach (var parameter in parameters)
+        {
+            parametersResult.Add(parameter);
+        }
+        
+        var lexeme = _lexer.CurrentLexeme;
+        while (lexeme is ISeparatorLexeme {Value: SeparatorValue.Comma})
+        {
+            _lexer.GetLexeme();
+            parameters = ParseParameter();
+            foreach (var parameter in parameters)
+            {
+                parametersResult.Add(parameter);
+            }
+
+            lexeme = _lexer.CurrentLexeme;
+        }
+
+        return parametersResult;
+    }
+
+    private List<Parameter> ParseParameter()
+    {
+        var identifierList = ParseIdentifierList();
+        List<Parameter> parameters = new();
+
+        if (identifierList.Count == 0)
+        {
+            return parameters;
+        }
+        
+        var lexeme = _lexer.CurrentLexeme;
+        if (lexeme is not IOperatorLexeme {Value: OperatorValue.DoublePoint})
+        {
+            throw new Exception(": was expected");
+        }
+        _lexer.GetLexeme();
+
+        var type = ParseType();
+
+        foreach (var identifier in identifierList)
+        {
+            Parameter parameter;
+            parameter.Identifier = identifier;
+            parameter.Type = type;
+            parameters.Add(parameter);
+        }
+
+        return parameters;
+    }
+
+    private List<Variable> ParseIdentifierList()
+    {
+        var lexeme = _lexer.CurrentLexeme;
+        List<Variable> identifiers = new();
+        if (lexeme is not IIdentifierLexeme identifierLexeme)
+        {
+            return identifiers;
+        }
+        _lexer.GetLexeme();
+        
+        identifiers.Add(new Variable(identifierLexeme.Value));
+        lexeme = _lexer.CurrentLexeme;
+        while (lexeme is ISeparatorLexeme {Value: SeparatorValue.Comma})
+        {
+            _lexer.GetLexeme();
+
+            lexeme = _lexer.CurrentLexeme;
+            if (lexeme is not IIdentifierLexeme identifierLexemeCycle)
+            {
+                throw new Exception("identifier was expected");
+            }
+            _lexer.GetLexeme();
+            
+            identifiers.Add(new Variable(identifierLexemeCycle.Value));
+            lexeme = _lexer.CurrentLexeme;
+        }
+        
+        return identifiers;
+    }
+    
     private INodeType ParseType()
     {
         var lexeme = _lexer.CurrentLexeme;
@@ -325,6 +499,11 @@ public class Parser
     }
 
     private IMainBlockNode ParseMainBlock()
+    {
+        return null;
+    }
+
+    private INodeStatement ParseStatement()
     {
         return null;
     }
