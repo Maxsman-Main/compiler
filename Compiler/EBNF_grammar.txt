@@ -9,7 +9,7 @@ Program
 <program> ::= ["program" <id> ";"] {<declarations>} <main>
 
 Declarations
-<declarations> ::= <const_declaration> | <var_declaration> | <type_declaration> | {<function_declaration> | <procedure_declaration>}
+<declarations> ::= <const_declaration> | <var_declaration> | <type_declaration> | <function_declaration> | <procedure_declaration>
 <const_declaration> ::= "const" <one_const_declaration> {<one_const_declaration>}
 <one_const_declaration> ::= <id> ":" <type> "=" <exp> ";"
 
