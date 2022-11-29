@@ -53,11 +53,14 @@ Expressions
 <factor> ::= <id> | <number> | <string> | "("<expression>")" | "not" <factor>
 
 Types
-<type> ::=  <primitive_type> | <array_type>
+<type> ::=  <primitive_type> | <array_type> | <record_type> | <type_identifier>
 <primitive_type> ::= "integer" | "double" | "string" | "char"
-<array_type> ::= "array" <ranges> "of" <primitive_type>
+<array_type> ::= "array" "["<ranges>"]" "of" <primitive_type>
 <ranges> ::= <range> {"," <range>}
 <range> ::= <int> ".." <int>
+<record_type> ::= "record" <field_list> "end"
+<field_list> ::= [(<record_section> {";" <record_section>}) [";"]]
+<record_section> ::= <id_list> ":" <type>
 
 //
 <id_list> ::= <id> {"," <id>}
