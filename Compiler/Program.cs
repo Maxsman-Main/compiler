@@ -10,7 +10,7 @@ namespace Compiler
     {
         public static void Main(string[] args)
         {
-           switch (args[0])
+         switch (args[0])
             {
                 case "-a" when args[1] == "-t":
                 {
