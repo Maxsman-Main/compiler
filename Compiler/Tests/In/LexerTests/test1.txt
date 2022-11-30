@@ -1,15 +1,10 @@
 ﻿12345
-1f 2345
 $FFFF
-$FQE12
 &71
-&91
 %101
-%1f01
 +1234
 _test
 test
-123batrest
 NOT
 not
 is
@@ -17,12 +12,8 @@ IS
 'a'
 'b'
 'a'abcqwer
-qwdqw'a'
 'some_word'
 'some_word'abasd
-asbaasd'some_word'
-2998adwdqw
-jaja123_d123'
 ''
 '   '
 +
@@ -44,10 +35,9 @@ abs := abs + 1;
 .0123123
 1123.
 555.0123
-acd #AFB
-5123.f
+acd //AFB
 '15124.2'
 '$ffff'
 $fffA
 . . .
-#ABCDEF
+//ABCDEF

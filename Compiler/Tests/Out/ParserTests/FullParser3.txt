@@ -1,4 +1,4 @@
-Program abc
+﻿Program abc
     FunctionDeclaration
         abc(a:Integer) : Integer
             ConstDeclaration

@@ -4,83 +4,135 @@ using Compiler.LexicalAnalyzerStateMachine;
 
 namespace Compiler.Tests;
 
-enum TestCompareKey
-{
-    Analyzer,
-    Parser
-}
-
 public class TestSystem
 {
-    private string[] _files = Directory.GetFiles("C:/Users/NITRO/RiderProjects/Compiler/Compiler/Tests/In");
-    private FileWriter _writer = new();
-    private List<string> _tests = new();
+    private const string LexerTestsPath = "../../../Tests/In/LexerTests";
+    private const string ParserExpressionTestsPath = "../../../Tests/In/ParserExpressionTests";
+    private const string ParserTestsPath = "../../../Tests/In/ParserTests";
+
+    private const string LexerOutPath = "../../../Tests/Out/LexerTests";
+    private const string ParserExpressionOutPath = "../../../Tests/Out/ParserExpressionTests";
+    private const string ParserOutPath = "../../../Tests/Out/ParserTests";
+
+    private readonly FileWriter _writer = new();
     
-    public void TestLexicalAnalyze(string testFile, string exceptedResult)
+    public void TestLexicalAnalyze()
     {
-        if (_writer.IsOpened == false)
+        var files = GetFiles(LexerTestsPath);
+        var outFiles = GetFiles(LexerOutPath);
+        List<bool> results = new();
+        for (int i = 0; i < files.Count; i++)
         {
-            _writer.OpenFile();
-        }
-        try
-        {
-            var analyzer = new LexicalAnalyzer();
-            analyzer.SetFile(testFile);
-
-            do
+            if (_writer.IsOpened == false)
             {
-                var lexeme = analyzer.GetLexeme();
-                if (lexeme is EndOfFileLexeme)
-                {
-                    break;
-                }
-                _writer.WriteLine(lexeme.Description);
-            } while (true);
-            
-            _writer.CloseFile();
-            CompareFilesAnalyzer(exceptedResult);
-        }
-        catch (CompilerException exception)
-        {
-            _writer.WriteLine(exception.Message);
-            _writer.CloseFile();
-            CompareFilesAnalyzer(exceptedResult);
-        }
-    }
-
-    public void TestParser(string testFile, string exceptedResult)
-    {
-        if (_writer.IsOpened == false)
-        {
-            _writer.OpenFile();
-        }
-
-        try
-        {
-            var analyzer = new LexicalAnalyzer();
-            analyzer.SetFile(testFile);
-            var parser = new Parser.Parser(analyzer);
-            while (analyzer.CurrentLexeme is not EndOfFileLexeme)
-            {
-                _writer.WriteLine(parser.ParseProgram().GetPrint(0));
+                _writer.OpenFile();
             }
-            _writer.CloseFile();
-            CompareFilesParser(exceptedResult);
+
+            try
+            {
+                var analyzer = new LexicalAnalyzer();
+                analyzer.SetFile(files[i]);
+
+                do
+                {
+                    var lexeme = analyzer.GetLexeme();
+                    if (lexeme is EndOfFileLexeme)
+                    {
+                        break;
+                    }
+
+                    _writer.WriteLine(lexeme.Description);
+                } while (true);
+
+                _writer.CloseFile();
+                results.Add(CompareFiles(outFiles[i]));
+            }
+            catch (CompilerException exception)
+            {
+                _writer.WriteLine(exception.Message);
+                _writer.CloseFile();
+                results.Add(CompareFiles(outFiles[i]));
+            }
         }
-        catch (CompilerException exception)
-        {
-            _writer.WriteLine(exception.Message);
-            _writer.CloseFile();
-            CompareFilesParser(exceptedResult);
-        }
+        
+        PrintResults(results, files);
     }
 
-    private void CompareFilesAnalyzer(string firstFile)
+    public void TestParserExpression()
     {
+        var files = GetFiles(ParserExpressionTestsPath);
+        var outFiles = GetFiles(ParserExpressionOutPath);
+        List<bool> results = new();
+        for (int i = 0; i < files.Count; i++)
+        {
+            if (_writer.IsOpened == false)
+            {
+                _writer.OpenFile();
+            }
+
+            try
+            {
+                var analyzer = new LexicalAnalyzer();
+                analyzer.SetFile(files[i]);
+                var parser = new Parser.Parser(analyzer);
+                _writer.WriteLine(parser.ParseExpression().GetPrint(0));
+                _writer.CloseFile();
+                results.Add(CompareFiles(outFiles[i]));
+            }
+            catch (CompilerException exception)
+            {
+                _writer.WriteLine(exception.Message);
+                _writer.CloseFile();
+                results.Add(CompareFiles(outFiles[i]));
+            }
+        }
+
+        PrintResults(results, files);
+    }
+
+    public void TestParser()
+    {
+        var files = GetFiles(ParserTestsPath);
+        var outFiles = GetFiles(ParserOutPath);
+        List<bool> results = new();
+        for (int i = 0; i < files.Count; i++)
+        {
+            if (_writer.IsOpened == false)
+            {
+                _writer.OpenFile();
+            }
+
+            try
+            {
+                var analyzer = new LexicalAnalyzer();
+                analyzer.SetFile(files[i]);
+                var parser = new Parser.Parser(analyzer);
+                while (analyzer.CurrentLexeme is not EndOfFileLexeme)
+                {
+                    _writer.WriteLine(parser.ParseProgram().GetPrint(0));
+                }
+
+                _writer.CloseFile();
+                results.Add(CompareFiles(outFiles[i]));
+            }
+            catch (CompilerException exception)
+            {
+                _writer.WriteLine(exception.Message);
+                _writer.CloseFile();
+                results.Add(CompareFiles(outFiles[i]));
+            }
+        }
+        
+        PrintResults(results, files);
+    }
+
+    private bool CompareFiles(string firstFile)
+    {
+        _writer.CloseFile();
         var secondFileReader = new StreamReader("../../../Tests/result.txt");
         var testCounter = 0;
         var correctTestCounter = 0;
-        using (var firstFileReader = new StreamReader("../../../Tests/Out/" + firstFile))
+        using (var firstFileReader = new StreamReader(firstFile))
         {
             while (true)
             {
@@ -95,57 +147,44 @@ public class TestSystem
 
                 if (firstFileString == null || secondFileString == null || !firstFileString.Equals(secondFileString))
                 {
-                    
-                    _tests.Add("Test number " + testCounter + " is FALSE");
                     correctTestCounter -= 1;
-                }
-                else
-                {
-                    _tests.Add("Test number " + testCounter + " is OK");
                 }
             }
         }
 
-        if (correctTestCounter == testCounter)
-        { 
-            Console.WriteLine("Tests successful!" + " tests count: " + correctTestCounter.ToString() + "/" + testCounter.ToString());
-        }
-        else
-        {
-            Console.WriteLine("Tests failed!" + " tests count: " + correctTestCounter.ToString() + "/" + testCounter.ToString());
-        }
-
-        foreach (var testResult in _tests)
-        {
-            Console.WriteLine(testResult);
-        }
+        secondFileReader.Close();
+        return correctTestCounter == testCounter;
     }
 
-    private void CompareFilesParser(string firstFile)
+    private List<string> GetFiles(string path)
     {
-        var secondFileReader = new StreamReader("../../../Tests/result.txt");
-        var testCounter = 0;
-        var correctTestCounter = 0;
-        using (var firstFileReader = new StreamReader("../../../Tests/Out/" + firstFile))
+        List<string> names = new();
+        var files = Directory.GetFiles(path);
+        foreach (var file in files)
         {
-            while (true)
-            {
-                var firstFileString = firstFileReader.ReadLine();
-                var secondFileString = secondFileReader.ReadLine();
-                if (firstFileString == null && secondFileString == null)
-                {
-                    break;
-                }
-                testCounter += 1;
-                correctTestCounter += 1;
-
-                if (firstFileString == null || secondFileString == null || !firstFileString.Equals(secondFileString))
-                {
-                    correctTestCounter -= 1;
-                }
-            }
+            var name = file;
+            names.Add(name);
         }
 
-        Console.WriteLine(correctTestCounter == testCounter ? "Tests successful!" : "Tests failed!");
+        names.Sort();
+        return names;
+    }
+
+    private void PrintResults(List<bool> results, List<string> files)
+    {
+        var counter = 0;
+        foreach (var result in results)
+        {
+            if (result)
+            {
+                counter += 1;
+            }
+        }
+        
+        Console.WriteLine("Right tests: " + counter + "/" + results.Count);
+        for (int i = 0; i < results.Count; i++)
+        {
+            Console.WriteLine(results[i] ? "Test " + files[i].Split("\\")[1] + " OK" : "Test " + files[i].Split("\\")[1] + " FALSE");
+        }
     }
 }

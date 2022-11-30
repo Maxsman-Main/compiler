@@ -16,6 +16,7 @@ namespace Compiler.LexicalAnalyzerStateMachine
         private string _wordBuffer = "";
 
         public ILexeme CurrentLexeme => _currentLexeme;
+        public string Coordinate => _reader.Coordinate.Line + " " + _reader.Coordinate.Column;
         
         public ILexeme GetLexeme()
         {
@@ -86,9 +87,9 @@ namespace Compiler.LexicalAnalyzerStateMachine
             return lexeme;
         }
 
-        public void SetFile(string file)
+        public void SetFile(string filePath)
         {
-            _reader.SetFile(file);
+            _reader.SetFile(filePath);
         }
     }
 }

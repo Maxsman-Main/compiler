@@ -1,3 +1,0 @@
-program abs
-const
-    a : integer = 2 + 3;

@@ -32,13 +32,13 @@ public class Parser
             }
             else
             {
-                throw new CompilerException("Identifier was expected");
+                throw new CompilerException(_lexer.Coordinate + " identifier was expected");
             }
 
             nextToken = _lexer.CurrentLexeme;
             if (nextToken is not ISeparatorLexeme {Value: SeparatorValue.Semicolon})
             {
-                throw new CompilerException("; was expected");
+                throw new CompilerException(_lexer.Coordinate + " ; was expected");
             }
             _lexer.GetLexeme();
             
@@ -83,7 +83,7 @@ public class Parser
                 _lexer.GetLexeme();
                 return ParseFunctionDeclaration();
             default:
-                throw new CompilerException("keyword type was expected");
+                throw new CompilerException(_lexer.Coordinate + " keyword type was expected");
         }
     }
 
@@ -96,7 +96,7 @@ public class Parser
             lexeme = _lexer.CurrentLexeme;
             if (lexeme is not IIdentifierLexeme identifierLexeme)
             {
-                throw new CompilerException("Identifier was expected");
+                throw new CompilerException(_lexer.Coordinate + " identifier was expected");
             }
             _lexer.GetLexeme();
 
@@ -105,7 +105,7 @@ public class Parser
             lexeme = _lexer.CurrentLexeme;
             if (lexeme is not IOperatorLexeme {Value: OperatorValue.Equal})
             {
-                throw new CompilerException("= was expected");
+                throw new CompilerException(_lexer.Coordinate + " = was expected");
             }
             _lexer.GetLexeme();
 
@@ -114,7 +114,7 @@ public class Parser
             lexeme  = _lexer.CurrentLexeme;
             if (lexeme is not ISeparatorLexeme {Value: SeparatorValue.Semicolon})
             {
-                throw new CompilerException("; was expected");
+                throw new CompilerException(_lexer.Coordinate + " ; was expected");
             }
             _lexer.GetLexeme();
             
@@ -139,7 +139,7 @@ public class Parser
             lexeme = _lexer.CurrentLexeme;
             if (lexeme is not IIdentifierLexeme identifierLexeme)
             {
-                throw new CompilerException("Identifier was expected");
+                throw new CompilerException(_lexer.Coordinate + " Identifier was expected");
             }
             _lexer.GetLexeme();
 
@@ -148,7 +148,7 @@ public class Parser
             lexeme = _lexer.CurrentLexeme;
             if (lexeme is not IOperatorLexeme {Value: OperatorValue.DoublePoint})
             {
-                throw new CompilerException(": was expected");
+                throw new CompilerException(_lexer.Coordinate + " : was expected");
             }
             _lexer.GetLexeme();
 
@@ -157,7 +157,7 @@ public class Parser
             lexeme  = _lexer.CurrentLexeme;
             if (lexeme is not IOperatorLexeme {Value: OperatorValue.Equal})
             {
-                throw new CompilerException("= was expected");
+                throw new CompilerException(_lexer.Coordinate + " = was expected");
             }
             _lexer.GetLexeme();
 
@@ -166,7 +166,7 @@ public class Parser
             lexeme  = _lexer.CurrentLexeme;
             if (lexeme is not ISeparatorLexeme {Value: SeparatorValue.Semicolon})
             {
-                throw new CompilerException("; was expected");
+                throw new CompilerException(_lexer.Coordinate + " ; was expected");
             }
             _lexer.GetLexeme();
 
@@ -192,7 +192,7 @@ public class Parser
             lexeme = _lexer.CurrentLexeme;
             if (lexeme is not IIdentifierLexeme identifierLexeme)
             {
-                throw new CompilerException("Identifier was expected");
+                throw new CompilerException(_lexer.Coordinate + " identifier was expected");
             }
             _lexer.GetLexeme();
 
@@ -206,14 +206,14 @@ public class Parser
                     lexeme = _lexer.CurrentLexeme;
                     if (lexeme is not ISeparatorLexeme {Value: SeparatorValue.Comma})
                     {
-                        throw new CompilerException(", was expected");
+                        throw new CompilerException(_lexer.Coordinate + " , was expected");
                     }
                     _lexer.GetLexeme();
                     
                     lexeme = _lexer.CurrentLexeme;
                     if (lexeme is not IIdentifierLexeme identifierLexemeCycle)
                     {
-                        throw new CompilerException("Identifier was expected");
+                        throw new CompilerException(_lexer.Coordinate + " identifier was expected");
                     }
                     _lexer.GetLexeme();
                 
@@ -226,7 +226,7 @@ public class Parser
                 lexeme = _lexer.CurrentLexeme;
                 if (lexeme is not IOperatorLexeme {Value: OperatorValue.DoublePoint})
                 {
-                    throw new CompilerException(": was expected");
+                    throw new CompilerException(_lexer.Coordinate + " : was expected");
                 }
                 _lexer.GetLexeme();
 
@@ -235,7 +235,7 @@ public class Parser
                 lexeme = _lexer.CurrentLexeme;
                 if (lexeme is not ISeparatorLexeme {Value: SeparatorValue.Semicolon})
                 {
-                    throw new CompilerException("; was expected");
+                    throw new CompilerException(_lexer.Coordinate + " ; was expected");
                 }
                 _lexer.GetLexeme();
 
@@ -255,7 +255,7 @@ public class Parser
                 lexeme = _lexer.CurrentLexeme;
                 if (lexeme is not IOperatorLexeme {Value: OperatorValue.DoublePoint})
                 {
-                    throw new CompilerException(": was expected");
+                    throw new CompilerException(_lexer.Coordinate + " : was expected");
                 }
                 _lexer.GetLexeme();
 
@@ -267,7 +267,7 @@ public class Parser
                     lexeme = _lexer.CurrentLexeme;
                     if (lexeme is not ISeparatorLexeme {Value: SeparatorValue.Semicolon})
                     {
-                        throw new CompilerException("; was expected");
+                        throw new CompilerException(_lexer.Coordinate + " ; was expected");
                     }
                     _lexer.GetLexeme();
                     
@@ -291,7 +291,7 @@ public class Parser
                     lexeme = _lexer.CurrentLexeme;
                     if (lexeme is not ISeparatorLexeme {Value: SeparatorValue.Semicolon})
                     {
-                        throw new CompilerException("; was expected");
+                        throw new CompilerException(_lexer.Coordinate + " ; was expected");
                     }
                     _lexer.GetLexeme();
 
@@ -317,7 +317,7 @@ public class Parser
         var lexeme = _lexer.CurrentLexeme;
         if (lexeme is not IIdentifierLexeme identifierLexeme)
         {
-            throw new CompilerException("identifier was expected");
+            throw new CompilerException(_lexer.Coordinate + " identifier was expected");
         }
         _lexer.GetLexeme();
 
@@ -326,7 +326,7 @@ public class Parser
         lexeme = _lexer.CurrentLexeme;
         if (lexeme is not ISeparatorLexeme {Value: SeparatorValue.LeftBracket})
         {
-            throw new CompilerException("( was expected");
+            throw new CompilerException(_lexer.Coordinate + " ( was expected");
         }
         _lexer.GetLexeme();
 
@@ -335,14 +335,14 @@ public class Parser
         lexeme = _lexer.CurrentLexeme;
         if (lexeme is not ISeparatorLexeme {Value: SeparatorValue.RightBracket})
         {
-            throw new CompilerException(") was expected");
+            throw new CompilerException(_lexer.Coordinate + ") was expected");
         }
         _lexer.GetLexeme();
 
         lexeme = _lexer.CurrentLexeme;
         if (lexeme is not IOperatorLexeme {Value: OperatorValue.DoublePoint})
         {
-            throw new CompilerException(": was expected");
+            throw new CompilerException(_lexer.Coordinate + ": was expected");
         }
         _lexer.GetLexeme();
         
@@ -351,7 +351,7 @@ public class Parser
         lexeme = _lexer.CurrentLexeme;
         if (lexeme is not ISeparatorLexeme {Value: SeparatorValue.Semicolon})
         {
-            throw new CompilerException("; was expected");
+            throw new CompilerException(_lexer.Coordinate + "; was expected");
         }
         _lexer.GetLexeme();
 
@@ -435,7 +435,7 @@ public class Parser
         var lexeme = _lexer.CurrentLexeme;
         if (lexeme is not IOperatorLexeme {Value: OperatorValue.DoublePoint})
         {
-            throw new CompilerException(": was expected");
+            throw new CompilerException(_lexer.Coordinate + ": was expected");
         }
         _lexer.GetLexeme();
 
@@ -471,7 +471,7 @@ public class Parser
             lexeme = _lexer.CurrentLexeme;
             if (lexeme is not IIdentifierLexeme identifierLexemeCycle)
             {
-                throw new CompilerException("identifier was expected");
+                throw new CompilerException(_lexer.Coordinate + "identifier was expected");
             }
             _lexer.GetLexeme();
             
@@ -493,7 +493,7 @@ public class Parser
         }
         else
         {
-            throw new CompilerException("keyword integer was expected");
+            throw new CompilerException(_lexer.Coordinate + "keyword integer was expected");
         }
 
         return type;
@@ -509,7 +509,7 @@ public class Parser
         return null;
     }
     
-    private INodeExpression ParseExpression()
+    public INodeExpression ParseExpression()
     {
         var left = ParseTerm();
         var lexeme = _lexer.CurrentLexeme;
@@ -551,14 +551,14 @@ public class Parser
             default:
                 if (lexeme is not ISeparatorLexeme {Value: SeparatorValue.LeftBracket})
                 {
-                    throw new CompilerException("Factor was expected");
+                    throw new CompilerException(_lexer.Coordinate + " factor was expected");
                 }
                 _lexer.GetLexeme();
                 var expression = ParseExpression();
                 var nextToken = _lexer.CurrentLexeme;
                 if (nextToken is not ISeparatorLexeme {Value: SeparatorValue.RightBracket})
                 {
-                    throw new CompilerException("No right bracket");
+                    throw new CompilerException(_lexer.Coordinate + " ) was expected");
                 }
                 
                 _lexer.GetLexeme();
