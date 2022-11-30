@@ -82,6 +82,9 @@ public class Parser
             case IKeyWordLexeme {Value: KeyWordValue.Function}:
                 _lexer.GetLexeme();
                 return ParseFunctionDeclaration();
+            case IKeyWordLexeme{Value: KeyWordValue.Procedure}:
+                _lexer.GetLexeme();
+                return ParseProcedureDeclaration();
             default:
                 throw new CompilerException(_lexer.Coordinate + " keyword type was expected");
         }
@@ -391,6 +394,76 @@ public class Parser
         return new FunctionDeclaration(identifier, parameters, type, declarations, statement);
     }
 
+    private INodeDeclaration ParseProcedureDeclaration()
+    {
+        var lexeme = _lexer.CurrentLexeme;
+        if (lexeme is not IIdentifierLexeme identifierLexeme)
+        {
+            throw new CompilerException(_lexer.Coordinate + " identifier was expected");
+        }
+        _lexer.GetLexeme();
+
+        var identifier = new Variable(identifierLexeme.Value);
+
+        lexeme = _lexer.CurrentLexeme;
+        if (lexeme is not ISeparatorLexeme {Value: SeparatorValue.LeftBracket})
+        {
+            throw new CompilerException(_lexer.Coordinate + " ( was expected");
+        }
+        _lexer.GetLexeme();
+
+        var parameters = ParseParameters();
+        
+        lexeme = _lexer.CurrentLexeme;
+        if (lexeme is not ISeparatorLexeme {Value: SeparatorValue.RightBracket})
+        {
+            throw new CompilerException(_lexer.Coordinate + ") was expected");
+        }
+        _lexer.GetLexeme();
+
+        lexeme = _lexer.CurrentLexeme;
+        if (lexeme is not ISeparatorLexeme {Value: SeparatorValue.Semicolon})
+        {
+            throw new CompilerException(_lexer.Coordinate + "; was expected");
+        }
+        _lexer.GetLexeme();
+
+        lexeme = _lexer.CurrentLexeme;
+        List<INodeDeclaration> declarations = new();
+        while (lexeme is IKeyWordLexeme {Value: KeyWordValue.Const or KeyWordValue.Var or KeyWordValue.Type})
+        {
+            switch (lexeme)
+            {
+                case IKeyWordLexeme {Value: KeyWordValue.Const}:
+                {
+                    _lexer.GetLexeme();
+                    var declaration = ParseConstDeclaration();
+                    declarations.Add(declaration);
+                    break;
+                }
+                case IKeyWordLexeme {Value: KeyWordValue.Var}:
+                {
+                    _lexer.GetLexeme();
+                    var declaration = ParseVarDeclaration();
+                    declarations.Add(declaration);
+                    break;
+                }
+                case IKeyWordLexeme {Value: KeyWordValue.Type}:
+                {
+                    _lexer.GetLexeme();
+                    var declaration = ParseTypeDeclaration();
+                    declarations.Add(declaration);
+                    break;
+                }
+            }
+
+            lexeme = _lexer.CurrentLexeme;
+        }
+
+        var statement = ParseStatement();
+        return new ProcedureDeclaration(identifier, parameters, declarations, statement);
+    }
+    
     private List<Parameter> ParseParameters()
     {
         List<Parameter> parametersResult = new();
@@ -407,7 +480,7 @@ public class Parser
         }
         
         var lexeme = _lexer.CurrentLexeme;
-        while (lexeme is ISeparatorLexeme {Value: SeparatorValue.Comma})
+        while (lexeme is ISeparatorLexeme {Value: SeparatorValue.Semicolon})
         {
             _lexer.GetLexeme();
             parameters = ParseParameter();

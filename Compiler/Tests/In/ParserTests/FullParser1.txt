@@ -16,7 +16,7 @@ function abc(a : integer) : integer;
         test11 : integer = 10 / 2 + 1;
     type
         test12 = INTEGER;
-function zxc(a : integer, b:integer) : integer;
-function kq(a, b, c : integer, z, x, c : integer) : integer;
-function opp(a, b, c : integer, z : integer) : integer;
+function zxc(a : integer; b:integer) : integer;
+function kq(a, b, c : integer; z, x, c : integer) : integer;
+function opp(a, b, c : integer; z : integer) : integer;
 function add() : integer;
