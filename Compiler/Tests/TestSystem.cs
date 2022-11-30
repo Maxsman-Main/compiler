@@ -1,4 +1,5 @@
-﻿using Compiler.Lexeme;
+﻿using Compiler.Exceptions;
+using Compiler.Lexeme;
 using Compiler.LexicalAnalyzerStateMachine;
 
 namespace Compiler.Tests;
@@ -17,27 +18,34 @@ public class TestSystem
     
     public void TestLexicalAnalyze(string testFile, string exceptedResult)
     {
-
         if (_writer.IsOpened == false)
         {
             _writer.OpenFile();
         }
-
-        var analyzer = new LexicalAnalyzer();
-        analyzer.SetFile(testFile);
-
-        ILexeme lexeme;
-        do
+        try
         {
-            lexeme = analyzer.GetLexeme();
-            if (lexeme is EndOfFileLexeme)
+            var analyzer = new LexicalAnalyzer();
+            analyzer.SetFile(testFile);
+
+            do
             {
-                break;
-            }
-            _writer.WriteLine(lexeme.Description);
-        } while (true);
-        _writer.CloseFile();
-        CompareFilesAnalyzer(exceptedResult);
+                var lexeme = analyzer.GetLexeme();
+                if (lexeme is EndOfFileLexeme)
+                {
+                    break;
+                }
+                _writer.WriteLine(lexeme.Description);
+            } while (true);
+            
+            _writer.CloseFile();
+            CompareFilesAnalyzer(exceptedResult);
+        }
+        catch (CompilerException exception)
+        {
+            _writer.WriteLine(exception.Message);
+            _writer.CloseFile();
+            CompareFilesAnalyzer(exceptedResult);
+        }
     }
 
     public void TestParser(string testFile, string exceptedResult)
@@ -47,32 +55,37 @@ public class TestSystem
             _writer.OpenFile();
         }
 
-        //for (int i = 0; i < _files.Length; i++)
-        //{
-        //    testFile = 
-        //}
-        var analyzer = new LexicalAnalyzer();
-        analyzer.SetFile(testFile);
-        var parser = new Parser.Parser(analyzer);
-        while (analyzer.CurrentLexeme is not EndOfFileLexeme)
+        try
         {
-            _writer.WriteLine(parser.ParseProgram().GetPrint(0));
+            var analyzer = new LexicalAnalyzer();
+            analyzer.SetFile(testFile);
+            var parser = new Parser.Parser(analyzer);
+            while (analyzer.CurrentLexeme is not EndOfFileLexeme)
+            {
+                _writer.WriteLine(parser.ParseProgram().GetPrint(0));
+            }
+            _writer.CloseFile();
+            CompareFilesParser(exceptedResult);
         }
-        _writer.CloseFile();
-        CompareFilesParser(exceptedResult);
+        catch (CompilerException exception)
+        {
+            _writer.WriteLine(exception.Message);
+            _writer.CloseFile();
+            CompareFilesParser(exceptedResult);
+        }
     }
 
     private void CompareFilesAnalyzer(string firstFile)
     {
-        StreamReader secondFileReader = new StreamReader("../../../Tests/result.txt");
-        int testCounter = 0;
-        int correctTestCounter = 0;
-        using (StreamReader firstFileReader = new StreamReader("../../../Tests/Out/" + firstFile))
+        var secondFileReader = new StreamReader("../../../Tests/result.txt");
+        var testCounter = 0;
+        var correctTestCounter = 0;
+        using (var firstFileReader = new StreamReader("../../../Tests/Out/" + firstFile))
         {
             while (true)
             {
-                string? firstFileString = firstFileReader.ReadLine();
-                string? secondFileString = secondFileReader.ReadLine();
+                var firstFileString = firstFileReader.ReadLine();
+                var secondFileString = secondFileReader.ReadLine();
                 if (firstFileString == null && secondFileString == null)
                 {
                     break;
@@ -110,15 +123,15 @@ public class TestSystem
 
     private void CompareFilesParser(string firstFile)
     {
-        StreamReader secondFileReader = new StreamReader("../../../Tests/result.txt");
-        int testCounter = 0;
-        int correctTestCounter = 0;
-        using (StreamReader firstFileReader = new StreamReader("../../../Tests/Out/" + firstFile))
+        var secondFileReader = new StreamReader("../../../Tests/result.txt");
+        var testCounter = 0;
+        var correctTestCounter = 0;
+        using (var firstFileReader = new StreamReader("../../../Tests/Out/" + firstFile))
         {
             while (true)
             {
-                string? firstFileString = firstFileReader.ReadLine();
-                string? secondFileString = secondFileReader.ReadLine();
+                var firstFileString = firstFileReader.ReadLine();
+                var secondFileString = secondFileReader.ReadLine();
                 if (firstFileString == null && secondFileString == null)
                 {
                     break;
