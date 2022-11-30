@@ -1,6 +1,7 @@
 ﻿using System.Globalization;
 using System.Text;
 using Compiler.Constants;
+using Compiler.Exceptions;
 using Compiler.Lexeme;
 using Compiler.LexicalAnalyzerStateMachine.States;
 using Compiler.Structs;
@@ -93,9 +94,12 @@ namespace Compiler.LexicalAnalyzerStateMachine
                 {
                     return new SeparatorLexeme(coordinate, source, LexemesSeparators.SeparatorValues[source]);
                 }
+                case IErrorState errorState:
+                {
+                    throw new CompilerException(errorState.Message);
+                }
                 default:
-                    var errorState = (IErrorState) state;
-                    return new ErrorLexeme(coordinate, errorState.Message, source);
+                    throw new CompilerException("Can't make lexeme");
             }
         }
 

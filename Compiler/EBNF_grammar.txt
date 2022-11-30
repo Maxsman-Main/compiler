@@ -1,7 +1,7 @@
 [] - optional constructs
 {} - zero or more repetitions of constructs
 () - grouping of constructs
-|  - choise of one from many
+|  - chose of one from many
 "" - literal text in definitions 
 
 
