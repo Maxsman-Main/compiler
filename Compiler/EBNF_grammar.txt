@@ -26,7 +26,7 @@ Declarations
 <procedure_header> ::= "procedure" <id> "(" <parameters> ")" ";"
 
 <parameters> ::= <parameter> {";" <parameter>}
-<parameter> ::= <id_list> ":" <type>
+<parameter> ::= [var] <id_list> ":" <type>
 
 <main> ::= begin <statement> end "."
 
