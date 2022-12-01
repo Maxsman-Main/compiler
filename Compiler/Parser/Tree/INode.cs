@@ -20,6 +20,11 @@ public interface INodeType : INode
     
 }
 
+public interface INodeArrayType : INodeType
+{
+    
+}
+
 public interface INodeDeclaration : INode
 {
     

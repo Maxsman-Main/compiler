@@ -1,9 +1,32 @@
 ﻿namespace Compiler.Parser.Tree;
 
-public struct Parameter
+public abstract class Parameter
 {
-    public Variable Identifier;
-    public INodeType Type;
+    private Variable _identifier;
+    private INodeType _type;
+
+    public Variable Identifier => _identifier;
+    public INodeType Type => _type;
+
+    protected Parameter(Variable identifier, INodeType type)
+    {
+        _identifier = identifier;
+        _type = type;
+    }
+}
+
+public class ValueParameter : Parameter
+{
+    public ValueParameter(Variable identifier, INodeType type) : base(identifier, type)
+    {
+    }
+}
+
+public class VarParameter : Parameter
+{
+    public VarParameter(Variable identifier, INodeType type) : base(identifier, type)
+    {
+    }
 }
 
 public class FunctionDeclaration : INodeDeclaration
@@ -40,6 +63,10 @@ public class FunctionDeclaration : INodeDeclaration
         result += "(";
         for(int i = 0; i < _parameters.Count; i++)
         {
+            if (_parameters[i] is VarParameter)
+            {
+                result += "var ";
+            }
             result += _parameters[i].Identifier.GetPrint(0) + ":" + _parameters[i].Type.GetPrint(0);
             if (i != _parameters.Count - 1)
             {

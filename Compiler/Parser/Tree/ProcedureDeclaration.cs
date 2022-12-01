@@ -32,6 +32,10 @@ public class ProcedureDeclaration : INodeDeclaration
         result += "(";
         for(int i = 0; i < _parameters.Count; i++)
         {
+            if (_parameters[i] is VarParameter)
+            {
+                result += "var ";
+            }
             result += _parameters[i].Identifier.GetPrint(0) + ":" + _parameters[i].Type.GetPrint(0);
             if (i != _parameters.Count - 1)
             {

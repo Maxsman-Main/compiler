@@ -467,8 +467,20 @@ public class Parser
     private List<Parameter> ParseParameters()
     {
         List<Parameter> parametersResult = new();
+
+        var lexeme = _lexer.CurrentLexeme;
+        List<Parameter> parameters = new();
         
-        var parameters = ParseParameter();
+        if (lexeme is KeyWordLexeme {Value: KeyWordValue.Var})
+        {
+            _lexer.GetLexeme();
+            parameters = ParseVarParameter();
+        }
+        else
+        {
+            parameters = ParseValueParameter();
+        }
+
         if (parameters.Count == 0)
         {
             return parametersResult;
@@ -479,11 +491,19 @@ public class Parser
             parametersResult.Add(parameter);
         }
         
-        var lexeme = _lexer.CurrentLexeme;
+        lexeme = _lexer.CurrentLexeme;
         while (lexeme is ISeparatorLexeme {Value: SeparatorValue.Semicolon})
         {
             _lexer.GetLexeme();
-            parameters = ParseParameter();
+            if (lexeme is KeyWordLexeme {Value: KeyWordValue.Var})
+            {
+                _lexer.GetLexeme();
+                parameters = ParseVarParameter();
+            }
+            else
+            {
+                parameters = ParseValueParameter();
+            }
             foreach (var parameter in parameters)
             {
                 parametersResult.Add(parameter);
@@ -495,7 +515,7 @@ public class Parser
         return parametersResult;
     }
 
-    private List<Parameter> ParseParameter()
+    private List<Parameter> ParseValueParameter()
     {
         var identifierList = ParseIdentifierList();
         List<Parameter> parameters = new();
@@ -516,9 +536,35 @@ public class Parser
 
         foreach (var identifier in identifierList)
         {
-            Parameter parameter;
-            parameter.Identifier = identifier;
-            parameter.Type = type;
+            var parameter = new ValueParameter(identifier, type);
+            parameters.Add(parameter);
+        }
+
+        return parameters;
+    }
+
+    private List<Parameter> ParseVarParameter()
+    {
+        var identifierList = ParseIdentifierList();
+        List<Parameter> parameters = new();
+
+        if (identifierList.Count == 0)
+        {
+            return parameters;
+        }
+        
+        var lexeme = _lexer.CurrentLexeme;
+        if (lexeme is not IOperatorLexeme {Value: OperatorValue.DoublePoint})
+        {
+            throw new CompilerException(_lexer.Coordinate + ": was expected");
+        }
+        _lexer.GetLexeme();
+
+        var type = ParseType();
+
+        foreach (var identifier in identifierList)
+        {
+            var parameter = new VarParameter(identifier, type);
             parameters.Add(parameter);
         }
 
