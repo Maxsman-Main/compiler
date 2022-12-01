@@ -25,8 +25,8 @@ Declarations
 <procedure_declaration> ::= <procedure_header> {<const_declaration> | <var_declaration> | <type_declaration>} <statement>
 <procedure_header> ::= "procedure" <id> "(" <parameters> ")" ";"
 
-<parameters> ::= <parameter> {";" <parameter>}
-<parameter> ::= ["var"] <id_list> ":" <type>
+<parameters> ::= ["var"] <parameter> {";" <parameter>}
+<parameter> ::= <id_list> ":" <type>
 
 <main> ::= begin <statement> end "."
 
