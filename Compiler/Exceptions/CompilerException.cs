@@ -2,11 +2,17 @@
 
 public class CompilerException : Exception
 {
-    public CompilerException() { }
+    protected CompilerException() { }
 
     public CompilerException(string message)
         : base(message) { }
 
-    public CompilerException(string message, Exception inner)
+    protected CompilerException(string message, Exception inner)
         : base(message, inner) { }
+}
+
+public class EmptyBlockException : CompilerException
+{
+    public EmptyBlockException(string message)
+        : base(message) { }
 }

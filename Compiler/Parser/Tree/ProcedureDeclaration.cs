@@ -7,14 +7,14 @@ public class ProcedureDeclaration : INodeDeclaration
     private readonly Variable _identifier;
     private readonly List<Parameter> _parameters;
     private readonly List<INodeDeclaration> _declarations;
-    private readonly INodeStatement _statement;
+    private readonly INodeStatement _statements;
 
-    public ProcedureDeclaration(Variable identifier, List<Parameter> parameters, List<INodeDeclaration> declarations, INodeStatement statement)
+    public ProcedureDeclaration(Variable identifier, List<Parameter> parameters, List<INodeDeclaration> declarations, INodeStatement statements)
     {
         _identifier = identifier;
         _parameters = parameters;
         _declarations = declarations;
-        _statement = statement;
+        _statements = statements;
     }
     
     public string GetPrint(int level)
@@ -53,7 +53,9 @@ public class ProcedureDeclaration : INodeDeclaration
             result += declaration.GetPrint(level + 2);
         }
 
-        //result += _statement.GetPrint(level + 1);
+        result += _statements.GetPrint(level + 1);
+
+        result += '\n';
         return result;
     }
 }

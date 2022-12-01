@@ -2,8 +2,8 @@
 
 public abstract class Parameter
 {
-    private Variable _identifier;
-    private INodeType _type;
+    private readonly Variable _identifier;
+    private readonly INodeType _type;
 
     public Variable Identifier => _identifier;
     public INodeType Type => _type;
@@ -37,15 +37,15 @@ public class FunctionDeclaration : INodeDeclaration
     private readonly List<Parameter> _parameters;
     private readonly INodeType _returnType;
     private readonly List<INodeDeclaration> _declarations;
-    private readonly INodeStatement _statement;
+    private readonly INodeStatement _block;
 
-    public FunctionDeclaration(Variable identifier, List<Parameter> parameters, INodeType returnType, List<INodeDeclaration> declarations, INodeStatement statement)
+    public FunctionDeclaration(Variable identifier, List<Parameter> parameters, INodeType returnType, List<INodeDeclaration> declarations, INodeStatement statements)
     {
         _identifier = identifier;
         _parameters = parameters;
         _returnType = returnType;
         _declarations = declarations;
-        _statement = statement;
+        _block = statements;
     }
     
     public string GetPrint(int level)
@@ -85,7 +85,8 @@ public class FunctionDeclaration : INodeDeclaration
             result += declaration.GetPrint(level + 2);
         }
 
-        //result += _statement.GetPrint(level + 1);
+        result += _block.GetPrint(level + 1);
+        result += '\n';
         return result;
     }
 }

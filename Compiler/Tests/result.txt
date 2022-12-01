@@ -1,8 +1,1 @@
-Program abc
-    FunctionDeclaration
-        abc(a:Integer) : Integer
-            ConstDeclaration
-                abc Integer
-                    1
-
-
+4 7 begin was expected

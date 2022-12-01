@@ -8,7 +8,10 @@ namespace Compiler
     {
         public static void Main(string[] args)
         {
-           switch (args[0])
+            args = new string[10];
+            args[0] = "-p";
+            args[1] = "a.txt";
+            switch (args[0])
             {
                 case "-a" when args[1] == "-t":
                 {

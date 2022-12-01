@@ -6,16 +6,16 @@ public class Program : INodeProgram
     
     private readonly Variable? _identifier;
     private readonly List<INodeDeclaration> _declarations;
-    private readonly IMainBlockNode _block;
+    private readonly INodeStatement _block;
 
-    public Program(Variable identifier, List<INodeDeclaration> declarations, IMainBlockNode block)
+    public Program(Variable identifier, List<INodeDeclaration> declarations, INodeStatement block)
     {
         _identifier = identifier;
         _declarations = declarations;
         _block = block;
     }
 
-    public Program(List<INodeDeclaration> declarations, IMainBlockNode block)
+    public Program(List<INodeDeclaration> declarations, INodeStatement block)
     {
         _identifier = null;
         _declarations = declarations;
@@ -42,7 +42,7 @@ public class Program : INodeProgram
             result += "\n";
         }
 
-        //result += _block.GetPrint(level + 1);
+        result += _block.GetPrint(level + 1);
         return result;
     }
 }

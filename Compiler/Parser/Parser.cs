@@ -60,7 +60,14 @@ public class Parser
             lexeme = _lexer.CurrentLexeme;
         }
 
-        var mainBlock = ParseMainBlock();
+        var mainBlock = ParseCompoundStatement();
+
+        lexeme = _lexer.CurrentLexeme;
+        if (lexeme is not ISeparatorLexeme {Value: SeparatorValue.Point})
+        {
+            throw new CompilerException(_lexer.Coordinate + " . was expected");
+        }
+        _lexer.GetLexeme();
 
         return identifier is null ? new Tree.Program(declarations, mainBlock) : new Tree.Program(identifier, declarations, mainBlock);
     }
@@ -390,7 +397,15 @@ public class Parser
             lexeme = _lexer.CurrentLexeme;
         }
 
-        var statement = ParseStatement();
+        var statement = ParseCompoundStatement();
+
+        lexeme = _lexer.CurrentLexeme;
+        if (lexeme is not ISeparatorLexeme {Value: SeparatorValue.Semicolon})
+        {
+            throw new CompilerException(_lexer.Coordinate + " ; was expected");
+        }
+        _lexer.GetLexeme();
+        
         return new FunctionDeclaration(identifier, parameters, type, declarations, statement);
     }
 
@@ -460,7 +475,15 @@ public class Parser
             lexeme = _lexer.CurrentLexeme;
         }
 
-        var statement = ParseStatement();
+        var statement = ParseCompoundStatement();
+        
+        lexeme = _lexer.CurrentLexeme;
+        if (lexeme is not ISeparatorLexeme {Value: SeparatorValue.Semicolon})
+        {
+            throw new CompilerException(_lexer.Coordinate + " ; was expected");
+        }
+        _lexer.GetLexeme();
+
         return new ProcedureDeclaration(identifier, parameters, declarations, statement);
     }
     
@@ -469,7 +492,7 @@ public class Parser
         List<Parameter> parametersResult = new();
 
         var lexeme = _lexer.CurrentLexeme;
-        List<Parameter> parameters = new();
+        List<Parameter> parameters;
         
         if (lexeme is KeyWordLexeme {Value: KeyWordValue.Var})
         {
@@ -618,14 +641,190 @@ public class Parser
         return type;
     }
 
-    private IMainBlockNode ParseMainBlock()
+    private List<INodeStatement> ParseStatementSequence()
     {
-        return null;
+        List<INodeStatement> statements = new() {ParseStatement()};
+        var lexeme = _lexer.CurrentLexeme;
+        while (lexeme is ISeparatorLexeme {Value: SeparatorValue.Semicolon})
+        {
+            _lexer.GetLexeme();
+            statements.Add(ParseStatement());
+            lexeme = _lexer.CurrentLexeme;
+        }
+
+        return statements;
     }
 
     private INodeStatement ParseStatement()
     {
-        return null;
+        var lexeme = _lexer.CurrentLexeme;
+        return lexeme switch
+        {
+            IIdentifierLexeme => ParseSimpleStatement(),
+            IKeyWordLexeme {Value: KeyWordValue.Begin or KeyWordValue.While or KeyWordValue.For or KeyWordValue.If} =>
+                ParseStructuredStatement(),
+            _ => throw new CompilerException(_lexer.Coordinate + " identifier or begin or end or while or for or if was expected")
+        };
+    }
+
+    private INodeStatement ParseSimpleStatement()
+    {
+        var lexeme = _lexer.CurrentLexeme;
+        var identifier = new Variable(((IIdentifierLexeme) lexeme).Value);
+        _lexer.GetLexeme();
+
+        lexeme = _lexer.CurrentLexeme;
+        return lexeme switch
+        {
+            IOperatorLexeme {Value: OperatorValue.Assignment} => ParseAssignmentStatement(identifier),
+            _ => ParseProcedureStatement(identifier)
+        };
+    }
+
+    private INodeStatement ParseProcedureStatement(Variable identifier)
+    {
+        var lexeme = _lexer.CurrentLexeme;
+        if (lexeme is not ISeparatorLexeme {Value: SeparatorValue.LeftBracket})
+            return new ProcedureStatement(identifier, null);
+        _lexer.GetLexeme();
+        var identifierList = ParseIdentifierList();
+        if (lexeme is not ISeparatorLexeme {Value: SeparatorValue.RightBracket})
+        {
+            throw new CompilerException(_lexer.Coordinate + " ) was expected");
+        }
+        _lexer.GetLexeme();
+
+        return new ProcedureStatement(identifier, identifierList);
+    }
+
+    private INodeStatement ParseAssignmentStatement(Variable identifier)
+    {
+        var lexeme = _lexer.CurrentLexeme;
+        if (lexeme is not IOperatorLexeme {Value: OperatorValue.Assignment})
+            throw new CompilerException(_lexer.Coordinate + " := was expected");
+        _lexer.GetLexeme();
+        var expression = ParseExpression();
+        return new AssignmentStatement(identifier, expression);
+
+    }
+    
+    private INodeStatement ParseStructuredStatement()
+    {
+        var lexeme = _lexer.CurrentLexeme;
+        return lexeme switch
+        {
+            IKeyWordLexeme {Value: KeyWordValue.Begin} => ParseCompoundStatement(),
+            IKeyWordLexeme {Value: KeyWordValue.While} => ParseWhileStatement(),
+            IKeyWordLexeme {Value: KeyWordValue.For} => ParseForStatement(),
+            IKeyWordLexeme {Value: KeyWordValue.If} => ParseIfStatement(),
+            _ => throw new CompilerException(_lexer.Coordinate + " can't find statement for this lexeme")
+        };
+    }
+
+    private INodeStatement ParseCompoundStatement()
+    {
+        var lexeme = _lexer.CurrentLexeme;
+        if (lexeme is not KeyWordLexeme {Value: KeyWordValue.Begin})
+        {
+            throw new CompilerException(_lexer.Coordinate + " begin was expected");
+        }
+        _lexer.GetLexeme();
+
+        var statements = ParseStatementSequence();
+        
+        lexeme = _lexer.CurrentLexeme;
+        if (lexeme is not KeyWordLexeme {Value: KeyWordValue.End})
+        {
+            throw new CompilerException(_lexer.Coordinate + " end was expected");
+        }
+        _lexer.GetLexeme();
+
+        return new CompoundStatement(statements);
+    }
+
+    private INodeStatement ParseWhileStatement()
+    {
+        _lexer.GetLexeme();
+
+        var expression = ParseExpression();
+
+        var lexeme = _lexer.CurrentLexeme;
+        if (lexeme is not IKeyWordLexeme {Value: KeyWordValue.Do})
+        {
+            throw new CompilerException(_lexer.Coordinate + " do was expected");
+        }
+        _lexer.GetLexeme();
+
+        var statement = ParseStatement();
+
+        return new WhileStatement(expression, statement);
+    }
+
+    private INodeStatement ParseForStatement()
+    {
+        _lexer.GetLexeme();
+
+        var lexeme = _lexer.CurrentLexeme;
+        if (lexeme is not IdentifierLexeme identifierLexeme)
+        {
+            throw new CompilerException(_lexer.Coordinate + " identifier was expected");
+        }
+        _lexer.GetLexeme();
+
+        var identifier = new Variable(identifierLexeme.Value);
+
+        lexeme = _lexer.CurrentLexeme;
+        if (lexeme is not OperatorLexeme {Value: OperatorValue.Assignment})
+        {
+            throw new CompilerException(_lexer.Coordinate + " := was expected");
+        }
+        _lexer.GetLexeme();
+
+        var startExpression = ParseExpression();
+
+        lexeme = _lexer.CurrentLexeme;
+        if (lexeme is not IKeyWordLexeme {Value: KeyWordValue.To})
+        {
+            throw new CompilerException(_lexer.Coordinate + " to was expected");
+        }
+        _lexer.GetLexeme();
+
+        var endExpression = ParseExpression();
+
+        lexeme = _lexer.CurrentLexeme;
+        if (lexeme is not IKeyWordLexeme {Value: KeyWordValue.Do})
+        {
+            throw new CompilerException(_lexer.Coordinate + " do was expected");
+        }
+        _lexer.GetLexeme();
+
+        var statement = ParseStatement();
+
+        return new ForStatement(identifier, startExpression, endExpression, statement);
+    }
+
+    private INodeStatement ParseIfStatement()
+    {
+        _lexer.GetLexeme();
+
+        var expression = ParseExpression();
+
+        var lexeme = _lexer.CurrentLexeme;
+        if (lexeme is not IKeyWordLexeme {Value: KeyWordValue.Then})
+        {
+            throw new CompilerException(_lexer.Coordinate + " then was expected");
+        }
+        _lexer.GetLexeme();
+
+        var statement = ParseStatement();
+
+        lexeme = _lexer.CurrentLexeme;
+        if (lexeme is not IKeyWordLexeme {Value: KeyWordValue.Else})
+            return new IfStatement(expression, statement, null);
+        _lexer.GetLexeme();
+        var elsePart = ParseStatement();
+        return new IfStatement(expression, statement, elsePart);
+
     }
     
     public INodeExpression ParseExpression()

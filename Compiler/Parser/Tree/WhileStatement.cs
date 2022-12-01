@@ -1,6 +1,6 @@
 ﻿namespace Compiler.Parser.Tree;
 
-public class WhileStatement
+public class WhileStatement : INodeStatement
 {
     private readonly INodeExpression _condition;
     private readonly INodeStatement _body;
@@ -9,5 +9,22 @@ public class WhileStatement
     {
         _condition = condition;
         _body = body;
+    }
+
+    public string GetPrint(int level)
+    {
+        var result = "";
+        for (int i = 0; i < level * 4; i++)
+        {
+            result += " ";
+        }
+
+        result += "WhileStatement";
+        result += '\n';
+        result += _condition.GetPrint(level + 1);
+        result += '\n';
+        result += _body.GetPrint(level + 1);
+
+        return result;
     }
 }

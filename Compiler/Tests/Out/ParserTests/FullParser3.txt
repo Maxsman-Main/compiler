@@ -1,6 +1,6 @@
 ﻿Program abc
     FunctionDeclaration
-        abc(a:Integer) : Integer
+        abc(var a:Integer) : Integer
             ConstDeclaration
                 abc Integer
                     1

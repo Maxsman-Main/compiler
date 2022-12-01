@@ -1,4 +1,4 @@
 ﻿program abc;
-function abc(a : integer) : integer;
+function abc(var a : integer) : integer;
 const
     abc : integer = 1;
