@@ -1007,12 +1007,77 @@ public class Parser
     
     public INodeExpression ParseExpression()
     {
-        var left = ParseTerm();
+        var leftSimpleExpression = ParseSimpleExpression();
         var lexeme = _lexer.CurrentLexeme;
-        while (lexeme is IOperatorLexeme {Value: OperatorValue.Plus or OperatorValue.Minus} operatorLexeme)
+        if (lexeme is not OperatorLexeme
+            {
+                Value: OperatorValue.Equal or OperatorValue.More or OperatorValue.Less or OperatorValue.MoreEqual
+                or OperatorValue.LessEqual
+            } operatorLexeme) return leftSimpleExpression;
+        _lexer.GetLexeme();
+
+        var rightSimpleExpression = ParseSimpleExpression();
+
+        return new BinOperation(operatorLexeme.Value, leftSimpleExpression, rightSimpleExpression);
+
+    }
+
+    private INodeExpression ParseSimpleExpression()
+    {
+        var lexeme = _lexer.CurrentLexeme;
+        var counter = 0;
+        while (lexeme is IOperatorLexeme {Value: OperatorValue.Minus or OperatorValue.Plus})
+        {
+            if (lexeme is IOperatorLexeme {Value: OperatorValue.Minus})
+            {
+                counter += 1;
+            }
+            _lexer.GetLexeme();
+            lexeme = _lexer.CurrentLexeme;
+        }
+
+        INodeExpression left;
+        if (counter > 0 && counter % 2 != 0)
+        {
+            left = new UnaryOperation(OperatorValue.Minus, ParseTerm());
+        }
+        else
+        {
+            left = ParseTerm();
+        }
+        
+        lexeme = _lexer.CurrentLexeme;
+        while (lexeme is IOperatorLexeme {Value: OperatorValue.Plus or OperatorValue.Minus})
+        {
+            counter = 0;
+            while (lexeme is IOperatorLexeme {Value: OperatorValue.Minus or OperatorValue.Plus})
+            {
+                if (lexeme is IOperatorLexeme {Value: OperatorValue.Minus})
+                {
+                    counter += 1;
+                }
+                _lexer.GetLexeme();
+                lexeme = _lexer.CurrentLexeme;
+            }
+
+            OperatorValue operatorValue;
+            if (counter > 0 && counter % 2 != 0)
+            {
+                operatorValue = OperatorValue.Minus;
+            }
+            else
+            {
+                operatorValue = OperatorValue.Plus;
+            }
+            
+            left = new BinOperation(operatorValue, left, ParseTerm());
+            lexeme = _lexer.CurrentLexeme;
+        }
+
+        while (lexeme is IKeyWordLexeme {Value: KeyWordValue.Or})
         {
             _lexer.GetLexeme();
-            left = new BinOperation(operatorLexeme.Value, left, ParseTerm());
+            left = new BinOperation(OperatorValue.Or, left, ParseTerm());
             lexeme = _lexer.CurrentLexeme;
         }
 
@@ -1029,6 +1094,12 @@ public class Parser
             left = new BinOperation(operatorLexeme.Value, left, ParseFactor());
             lexeme = _lexer.CurrentLexeme;
         }
+        while (lexeme is IKeyWordLexeme {Value: KeyWordValue.And})
+        {
+            _lexer.GetLexeme();
+            left = new BinOperation(OperatorValue.And, left, ParseFactor());
+            lexeme = _lexer.CurrentLexeme;
+        }
 
         return left;
     }
@@ -1041,9 +1112,48 @@ public class Parser
             case IIntegerLexeme integerLexeme:
                 _lexer.GetLexeme();
                 return new Number(integerLexeme.Value);
+            case IFloatLexeme floatLexeme:
+                _lexer.GetLexeme();
+                return new DoubleNumber(floatLexeme.Value);
+            case IStringLexeme stringLexeme:
+                _lexer.GetLexeme();
+                return new Tree.String(stringLexeme.Value);
+            case ICharLexeme charLexeme:
+                _lexer.GetLexeme();
+                return new Tree.Char(charLexeme.Value);
             case IIdentifierLexeme identifierLexeme:
                 _lexer.GetLexeme();
-                return new Variable(identifierLexeme.Value);
+                
+                lexeme = _lexer.CurrentLexeme;
+                if (lexeme is not ISeparatorLexeme {Value: SeparatorValue.LeftBracket})
+                    return new Variable(identifierLexeme.Value);
+                _lexer.GetLexeme();
+
+                lexeme = _lexer.CurrentLexeme;
+                if (lexeme is ISeparatorLexeme {Value: SeparatorValue.RightBracket})
+                {
+                    _lexer.GetLexeme();
+                    return new Call(identifierLexeme.Value, new List<INodeExpression>());
+                }
+                
+                List<INodeExpression> expressions = new() {ParseExpression()};
+
+                lexeme = _lexer.CurrentLexeme;
+                while (lexeme is ISeparatorLexeme {Value: SeparatorValue.Comma})
+                {
+                    _lexer.GetLexeme();
+                    expressions.Add(ParseExpression());
+                    lexeme = _lexer.CurrentLexeme;
+                }
+
+                lexeme = _lexer.CurrentLexeme;
+                if (lexeme is not ISeparatorLexeme {Value: SeparatorValue.RightBracket})
+                {
+                    throw new CompilerException(_lexer.Coordinate + " ) was expected");
+                }
+                _lexer.GetLexeme();
+
+                return new Call(identifierLexeme.Value, expressions);
             default:
                 if (lexeme is not ISeparatorLexeme {Value: SeparatorValue.LeftBracket})
                 {

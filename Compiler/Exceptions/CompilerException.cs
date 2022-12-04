@@ -16,3 +16,9 @@ public class EmptyBlockException : CompilerException
     public EmptyBlockException(string message)
         : base(message) { }
 }
+
+public class EmptyArgumentsException : CompilerException
+{
+    public EmptyArgumentsException(string message):
+        base(message){}
+}

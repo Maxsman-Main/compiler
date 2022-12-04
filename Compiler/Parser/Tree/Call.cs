@@ -3,9 +3,9 @@
 public class Call : INodeExpression
 {
     private readonly string _name;
-    private readonly List<INode> _arguments;
+    private readonly List<INodeExpression> _arguments;
 
-    public Call(string name, List<INode> arguments)
+    public Call(string name, List<INodeExpression> arguments)
     {
         _name = name;
         _arguments = arguments;
@@ -20,6 +20,12 @@ public class Call : INodeExpression
         }
 
         value += _name;
+        value += "\n";
+        for (int i = 0; i < (level + 1) * 4; i++)
+        {
+            value += " ";
+        }
+        value += "arguments";
         value += "\n";
         for(int i = 0; i < _arguments.Count; i++)
         {

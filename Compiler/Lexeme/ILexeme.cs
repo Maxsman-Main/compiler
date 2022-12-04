@@ -40,4 +40,14 @@ namespace Compiler.Lexeme
     {
         public KeyWordValue Value { get; }
     }
+
+    public interface IStringLexeme
+    {
+        public string Value { get; }
+    }
+
+    public interface ICharLexeme
+    {
+        public string Value { get; }
+    }
 }

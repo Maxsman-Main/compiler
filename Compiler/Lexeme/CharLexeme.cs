@@ -3,7 +3,7 @@ using Compiler.Structs;
 
 namespace Compiler.Lexeme;
 
-public class CharLexeme : ILexeme
+public class CharLexeme : ILexeme, ICharLexeme
 {
     private const string _name = "Char";
     private readonly Coordinate _coordinate;

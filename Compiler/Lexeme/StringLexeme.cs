@@ -2,7 +2,7 @@
 
 namespace Compiler.Lexeme;
 
-public class StringLexeme : ILexeme
+public class StringLexeme : ILexeme, IStringLexeme
 {
     private const string _name = "String";
     private readonly Coordinate _coordinate;

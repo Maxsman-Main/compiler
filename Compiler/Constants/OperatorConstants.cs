@@ -15,6 +15,8 @@ public enum OperatorValue
     LessEqual,
     Point,
     Range,
+    And,
+    Or,
     Null
 }
 
@@ -60,7 +62,9 @@ public static class OperatorConstants
         {OperatorValue.MoreEqual, ">="},
         {OperatorValue.LessEqual, "<="},
         {OperatorValue.Point, "."},
-        {OperatorValue.Range, ".."}
+        {OperatorValue.Range, ".."},
+        {OperatorValue.And, "and"},
+        {OperatorValue.Or, "or" }
     };
 
     public static char Column => _column;
