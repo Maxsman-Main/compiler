@@ -826,7 +826,11 @@ public class Parser
         while (lexeme is ISeparatorLexeme {Value: SeparatorValue.Semicolon})
         {
             _lexer.GetLexeme();
-            statements.Add(ParseStatement());
+            var statement = ParseStatement();
+            if (statement is not NullStatement)
+            {
+                statements.Add(statement);
+            }
             lexeme = _lexer.CurrentLexeme;
         }
 
@@ -841,7 +845,7 @@ public class Parser
             IIdentifierLexeme => ParseSimpleStatement(),
             IKeyWordLexeme {Value: KeyWordValue.Begin or KeyWordValue.While or KeyWordValue.For or KeyWordValue.If} =>
                 ParseStructuredStatement(),
-            _ => throw new CompilerException(_lexer.Coordinate + " identifier or begin or end or while or for or if was expected")
+            _ => new NullStatement()
         };
     }
 
@@ -865,14 +869,17 @@ public class Parser
         if (lexeme is not ISeparatorLexeme {Value: SeparatorValue.LeftBracket})
             return new ProcedureStatement(identifier, null);
         _lexer.GetLexeme();
-        var identifierList = ParseIdentifierList();
+        
+        var expressionList = ParseExpressionList();
+        
+        lexeme = _lexer.CurrentLexeme;
         if (lexeme is not ISeparatorLexeme {Value: SeparatorValue.RightBracket})
         {
             throw new CompilerException(_lexer.Coordinate + " ) was expected");
         }
         _lexer.GetLexeme();
 
-        return new ProcedureStatement(identifier, identifierList);
+        return new ProcedureStatement(identifier, expressionList);
     }
 
     private INodeStatement ParseAssignmentStatement(Variable identifier)
@@ -995,7 +1002,6 @@ public class Parser
         _lexer.GetLexeme();
 
         var statement = ParseStatement();
-
         lexeme = _lexer.CurrentLexeme;
         if (lexeme is not IKeyWordLexeme {Value: KeyWordValue.Else})
             return new IfStatement(expression, statement, null);

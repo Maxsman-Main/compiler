@@ -3,9 +3,9 @@
 public class ProcedureStatement : INodeStatement
 {
     private readonly Variable _identifier;
-    private readonly List<Variable>? _parameters;
+    private readonly List<INodeExpression>? _parameters;
 
-    public ProcedureStatement(Variable identifier, List<Variable>? parameters)
+    public ProcedureStatement(Variable identifier, List<INodeExpression>? parameters)
     {
         _identifier = identifier;
         _parameters = parameters;
@@ -26,8 +26,8 @@ public class ProcedureStatement : INodeStatement
         if (_parameters == null) return result;
         foreach (var parameter in _parameters)
         {
-            result += parameter.GetPrint(level + 1);
-            result += 'n';
+            result += parameter.GetPrint(level + 2);
+            result += '\n';
         }
 
         return result;

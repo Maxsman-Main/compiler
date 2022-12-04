@@ -5,7 +5,7 @@ public class ForStatement : INodeStatement
     private readonly Variable _identifier;
     private readonly INodeExpression _startExpression;
     private readonly INodeExpression _endExpression;
-    private readonly INodeStatement _statement;
+    private readonly INodeStatement? _statement;
 
     public ForStatement(Variable identifier, INodeExpression startExpression, INodeExpression endExpression,
         INodeStatement statement)
@@ -13,6 +13,11 @@ public class ForStatement : INodeStatement
         _identifier = identifier;
         _startExpression = startExpression;
         _endExpression = endExpression;
+        if (statement is NullStatement)
+        {
+            _statement = null;
+        }
+
         _statement = statement;
     }
     
@@ -31,8 +36,7 @@ public class ForStatement : INodeStatement
         result += _startExpression.GetPrint(level + 1);
         result += '\n';
         result += _endExpression.GetPrint(level + 1);
-        result += '\n';
-        result += _statement.GetPrint(level + 1);
+        result += _statement is not null ? '\n' + _statement.GetPrint(level + 1) : "";
         return result;
     }
 }

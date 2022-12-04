@@ -3,12 +3,21 @@
 public class IfStatement : INodeStatement
 {
     private readonly INodeExpression _condition;
-    private readonly INodeStatement _body;
+    private readonly INodeStatement? _body;
     private readonly INodeStatement? _elsePart;
     
     public IfStatement(INodeExpression condition, INodeStatement body, INodeStatement? elsePart)
     {
         _condition = condition;
+        if (body is NullStatement)
+        {
+            _body = null;
+        }
+        if (elsePart is NullStatement)
+        {
+            _elsePart = null;
+        }
+
         _body = body;
         _elsePart = elsePart;
     }
@@ -24,10 +33,8 @@ public class IfStatement : INodeStatement
         result += "IfStatement";
         result += '\n';
         result += _condition.GetPrint(level + 1);
-        result += '\n';
-        result += _body.GetPrint(level + 1);
-        result += '\n';
-        result += _elsePart?.GetPrint(level + 1);
+        result += _body is not null ? '\n' + _body.GetPrint(level + 1) : "";
+        result += _elsePart is not null ? '\n' + _elsePart.GetPrint(level + 1) : "";
         return result;
     }
 }

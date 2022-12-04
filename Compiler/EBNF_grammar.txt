@@ -17,7 +17,7 @@ Declarations
 <one_var_declaration> ::= <id> {"," <id>} ":" <type> ";" | <id> ":" <type> "=" <exp> ";"
 
 <type_declaration> ::= "type" <one_type_declaration> {<one_type_declaration>}
-<one_type_declaration> ::= <id> "=" <type> "
+<one_type_declaration> ::= <id> "=" <type>
 
 <function_declaration> ::= <function_header> {<const_declaration> | <var_declaration> | <type_declaration>} <compound_statement> ";"
 <function_header> ::= "function" <id> "(" <parameters> ")" ":" <type> ";"
@@ -46,8 +46,8 @@ Statements
 Expressions
 <expression> ::= <simple_expression> ["=" | "<" | "<=" | ">" | ">=" <simple_expression>]
 <simple_expression> ::= {"+" | "-"} <term> {"+" | "-" | "or" <term>}
-<term> ::= <factor> {"*" | "/" | "and"  <factor>} ["." <id>]
-<factor> ::= <variable> | <number> | <string> | <char> | <double> | "("<expression>")" | <call> | <id> "." <id>
+<term> ::= <factor> {("*" | "/" | "and"  <factor>) | "." <id>}
+<factor> ::= <variable> | <number> | <string> | <char> | <double> | "("<expression>")" | <call> | <id> "." <id> | "(" <expression> ")" "." <id>
 <call> ::= <id> "(" [ <expression> {"," expression} ] ")"
 
 <variable> ::= <id> ["[" <expression_list> "]"]
