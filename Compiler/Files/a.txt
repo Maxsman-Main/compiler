@@ -1,7 +1,7 @@
 ﻿program abc;
 begin
-    if true then
+    if 1 then
     begin
-        test := call(a, a + 1)
+        test  := a.b + test2[a.b, call(1, 2)]
     end
 end.

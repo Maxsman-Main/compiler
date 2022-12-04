@@ -45,7 +45,7 @@ public static class OperatorConstants
         {"<=", OperatorValue.LessEqual},
         {">=", OperatorValue.MoreEqual},
         {".", OperatorValue.Point},
-        {"..", OperatorValue.Range}
+        {"..", OperatorValue.Range},
     };
     
     private static Dictionary<OperatorValue, string> _operatorSymbols = new Dictionary<OperatorValue, string>
@@ -64,7 +64,7 @@ public static class OperatorConstants
         {OperatorValue.Point, "."},
         {OperatorValue.Range, ".."},
         {OperatorValue.And, "and"},
-        {OperatorValue.Or, "or" }
+        {OperatorValue.Or, "or" },
     };
 
     public static char Column => _column;

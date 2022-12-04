@@ -46,18 +46,12 @@ Statements
 Expressions
 <expression> ::= <simple_expression> ["=" | "<" | "<=" | ">" | ">=" <simple_expression>]
 <simple_expression> ::= {"+" | "-"} <term> {"+" | "-" | "or" <term>}
-<term> ::= <factor> {"*" | "/" | "and"  <factor>}
-<factor> ::= <id> | <number> | <string> | <char> | <double> | "("<expression>")" | <call>
-<call> ::= <id> "(" [ <expression> {"," expression} ] ")" 
-<variable> ::= <entire_variable> | <component_variable> | <referenced_variable>
-<entire_variable> ::= <id>
-<component_variable> ::= <indexed_variable> | <field_designator>
+<term> ::= <factor> {"*" | "/" | "and"  <factor>} ["." <id>]
+<factor> ::= <variable> | <number> | <string> | <char> | <double> | "("<expression>")" | <call> | <id> "." <id>
+<call> ::= <id> "(" [ <expression> {"," expression} ] ")"
 
-<indexed_variable> ::= <array_variable> "[" <expression_list "]"
-<array_variable> ::= <variable>
-
-<field_designator> ::= <record_variable> "." <field_identifier>
-<record_variable> ::= <variable>
+<variable> ::= <id> ["[" <expression_list> "]"]
+<expression_list> ::= <expression> {"," <expression>}
 
 Types
 <type> ::=  <primitive_type> | <array_type> | <record_type> | <type_identifier>

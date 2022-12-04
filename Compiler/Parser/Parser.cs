@@ -1009,16 +1009,23 @@ public class Parser
     {
         var leftSimpleExpression = ParseSimpleExpression();
         var lexeme = _lexer.CurrentLexeme;
-        if (lexeme is not OperatorLexeme
+        switch (lexeme)
+        {
+            case OperatorLexeme
             {
                 Value: OperatorValue.Equal or OperatorValue.More or OperatorValue.Less or OperatorValue.MoreEqual
                 or OperatorValue.LessEqual
-            } operatorLexeme) return leftSimpleExpression;
-        _lexer.GetLexeme();
+            } operatorLexeme:
+            {
+                _lexer.GetLexeme();
 
-        var rightSimpleExpression = ParseSimpleExpression();
+                var rightSimpleExpression = ParseSimpleExpression();
 
-        return new BinOperation(operatorLexeme.Value, leftSimpleExpression, rightSimpleExpression);
+                return new BinOperation(operatorLexeme.Value, leftSimpleExpression, rightSimpleExpression);
+            } 
+        }
+
+        return leftSimpleExpression;
 
     }
 
@@ -1069,7 +1076,6 @@ public class Parser
             {
                 operatorValue = OperatorValue.Plus;
             }
-            
             left = new BinOperation(operatorValue, left, ParseTerm());
             lexeme = _lexer.CurrentLexeme;
         }
@@ -1088,19 +1094,37 @@ public class Parser
     {
         var left = ParseFactor();
         var lexeme = _lexer.CurrentLexeme;
-        while (lexeme is IOperatorLexeme {Value: OperatorValue.Multiplication or OperatorValue.Div} operatorLexeme)
+        while (lexeme is IOperatorLexeme {Value: OperatorValue.Multiplication or OperatorValue.Div} | lexeme is IKeyWordLexeme{Value: KeyWordValue.And} | lexeme is SeparatorLexeme{Value: SeparatorValue.Point})
         {
-            _lexer.GetLexeme();
-            left = new BinOperation(operatorLexeme.Value, left, ParseFactor());
-            lexeme = _lexer.CurrentLexeme;
-        }
-        while (lexeme is IKeyWordLexeme {Value: KeyWordValue.And})
-        {
-            _lexer.GetLexeme();
-            left = new BinOperation(OperatorValue.And, left, ParseFactor());
-            lexeme = _lexer.CurrentLexeme;
-        }
+            switch (lexeme)
+            {
+                case IKeyWordLexeme:
+                    _lexer.GetLexeme();
+                    left = new BinOperation(OperatorValue.And, left, ParseFactor());
+                    break;
+                case IOperatorLexeme operatorLexeme:
+                    _lexer.GetLexeme();
+                    left = new BinOperation(operatorLexeme.Value, left, ParseFactor());
+                    break;
+                case ISeparatorLexeme:
+                {
+                    _lexer.GetLexeme();
+                
+                    lexeme = _lexer.CurrentLexeme;
+                    if (lexeme is not IIdentifierLexeme identifierLexeme)
+                    {
+                        throw  new CompilerException(_lexer.Coordinate + " identifier was expected");
+                    }
+                    _lexer.GetLexeme();
 
+                    left = new RecordAccess(left, identifierLexeme.Value);
+                    break;
+                }
+            }
+
+            lexeme = _lexer.CurrentLexeme;
+        }
+        
         return left;
     }
 
@@ -1123,6 +1147,36 @@ public class Parser
                 return new Tree.Char(charLexeme.Value);
             case IIdentifierLexeme identifierLexeme:
                 _lexer.GetLexeme();
+
+                lexeme = _lexer.CurrentLexeme;
+                if (lexeme is ISeparatorLexeme {Value: SeparatorValue.Point})
+                {
+                    _lexer.GetLexeme();
+
+                    lexeme = _lexer.CurrentLexeme;
+                    if (lexeme is not IIdentifierLexeme identifierLexemeRecord)
+                        throw new CompilerException(_lexer.Coordinate + " identifier was expected");
+                    _lexer.GetLexeme();
+                    return new RecordAccess(new Variable(identifierLexeme.Value), identifierLexemeRecord.Value);
+                }
+
+                lexeme = _lexer.CurrentLexeme;
+                if (lexeme is ISeparatorLexeme {Value: SeparatorValue.SquareLeftBracket})
+                {
+                    _lexer.GetLexeme();
+                    
+                    var expressionList = ParseExpressionList();
+
+                    lexeme = _lexer.CurrentLexeme;
+                    if (lexeme is not ISeparatorLexeme {Value: SeparatorValue.SquareRightBracket})
+                    {
+                        throw new CompilerException(_lexer.Coordinate + " ] was expected");
+                    }
+                    _lexer.GetLexeme();
+
+                    return new Variable(identifierLexeme.Value, expressionList);
+                }
+                
                 
                 lexeme = _lexer.CurrentLexeme;
                 if (lexeme is not ISeparatorLexeme {Value: SeparatorValue.LeftBracket})
@@ -1160,16 +1214,48 @@ public class Parser
                     throw new CompilerException(_lexer.Coordinate + " factor was expected");
                 }
                 _lexer.GetLexeme();
+                
                 var expression = ParseExpression();
+                
                 var nextToken = _lexer.CurrentLexeme;
                 if (nextToken is not ISeparatorLexeme {Value: SeparatorValue.RightBracket})
                 {
                     throw new CompilerException(_lexer.Coordinate + " ) was expected");
                 }
-                
                 _lexer.GetLexeme();
 
+                nextToken = _lexer.CurrentLexeme;
+                if (nextToken is ISeparatorLexeme {Value: SeparatorValue.Point})
+                {
+                    _lexer.GetLexeme();
+                    nextToken = _lexer.CurrentLexeme;
+                    if (nextToken is not IIdentifierLexeme identifierLexeme)
+                    {
+                        throw new Exception(_lexer.Coordinate + " identifier was expected");
+                    }
+                    _lexer.GetLexeme();
+                    
+                    return new RecordAccess(expression, identifierLexeme.Value);
+                }
+                
                 return expression;
         }
+    }
+
+    private List<INodeExpression> ParseExpressionList()
+    {
+        
+        var expression = ParseExpression();
+        List<INodeExpression> expressions = new() {expression};
+
+        var lexeme = _lexer.CurrentLexeme;
+        while (lexeme is ISeparatorLexeme {Value: SeparatorValue.Comma})
+        {
+            _lexer.GetLexeme();
+            expressions.Add(ParseExpression());
+            lexeme = _lexer.CurrentLexeme;
+        }
+
+        return expressions;
     }
 }
