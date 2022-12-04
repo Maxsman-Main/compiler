@@ -32,10 +32,10 @@ public class VarDeclaration : INodeDeclaration
         for(int i = 0; i < _varDeclarations.Count; i++)
         {
             result += _varDeclarations[i].Identifier.GetPrint(level + 1);
-            result += " ";
-            result += _varDeclarations[i].Type.GetPrint(0);
             result += "\n";
-            result += _varDeclarations[i].Expression?.GetPrint(level + 2);
+            result += _varDeclarations[i].Type.GetPrint(level + 2);
+            result += "\n";
+            result += _varDeclarations[i].Expression?.GetPrint(level + 3);
             if (i != _varDeclarations.Count - 1 && _varDeclarations[i].Expression is not null)
             {
                 result += "\n";

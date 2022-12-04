@@ -1,4 +1,5 @@
-﻿using Compiler.Lexeme;
+﻿using Compiler.Exceptions;
+using Compiler.Lexeme;
 using Compiler.LexicalAnalyzerStateMachine;
 using Compiler.Tests;
 
@@ -58,7 +59,14 @@ namespace Compiler
                     var lexer = new LexicalAnalyzer();
                     lexer.SetFile("../../../Files/" + args[1]);
                     var parser = new Parser.Parser(lexer);
-                    Console.WriteLine(parser.ParseProgram().GetPrint(0));
+                    try
+                    {
+                        Console.WriteLine(parser.ParseProgram().GetPrint(0));
+                    }
+                    catch (CompilerException exception)
+                    {
+                        Console.WriteLine(exception.Message);
+                    }
                     break;
                 }
                 default:

@@ -29,7 +29,9 @@ namespace Compiler.LexicalAnalyzerStateMachine
             {
                 _reader.IncreaseColumn();
                 _wordBuffer = "";
-                return _lexemeFactory.CreateLexemeByState(new OperatorEndState(), _reader.Coordinate, "..");
+                var lexemeRange = _lexemeFactory.CreateLexemeByState(new OperatorEndState(), _reader.Coordinate, "..");
+                _currentLexeme = lexemeRange;
+                return lexemeRange;
             }
 
             _currentState = new StartState();
@@ -54,7 +56,9 @@ namespace Compiler.LexicalAnalyzerStateMachine
                     }
 
                     _reader.IncreaseColumn();
-                    return _lexemeFactory.CreateLexemeByState(new DecimalEndState(), _reader.Coordinate, decimalPart);
+                    var lexemeDecimal = _lexemeFactory.CreateLexemeByState(new DecimalEndState(), _reader.Coordinate, decimalPart);
+                    _currentLexeme = lexemeDecimal;
+                    return lexemeDecimal;
                 }
                 
                 if (_currentState is CommentEndState)

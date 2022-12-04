@@ -37,14 +37,17 @@ public enum KeyWordValue
     Else,
     Mod,
     Repeat,
-    Integer
+    Integer,
+    Double,
+    String,
+    Char
 }
 
 public static class KeyWordsConstants
 {
     private static List<string> _keyWords = new()
     {
-        "and", "end", "nil", "set", "integer",
+        "and", "end", "nil", "set", "integer", "double", "string", "char",
         "array", "file", "not", "then",
         "begin", "for", "of", "to",
         "case", "function", "or", "type",
@@ -53,7 +56,7 @@ public static class KeyWordsConstants
         "do", "in", "program", "while",
         "downto", "label", "record", "with",
         "else", "mod", "repeat",
-        "AND", "END", "NIL", "SET", "INTEGER",
+        "AND", "END", "NIL", "SET", "INTEGER", "DOUBLE", "STRING", "CHAR",
         "ARRAY", "FILE", "NOT", "THEN",
         "BEGIN", "FOR", "OF", "TO",
         "CASE", "FUNCTION", "OR", "TYPE",
@@ -71,6 +74,9 @@ public static class KeyWordsConstants
         {"nil", KeyWordValue.Nil},
         {"set", KeyWordValue.Set},
         {"integer", KeyWordValue.Integer},
+        {"double", KeyWordValue.Double},
+        {"string", KeyWordValue.String},
+        {"char", KeyWordValue.Char},
         {"array", KeyWordValue.Array},
         {"file", KeyWordValue.File},
         {"not", KeyWordValue.Not},
@@ -107,6 +113,9 @@ public static class KeyWordsConstants
         {"NIL", KeyWordValue.Nil},
         {"SET", KeyWordValue.Set},
         {"INTEGER", KeyWordValue.Integer},
+        {"DOUBLE", KeyWordValue.Double},
+        {"STRING", KeyWordValue.String},
+        {"CHAR", KeyWordValue.Char},
         {"ARRAY", KeyWordValue.Array},
         {"FILE", KeyWordValue.File},
         {"NOT", KeyWordValue.Not},
