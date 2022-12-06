@@ -32,11 +32,14 @@ public class ConstDeclaration : INodeDeclaration
         for(int i = 0; i < _constDeclarations.Count; i++)
         {
             result += _constDeclarations[i].Identifier.GetPrint(level + 1);
-            result += " ";
-            result += _constDeclarations[i].Type.GetPrint(0);
             result += "\n";
-            result += _constDeclarations[i].Expression.GetPrint(level + 2);
+            result += _constDeclarations[i].Type.GetPrint(level + 2);
             result += "\n";
+            result += _constDeclarations[i].Expression.GetPrint(level + 3);
+            if (i != _constDeclarations.Count - 1)
+            {
+                result += "\n";
+            }
         }
 
         return result;

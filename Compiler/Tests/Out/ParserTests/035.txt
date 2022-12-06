@@ -1,0 +1,11 @@
+﻿Program abc
+    FunctionDeclaration
+        abc(a:Integer) : Integer
+            VarDeclaration
+                a
+                    Integer
+                        +
+                            2
+                            5
+            CompoundStatement
+    CompoundStatement

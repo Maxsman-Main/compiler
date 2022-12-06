@@ -1,0 +1,8 @@
+﻿Program abc
+    ConstDeclaration
+        a
+            Integer
+                +
+                    1
+                    2
+    CompoundStatement

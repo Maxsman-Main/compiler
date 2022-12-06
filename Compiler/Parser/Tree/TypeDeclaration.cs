@@ -31,9 +31,12 @@ public class TypeDeclaration : INodeDeclaration
         for(int i = 0; i < _typeDeclarations.Count; i++)
         {
             result += _typeDeclarations[i].Identifier.GetPrint(level + 1);
-            result += " ";
-            result += _typeDeclarations[i].Type.GetPrint(0); 
             result += "\n";
+            result += _typeDeclarations[i].Type.GetPrint(level + 2);
+            if (i != _typeDeclarations.Count - 1)
+            {
+                result += "\n";
+            }
         }
 
         return result;

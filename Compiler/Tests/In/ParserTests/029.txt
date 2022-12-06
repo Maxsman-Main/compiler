@@ -1,0 +1,6 @@
+﻿program abc;
+function abc(var a : integer; var b : integer) : integer;
+    begin
+    end;
+begin
+end.

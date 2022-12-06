@@ -26,7 +26,11 @@ public class Call : INodeExpression
             value += " ";
         }
         value += "arguments";
-        value += "\n";
+        if (_arguments.Count != 0)
+        {
+            value += "\n";
+        }
+
         for(int i = 0; i < _arguments.Count; i++)
         {
             value += _arguments[i].GetPrint(level + 1);

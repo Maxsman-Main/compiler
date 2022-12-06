@@ -1,0 +1,8 @@
+﻿program abc;
+function abc(a : integer) : integer;
+    var
+        a : integer = 2 + 5;
+    begin
+    end;
+begin
+end.

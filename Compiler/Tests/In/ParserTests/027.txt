@@ -1,4 +1,6 @@
 ﻿program abc;
 function abc(var a : integer) : integer;
-const
-    abc : integer = 1;
+    begin
+    end;
+begin
+end.

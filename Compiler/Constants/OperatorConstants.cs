@@ -17,6 +17,7 @@ public enum OperatorValue
     Range,
     And,
     Or,
+    Ref,
     Null
 }
 
@@ -28,7 +29,7 @@ public static class OperatorConstants
     private static char _lessSign = '<';
     private static List<char> _operators = new List<char>
     {
-        '+', '-', '=', '*', '/', '=', '>', '<', ':'
+        '+', '-', '=', '*', '/', '=', '>', '<', ':', '^'
     };
 
     private static Dictionary<string, OperatorValue> _operatorValues = new Dictionary<string, OperatorValue>
@@ -46,6 +47,7 @@ public static class OperatorConstants
         {">=", OperatorValue.MoreEqual},
         {".", OperatorValue.Point},
         {"..", OperatorValue.Range},
+        {"^", OperatorValue.Ref}
     };
     
     private static Dictionary<OperatorValue, string> _operatorSymbols = new Dictionary<OperatorValue, string>
@@ -65,6 +67,7 @@ public static class OperatorConstants
         {OperatorValue.Range, ".."},
         {OperatorValue.And, "and"},
         {OperatorValue.Or, "or" },
+        {OperatorValue.Ref, "^"}
     };
 
     public static char Column => _column;

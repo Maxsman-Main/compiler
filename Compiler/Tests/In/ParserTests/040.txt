@@ -1,0 +1,5 @@
+﻿program abc;
+var
+    a : char = 's';
+begin
+end.

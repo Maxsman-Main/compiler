@@ -1,0 +1,5 @@
+﻿program abc;
+var
+    a : integer = 1 * -2;
+begin
+end.

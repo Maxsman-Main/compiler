@@ -1,8 +1,4 @@
 ﻿program abc;
 begin
-    if true then
-        if true then
-            begin
-                a := b + 1;;;;;;
-            end;;;;;;
+    a := ^sama
 end.

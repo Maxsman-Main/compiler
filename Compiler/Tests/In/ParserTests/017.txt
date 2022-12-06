@@ -1,0 +1,5 @@
+﻿program abc;
+const
+    a : Integer = 1 + 2;
+begin
+end.

@@ -6,7 +6,7 @@
 
 
 Program
-<program> ::= ["program" <id> ";"] {<declarations>} <compound_statement> "."
+<program> ::= ["program" <id> ";"] { <declarations> } <compound_statement> "."
 
 Declarations
 <declarations> ::= <const_declaration> | <var_declaration> | <type_declaration> | <function_declaration> | <procedure_declaration>
@@ -65,3 +65,5 @@ Types
 
 //
 <id_list> ::= <id> {"," <id>}
+
+#<expr> :=

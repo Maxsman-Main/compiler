@@ -1,0 +1,5 @@
+﻿Program abc
+    FunctionDeclaration
+        abc(a:Integer, b:Integer, c:Integer) : Integer
+            CompoundStatement
+    CompoundStatement

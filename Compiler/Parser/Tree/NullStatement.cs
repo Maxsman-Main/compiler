@@ -4,6 +4,6 @@ public class NullStatement : INodeStatement
 {
     public string GetPrint(int level)
     {
-        return null;
+        return "";
     }
 }

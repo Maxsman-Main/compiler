@@ -1,0 +1,6 @@
+﻿program abc;
+var
+    a : integer;
+    b : integer;
+begin
+end.

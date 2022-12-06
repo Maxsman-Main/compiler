@@ -1,0 +1,6 @@
+﻿program abc;
+function abc() : integer;
+    begin
+    end;
+begin
+end.

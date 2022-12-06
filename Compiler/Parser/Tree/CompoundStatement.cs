@@ -11,8 +11,6 @@ public class CompoundStatement : INodeStatement
     
     public string GetPrint(int level)
     {
-        Console.WriteLine(_body.Count);
-    
         var result = "";
         for (int i = 0; i < level * 4; i++)
         {
@@ -20,7 +18,12 @@ public class CompoundStatement : INodeStatement
         }
 
         result += "CompoundStatement";
-        result += '\n';
+
+        if (_body.Count > 0)
+        {
+            Console.WriteLine(_body[0].GetPrint(0));
+            result += '\n';
+        }
 
         for (int i = 0; i < _body.Count; i++)
         {

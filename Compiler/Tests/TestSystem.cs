@@ -107,10 +107,7 @@ public class TestSystem
                 var analyzer = new LexicalAnalyzer();
                 analyzer.SetFile(files[i]);
                 var parser = new Parser.Parser(analyzer);
-                while (analyzer.CurrentLexeme is not EndOfFileLexeme)
-                {
-                    _writer.WriteLine(parser.ParseProgram().GetPrint(0));
-                }
+                _writer.WriteLine(parser.ParseProgram().GetPrint(0));
 
                 _writer.CloseFile();
                 results.Add(CompareFiles(outFiles[i]));

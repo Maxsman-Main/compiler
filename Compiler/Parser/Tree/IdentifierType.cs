@@ -4,7 +4,6 @@ public class IdentifierType : INodeType
 {
     private readonly Variable _identifier;
 
-
     public IdentifierType(Variable identifier)
     {
         _identifier = identifier;

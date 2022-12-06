@@ -1,0 +1,6 @@
+﻿program abc;
+procedure abc(a : integer; var d : integer; b : integer; var c : integer);
+    begin
+    end;
+begin
+end.

@@ -1,0 +1,6 @@
+﻿program abc;
+type
+    a = Integer;
+    b = Integer;
+begin
+end.

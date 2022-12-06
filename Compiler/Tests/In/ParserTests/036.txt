@@ -1,0 +1,16 @@
+﻿program abc;
+var
+    a : integer;
+    b : integer;
+const
+    c : integer = 1 + 2;
+type
+    d = integer;
+function abc() : integer;
+    begin
+    end;
+procedure bca();
+    begin
+    end;
+begin
+end.

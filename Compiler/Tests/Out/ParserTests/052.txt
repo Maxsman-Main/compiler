@@ -1,0 +1,13 @@
+﻿Program abc
+    VarDeclaration
+        a
+            Integer
+                +
+                    -
+                        *
+                            *
+                                1
+                                2
+                            3
+                    1
+    CompoundStatement

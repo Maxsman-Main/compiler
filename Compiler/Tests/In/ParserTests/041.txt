@@ -1,0 +1,5 @@
+﻿program abc;
+var
+    a : double = 123.123;
+begin
+end.

@@ -345,14 +345,14 @@ public class Parser
         lexeme = _lexer.CurrentLexeme;
         if (lexeme is not ISeparatorLexeme {Value: SeparatorValue.RightBracket})
         {
-            throw new CompilerException(_lexer.Coordinate + ") was expected");
+            throw new CompilerException(_lexer.Coordinate + " ) was expected");
         }
         _lexer.GetLexeme();
 
         lexeme = _lexer.CurrentLexeme;
         if (lexeme is not IOperatorLexeme {Value: OperatorValue.DoublePoint})
         {
-            throw new CompilerException(_lexer.Coordinate + ": was expected");
+            throw new CompilerException(_lexer.Coordinate + " : was expected");
         }
         _lexer.GetLexeme();
         
@@ -518,6 +518,7 @@ public class Parser
         while (lexeme is ISeparatorLexeme {Value: SeparatorValue.Semicolon})
         {
             _lexer.GetLexeme();
+            lexeme = _lexer.CurrentLexeme;
             if (lexeme is KeyWordLexeme {Value: KeyWordValue.Var})
             {
                 _lexer.GetLexeme();
@@ -821,7 +822,12 @@ public class Parser
 
     private List<INodeStatement> ParseStatementSequence()
     {
-        List<INodeStatement> statements = new() {ParseStatement()};
+        var statementFirst = ParseStatement();
+        List<INodeStatement> statements = new();
+        if (statementFirst is not NullStatement)
+        {
+            statements.Add(statementFirst);
+        }
         var lexeme = _lexer.CurrentLexeme;
         while (lexeme is ISeparatorLexeme {Value: SeparatorValue.Semicolon})
         {

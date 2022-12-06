@@ -43,19 +43,18 @@ public class ProcedureDeclaration : INodeDeclaration
             }
         }
         result += ")";
-        if (_declarations.Count != 0)
+        result += "\n";
+
+        for (var index = 0; index < _declarations.Count; index++)
         {
-            result += "\n";
+            result += _declarations[index].GetPrint(level + 2);
+            if (index != _declarations.Count)
+            {
+                result += "\n";
+            }
         }
 
-        foreach (var declaration in _declarations)
-        {
-            result += declaration.GetPrint(level + 2);
-        }
-
-        result += _statements.GetPrint(level + 1);
-
-        result += '\n';
+        result += _statements.GetPrint(level + 2);
         return result;
     }
 }

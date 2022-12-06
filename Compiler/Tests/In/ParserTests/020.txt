@@ -1,0 +1,6 @@
+﻿program abc;
+const
+    a : Integer = 1 + 2;
+    b : Integer = 3 + 4;
+begin
+end.

@@ -1,0 +1,6 @@
+﻿Program abc
+    VarDeclaration
+        a
+            Double
+                123.123
+    CompoundStatement

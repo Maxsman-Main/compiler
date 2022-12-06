@@ -1,0 +1,5 @@
+﻿Program abc
+    ProcedureDeclaration
+        abc(a:Integer, var d:Integer, b:Integer, var c:Integer)
+            CompoundStatement
+    CompoundStatement

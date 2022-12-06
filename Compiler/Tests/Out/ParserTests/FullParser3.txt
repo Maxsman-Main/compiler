@@ -1,8 +1,0 @@
-﻿Program abc
-    FunctionDeclaration
-        abc(var a:Integer) : Integer
-            ConstDeclaration
-                abc Integer
-                    1
-
-

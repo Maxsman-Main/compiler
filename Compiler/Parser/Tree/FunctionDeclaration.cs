@@ -85,8 +85,9 @@ public class FunctionDeclaration : INodeDeclaration
             result += declaration.GetPrint(level + 2);
         }
 
-        result += _block.GetPrint(level + 1);
-        result += '\n';
+        result += "\n";
+
+        result += _block.GetPrint(level + 2);
         return result;
     }
 }
