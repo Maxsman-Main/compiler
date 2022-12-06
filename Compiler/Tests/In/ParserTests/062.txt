@@ -1,0 +1,5 @@
+﻿program abc;
+var
+    a : integer = 1  +- cba(0, dca()) * (2 + 3 * 4);
+begin
+end.

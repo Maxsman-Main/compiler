@@ -1,0 +1,10 @@
+﻿Program abc
+    VarDeclaration
+        a
+            Integer
+                .
+                    arr[]
+                        indexes
+                            0
+                    k
+    CompoundStatement

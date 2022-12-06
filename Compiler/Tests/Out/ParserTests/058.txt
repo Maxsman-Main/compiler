@@ -1,0 +1,8 @@
+﻿Program abc
+    VarDeclaration
+        a
+            Integer
+                abc[]
+                    indexes
+                        0
+    CompoundStatement

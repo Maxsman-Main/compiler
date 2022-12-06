@@ -1,0 +1,5 @@
+﻿program abc;
+var
+    a : integer = abc[0];
+begin
+end.

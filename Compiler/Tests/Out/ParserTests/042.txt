@@ -2,6 +2,6 @@
     VarDeclaration
         a
             Double
-                abc
+                abc()
                     arguments
     CompoundStatement

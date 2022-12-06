@@ -19,7 +19,7 @@ public class Call : INodeExpression
             value += " ";
         }
 
-        value += _name;
+        value += _name + "()";
         value += "\n";
         for (int i = 0; i < (level + 1) * 4; i++)
         {
@@ -33,7 +33,7 @@ public class Call : INodeExpression
 
         for(int i = 0; i < _arguments.Count; i++)
         {
-            value += _arguments[i].GetPrint(level + 1);
+            value += _arguments[i].GetPrint(level + 2);
             if (i != _arguments.Count - 1)
             {
                 value += "\n";

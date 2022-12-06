@@ -1,0 +1,13 @@
+﻿Program abc
+    VarDeclaration
+        a
+            Integer
+                abc[]
+                    indexes
+                        0
+                        cba()
+                            arguments
+                        kda[]
+                            indexes
+                                0
+    CompoundStatement

@@ -1,0 +1,6 @@
+﻿program abc;
+begin
+    if 1 
+    begin
+    end;
+end.

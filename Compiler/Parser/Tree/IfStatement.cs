@@ -9,17 +9,8 @@ public class IfStatement : INodeStatement
     public IfStatement(INodeExpression condition, INodeStatement body, INodeStatement? elsePart)
     {
         _condition = condition;
-        if (body is NullStatement)
-        {
-            _body = null;
-        }
-        if (elsePart is NullStatement)
-        {
-            _elsePart = null;
-        }
-
-        _body = body;
-        _elsePart = elsePart;
+        _body = body is NullStatement ? null : body;
+        _elsePart = elsePart is NullStatement ? null : elsePart;
     }
 
     public string GetPrint(int level)
@@ -32,9 +23,21 @@ public class IfStatement : INodeStatement
 
         result += "IfStatement";
         result += '\n';
-        result += _condition.GetPrint(level + 1);
-        result += _body is not null ? '\n' + _body.GetPrint(level + 1) : "";
-        result += _elsePart is not null ? '\n' + _elsePart.GetPrint(level + 1) : "";
+        for (int i = 0; i < (level + 1) * 4; i++)
+        {
+            result += " ";
+        }
+        result += "Condition";
+        result += '\n';
+        result += _condition.GetPrint(level + 2);
+        result += '\n';
+        for (int i = 0; i < (level + 1) * 4; i++)
+        {
+            result += " ";
+        }
+        result += "Body";
+        result += _body is not null ? '\n' + _body.GetPrint(level + 2) : "";
+        result += _elsePart is not null ? '\n' + _elsePart.GetPrint(level + 2) : "";
         return result;
     }
 }

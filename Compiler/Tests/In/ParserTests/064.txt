@@ -1,0 +1,5 @@
+﻿program abc;
+var
+    a : integer = arr[0].k;
+begin
+end.

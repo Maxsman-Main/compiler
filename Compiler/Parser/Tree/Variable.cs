@@ -40,7 +40,7 @@ public class Variable : INodeExpression
         }
         for (int i = 0; i < _expressions.Count; i++)
         {
-            value += _expressions[i].GetPrint(level + 1);
+            value += _expressions[i].GetPrint(level + 2);
             
             if (i != _expressions.Count - 1)
             {

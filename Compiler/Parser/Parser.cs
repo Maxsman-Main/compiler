@@ -1108,15 +1108,52 @@ public class Parser
         var lexeme = _lexer.CurrentLexeme;
         while (lexeme is IOperatorLexeme {Value: OperatorValue.Multiplication or OperatorValue.Div} | lexeme is IKeyWordLexeme{Value: KeyWordValue.And} | lexeme is SeparatorLexeme{Value: SeparatorValue.Point})
         {
+            var counter = 0;
             switch (lexeme)
-            {
+            {  
                 case IKeyWordLexeme:
                     _lexer.GetLexeme();
-                    left = new BinOperation(OperatorValue.And, left, ParseFactor());
+                    lexeme = _lexer.CurrentLexeme;
+                    while (lexeme is IOperatorLexeme {Value: OperatorValue.Minus or OperatorValue.Plus} plusMinusOperator)
+                    {
+                        _lexer.GetLexeme();
+                        if (plusMinusOperator.Value is OperatorValue.Minus)
+                        {
+                            counter += 1;
+                        }
+                        lexeme = _lexer.CurrentLexeme;
+                    }
+
+                    if (counter > 0 && counter % 2 != 0)
+                    {
+                        left = new BinOperation(OperatorValue.And, left, new UnaryOperation(OperatorValue.Minus, ParseFactor()));
+                    }
+                    else
+                    {
+                        left = new BinOperation(OperatorValue.And, left, ParseFactor());
+                    }
                     break;
                 case IOperatorLexeme operatorLexeme:
                     _lexer.GetLexeme();
-                    left = new BinOperation(operatorLexeme.Value, left, ParseFactor());
+                    lexeme = _lexer.CurrentLexeme;
+                    while (lexeme is IOperatorLexeme {Value: OperatorValue.Minus or OperatorValue.Plus} plusMinusOperator)
+                    {
+                        _lexer.GetLexeme();
+                        if (plusMinusOperator.Value is OperatorValue.Minus)
+                        {
+                            counter += 1;
+                        }
+                        lexeme = _lexer.CurrentLexeme;
+                    }
+
+                    if (counter > 0 && counter % 2 != 0)
+                    {
+                        left = new BinOperation(operatorLexeme.Value, left, new UnaryOperation(OperatorValue.Minus, ParseFactor()));
+                    }
+                    else
+                    {
+                        left = new BinOperation(operatorLexeme.Value, left, ParseFactor());
+                    }
                     break;
                 case ISeparatorLexeme:
                 {

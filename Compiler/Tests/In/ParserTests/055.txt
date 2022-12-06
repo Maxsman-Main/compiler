@@ -1,0 +1,5 @@
+﻿program abc;
+var
+    a : integer = -1 + 2 and 3 or 4 / 5;
+begin
+end.

@@ -21,7 +21,6 @@ public class CompoundStatement : INodeStatement
 
         if (_body.Count > 0)
         {
-            Console.WriteLine(_body[0].GetPrint(0));
             result += '\n';
         }
 

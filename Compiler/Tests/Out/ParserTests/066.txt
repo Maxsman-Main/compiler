@@ -1,0 +1,14 @@
+﻿Program abc
+    VarDeclaration
+        a
+            Integer
+                arr[]
+                    indexes
+                        2
+                        *
+                            abc()
+                                arguments
+                            +
+                                2
+                                3
+    CompoundStatement
