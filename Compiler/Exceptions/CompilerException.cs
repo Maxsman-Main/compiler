@@ -22,3 +22,9 @@ public class EmptyArgumentsException : CompilerException
     public EmptyArgumentsException(string message):
         base(message){}
 }
+
+public class FactorException : CompilerException
+{
+    public FactorException(string message):
+        base(message){}
+}

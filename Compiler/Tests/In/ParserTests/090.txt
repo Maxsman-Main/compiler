@@ -1,0 +1,15 @@
+﻿var
+    a : integer;
+    b : string;
+    c : char;
+    d : double;
+    e : record
+            a, b, c : integer;
+            q, w, e : string;
+        end;
+    f : array [1..2] of integer;
+    g : array [1..2, 3..4] of integer;
+    h : array [1..2] of array [3..4] of integer;
+    c : customType;
+begin
+end.

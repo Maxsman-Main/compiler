@@ -18,8 +18,8 @@ public class RecordSection : INode
         for (int i = 0; i < _identifiers.Count; i++)
         {
             result += _identifiers[i].GetPrint(level);
-            result += " ";
-            result += _type.GetPrint(0);
+            result += "\n";
+            result += _type.GetPrint(level + 1);
 
             if (i != _identifiers.Count - 1)
             {

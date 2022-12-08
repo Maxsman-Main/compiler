@@ -876,16 +876,22 @@ public class Parser
             return new ProcedureStatement(identifier, null);
         _lexer.GetLexeme();
         
-        var expressionList = ParseExpressionList();
-        
         lexeme = _lexer.CurrentLexeme;
         if (lexeme is not ISeparatorLexeme {Value: SeparatorValue.RightBracket})
         {
-            throw new CompilerException(_lexer.Coordinate + " ) was expected");
-        }
-        _lexer.GetLexeme();
+            var expressionList = ParseExpressionList();
+            lexeme = _lexer.CurrentLexeme;
+            if (lexeme is not ISeparatorLexeme {Value: SeparatorValue.RightBracket})
+            {
+                throw new CompilerException(_lexer.Coordinate + " ) was expected");
+            }
+            _lexer.GetLexeme();
 
-        return new ProcedureStatement(identifier, expressionList);
+            return new ProcedureStatement(identifier, expressionList);
+        }
+
+        _lexer.GetLexeme();
+        return new ProcedureStatement(identifier, new List<INodeExpression>());
     }
 
     private INodeStatement ParseAssignmentStatement(Variable identifier)
@@ -1260,7 +1266,7 @@ public class Parser
             default:
                 if (lexeme is not ISeparatorLexeme {Value: SeparatorValue.LeftBracket})
                 {
-                    throw new CompilerException(_lexer.Coordinate + " factor was expected");
+                    throw new FactorException(_lexer.Coordinate + " factor was expected");
                 }
                 _lexer.GetLexeme();
                 
@@ -1280,7 +1286,7 @@ public class Parser
                     nextToken = _lexer.CurrentLexeme;
                     if (nextToken is not IIdentifierLexeme identifierLexeme)
                     {
-                        throw new Exception(_lexer.Coordinate + " identifier was expected");
+                        throw new CompilerException(_lexer.Coordinate + " identifier was expected");
                     }
                     _lexer.GetLexeme();
                     

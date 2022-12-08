@@ -1,0 +1,5 @@
+﻿Program
+    VarDeclaration
+        e
+            Record
+    CompoundStatement

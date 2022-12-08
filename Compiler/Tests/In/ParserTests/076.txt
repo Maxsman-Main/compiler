@@ -1,0 +1,4 @@
+﻿program abc;
+begin
+    a := 2 + 3;
+end.

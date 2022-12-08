@@ -25,8 +25,20 @@ public class WhileStatement : INodeStatement
 
         result += "WhileStatement";
         result += '\n';
-        result += _condition.GetPrint(level + 1);
-        result += _body is not null ? '\n' + _body.GetPrint(level + 1) : "";
+        for (int i = 0; i < (level + 1) * 4; i++)
+        {
+            result += " ";
+        }
+        result += "Condition";
+        result += '\n';
+        result += _condition.GetPrint(level + 2);
+        result += '\n';
+        for (int i = 0; i < (level + 1) * 4; i++)
+        {
+            result += " ";
+        }
+        result += "Body";
+        result += _body is not null ? '\n' + _body.GetPrint(level + 2) : "";
         return result;
     }
 }

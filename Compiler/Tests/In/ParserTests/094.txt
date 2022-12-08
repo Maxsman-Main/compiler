@@ -1,0 +1,7 @@
+﻿var
+    e : record
+            a : Integer
+            b : String
+        end;
+begin
+end.

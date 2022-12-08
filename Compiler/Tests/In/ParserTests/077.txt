@@ -1,0 +1,4 @@
+﻿program abc;
+begin
+    abc(1, lim, 1 + 2, a.k);
+end.

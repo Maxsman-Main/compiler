@@ -17,12 +17,13 @@ public class RecordType : INodeType
             result += " ";
         }
 
-        result += "record";
+        result += "Record";
+        if (_recordSection.Count == 0) return result;
         result += '\n';
         for (int i = 0; i < _recordSection.Count; i++)
         {
             result += _recordSection[i].GetPrint(level + 1);
-            if (i != _recordSection.Count)
+            if (i != _recordSection.Count - 1)
             {
                 result += '\n';
             }

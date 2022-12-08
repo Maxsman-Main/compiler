@@ -1,0 +1,4 @@
+﻿var
+    a : array [1..2] of array[3..4] of string;
+begin
+end.

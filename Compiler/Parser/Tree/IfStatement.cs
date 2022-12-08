@@ -37,7 +37,18 @@ public class IfStatement : INodeStatement
         }
         result += "Body";
         result += _body is not null ? '\n' + _body.GetPrint(level + 2) : "";
-        result += _elsePart is not null ? '\n' + _elsePart.GetPrint(level + 2) : "";
+        if (_elsePart is not null)
+        {
+            result += '\n'; 
+            for (int i = 0; i < (level + 1) * 4; i++)
+            {
+                result += " ";
+            }
+
+            result += "ElsePart";
+            result += '\n';
+            result += _elsePart.GetPrint(level + 2);
+        }
         return result;
     }
 }

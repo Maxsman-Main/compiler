@@ -1,0 +1,33 @@
+﻿Program
+    VarDeclaration
+        a
+            Integer
+        b
+            String
+        c
+            Char
+        d
+            Double
+        e
+            Record
+                a
+                    Integer
+                b
+                    Integer
+                c
+                    Integer
+                q
+                    String
+                w
+                    String
+                e
+                    String
+        f
+            array[1..2] of Integer
+        g
+            array[1..2,3..4] of Integer
+        h
+            array[1..2] of array[3..4] of Integer
+        c
+            customType
+    CompoundStatement

@@ -1,0 +1,4 @@
+﻿var
+    a : array [1..
+begin
+end.

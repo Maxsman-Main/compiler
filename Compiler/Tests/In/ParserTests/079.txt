@@ -1,0 +1,4 @@
+﻿program abc;
+begin
+    abc(;;;;;;;
+end.

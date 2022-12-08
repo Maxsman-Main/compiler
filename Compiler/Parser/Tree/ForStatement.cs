@@ -28,15 +28,45 @@ public class ForStatement : INodeStatement
         {
             result += " ";
         }
-
         result += "ForStatement";
         result += '\n';
-        result += _identifier.GetPrint(level + 1);
+        
+        for (int i = 0; i < (level + 1) * 4; i++)
+        {
+            result += " ";
+        }
+        result += "Identifier";
         result += '\n';
-        result += _startExpression.GetPrint(level + 1);
+
+        result += _identifier.GetPrint(level + 2);
         result += '\n';
-        result += _endExpression.GetPrint(level + 1);
-        result += _statement is not null ? '\n' + _statement.GetPrint(level + 1) : "";
+        
+        for (int i = 0; i < (level + 1) * 4; i++)
+        {
+            result += " ";
+        }
+        result += "LeftBound";
+        result += '\n';
+
+        result += _startExpression.GetPrint(level + 2);
+        result += '\n';
+
+        for (int i = 0; i < (level + 1) * 4; i++)
+        {
+            result += " ";
+        }
+        result += "RightBound";
+        result += '\n';
+        
+        result += _endExpression.GetPrint(level + 2);
+        result += '\n';
+        
+        for (int i = 0; i < (level + 1) * 4; i++)
+        {
+            result += " ";
+        }
+        result += "Body";
+        result += _statement is not null ? '\n' + _statement.GetPrint(level + 2) : "";
         return result;
     }
 }

@@ -33,7 +33,7 @@ Statements
 <statement_sequence> ::= <statement> {";" <statement>}
 
 <simple_statement> ::= <assignment_statement> | <procedure_statement>
-<procedure_statement> ::= <id> ["(" <id_list> ")"]
+<procedure_statement> ::= <id> "(" [<expression_list>] ")"
 <assignment_statement> ::= <id> ":=" <expression>
 
 <structured_statement> ::= <compound_statement> | <repetitive_statement> | <if_statement>
@@ -64,6 +64,6 @@ Types
 <record_section> ::= <id_list> ":" <type>
 
 //
-<id_list> ::= <id> {"," <id>}
+<id_list> ::= <id> {"," <id>}   
 
 #<expr> :=

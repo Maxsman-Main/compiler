@@ -1,0 +1,14 @@
+﻿program abc;
+begin
+    if 1 then
+        a := 3;
+    while 2 do
+        begin
+            abc(a.k, b.c);;;;
+            k := 2 + 3 * -2;
+        end;
+    for i := arr[0,2,3] to 200 do
+         a := a + 1;
+    a := 5;
+    kca();
+end.

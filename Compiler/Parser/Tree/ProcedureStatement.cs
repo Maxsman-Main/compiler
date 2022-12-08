@@ -21,13 +21,40 @@ public class ProcedureStatement : INodeStatement
 
         result += "ProcedureStatement";
         result += '\n';
-        result += _identifier.GetPrint(level + 1);
-        result += '\n';
-        if (_parameters == null) return result;
-        foreach (var parameter in _parameters)
+        
+        for (int i = 0; i < (level + 1) * 4; i++)
         {
+            result += " ";
+        }
+        result += "Identifier";
+        result += '\n';
+
+        result += _identifier.GetPrint(level + 2);
+        result += '\n';
+        
+        for (int i = 0; i < (level + 1) * 4; i++)
+        {
+            result += " ";
+        }
+        result += "arguments";
+
+        switch (_parameters)
+        {
+            case null:
+                return result;
+            case {Count: 0}:
+                return result;
+        }
+
+        result += '\n';
+        for (var index = 0; index < _parameters.Count; index++)
+        {
+            var parameter = _parameters[index];
             result += parameter.GetPrint(level + 2);
-            result += '\n';
+            if (index != _parameters.Count - 1)
+            {
+                result += '\n';
+            }
         }
 
         return result;

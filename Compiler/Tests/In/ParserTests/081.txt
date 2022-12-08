@@ -1,0 +1,8 @@
+﻿program abc;
+begin
+    if 1 then
+        begin
+            while 1 do
+                a := 5 + k
+        end;;;;;;;
+end.

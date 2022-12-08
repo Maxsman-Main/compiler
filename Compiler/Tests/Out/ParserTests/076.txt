@@ -1,0 +1,7 @@
+﻿Program abc
+    CompoundStatement
+        :=
+            a
+            +
+                2
+                3
