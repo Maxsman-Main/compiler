@@ -1,6 +1,6 @@
 ﻿using Compiler.Parser.Tree;
 
-namespace Compiler.Parser.Semantic;
+namespace Compiler.Semantic;
 
 public class SymbolFunction : SymbolProcedure
 {

@@ -10,11 +10,11 @@ using Type = Compiler.Parser.Tree.Type;
 
 namespace Compiler.Parser;
 
-public class Parser
+public class SemanticParser
 {
     private readonly LexicalAnalyzer _lexer;
 
-    public Parser(LexicalAnalyzer lexer)
+    public SemanticParser(LexicalAnalyzer lexer)
     {
         _lexer = lexer;
         _lexer.GetLexeme();
@@ -72,7 +72,7 @@ public class Parser
         }
         _lexer.GetLexeme();
 
-        return identifier is null ? new Tree.Program(declarations, mainBlock) : new Tree.Program(identifier, declarations, mainBlock);
+        return identifier is null ? new Compiler.Parser.Tree.Program(declarations, mainBlock) : new Compiler.Parser.Tree.Program(identifier, declarations, mainBlock);
     }
 
     private INodeDeclaration ParseDeclaration()
@@ -1026,7 +1026,7 @@ public class Parser
 
     }
     
-    public INodeExpression ParseExpression()
+    private INodeExpression ParseExpression()
     {
         var leftSimpleExpression = ParseSimpleExpression();
         var lexeme = _lexer.CurrentLexeme;

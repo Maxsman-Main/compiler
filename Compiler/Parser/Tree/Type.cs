@@ -2,7 +2,7 @@
 
 namespace Compiler.Parser.Tree;
 
-public class Type : INodeType
+public sealed class Type : INodeType
 {
     private readonly KeyWordValue _type;
 
@@ -11,7 +11,7 @@ public class Type : INodeType
         _type = type;
     }
     
-    public virtual string GetPrint(int level)
+    public string GetPrint(int level)
     {
         var result = "";
         for (int i = 0; i < level * 4; i++)

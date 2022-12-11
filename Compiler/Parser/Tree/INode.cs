@@ -5,7 +5,12 @@ public interface INode
     public string GetPrint(int level);
 }
 
-public interface INodeExpression : INode
+public interface ISemanticVariable
+{
+    
+}
+
+    public interface INodeExpression : INode
 {
     
 }

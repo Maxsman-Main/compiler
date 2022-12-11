@@ -1,4 +1,4 @@
-﻿namespace Compiler.Parser.Semantic;
+﻿namespace Compiler.Semantic;
 
 public abstract class Symbol
 {

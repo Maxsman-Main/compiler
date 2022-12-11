@@ -1,19 +1,34 @@
-﻿namespace Compiler.Parser.Tree;
+﻿using Compiler.Semantic;
+
+namespace Compiler.Parser.Tree;
 
 public class Variable : INodeExpression
 {
-    private readonly string _name;
+    private readonly string? _name;
+    private readonly SymbolVariable? _symbol;
     private readonly List<INodeExpression> _expressions;
-
+    
     public Variable(string name)
     {
         _name = name;
         _expressions = new List<INodeExpression>();
     }
-
+    
     public Variable(string name, List<INodeExpression> expressions)
     {
         _name = name;
+        _expressions = expressions;
+    }
+
+    public Variable(SymbolVariable symbol)
+    {
+        _symbol = symbol;
+        _expressions = new List<INodeExpression>();
+    }
+    
+    public Variable(SymbolVariable symbol, List<INodeExpression> expressions)
+    {
+        _symbol = symbol;
         _expressions = expressions;
     }
 

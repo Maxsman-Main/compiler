@@ -1,6 +1,6 @@
 ﻿namespace Compiler.Parser.Tree;
 
-public class CompoundStatement : INodeStatement
+public partial class CompoundStatement : INodeStatement
 {
     private readonly List<INodeStatement> _body;
 

@@ -1,12 +1,12 @@
 ﻿using System.Collections.Specialized;
 
-namespace Compiler.Parser.Semantic;
+namespace Compiler.Semantic;
 
-public class SymbolTable
+public abstract class SymbolTable
 {
     private readonly OrderedDictionary _data;
 
-    public SymbolTable(OrderedDictionary data)
+    protected SymbolTable(OrderedDictionary data)
     {
         _data = data;
     }
