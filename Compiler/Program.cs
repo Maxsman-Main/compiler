@@ -1,6 +1,7 @@
 ﻿using Compiler.Exceptions;
 using Compiler.Lexeme;
 using Compiler.LexicalAnalyzerStateMachine;
+using Compiler.Parser;
 using Compiler.Tests;
 
 namespace Compiler
@@ -10,9 +11,9 @@ namespace Compiler
         public static void Main(string[] args)
         {
             args = new string[10];
-            args[0] = "-p";
-            args[1] = "-t";
-            //args[1] = "a.txt";
+            args[0] = "-s";
+            //args[1] = "-t";
+            args[1] = "a.txt";
             switch (args[0])
             {
                 case "-a" when args[1] == "-t":
@@ -60,6 +61,21 @@ namespace Compiler
                     var lexer = new LexicalAnalyzer();
                     lexer.SetFile("../../../Files/" + args[1]);
                     var parser = new Parser.Parser(lexer);
+                    try
+                    {
+                        Console.WriteLine(parser.ParseProgram().GetPrint(0));
+                    }
+                    catch (CompilerException exception)
+                    {
+                        Console.WriteLine(exception.Message);
+                    }
+                    break;
+                }
+                case "-s":
+                {
+                    var lexer = new LexicalAnalyzer();
+                    lexer.SetFile("../../../Files/" + args[1]);
+                    var parser = new SemanticParser(lexer);
                     try
                     {
                         Console.WriteLine(parser.ParseProgram().GetPrint(0));

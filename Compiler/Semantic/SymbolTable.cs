@@ -2,20 +2,21 @@
 
 namespace Compiler.Semantic;
 
-public abstract class SymbolTable
+public class SymbolTable
 {
     private readonly OrderedDictionary _data;
 
-    protected SymbolTable(OrderedDictionary data)
+    public SymbolTable(OrderedDictionary data)
     {
         _data = data;
     }
 
-    public void Add(string name)
+    public void Add(string name, Symbol value)
     {
+        _data.Add(name, value);
     }
 
-    public Symbol? GetByName(string name)
+    public Symbol? Get(string name)
     {
         return _data[name] as Symbol;
     }

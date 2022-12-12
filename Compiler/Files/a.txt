@@ -1,6 +1,2 @@
-﻿program abc;
-var
-    a : integer = 1 * k.a / c - arr[0] + -cba(0, dca()) * (2 + 3 * 4);
-    b : double = 2.2 * (k + 1).c - 'str' * 'c';
-begin
+﻿begin
 end.

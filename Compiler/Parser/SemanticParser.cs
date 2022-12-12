@@ -3,6 +3,7 @@ using Compiler.Exceptions;
 using Compiler.Lexeme;
 using Compiler.LexicalAnalyzerStateMachine;
 using Compiler.Parser.Tree;
+using Compiler.Semantic;
 using Char = Compiler.Parser.Tree.Char;
 using CompoundStatement = Compiler.Parser.Tree.CompoundStatement;
 using String = Compiler.Parser.Tree.String;
@@ -13,10 +14,12 @@ namespace Compiler.Parser;
 public class SemanticParser
 {
     private readonly LexicalAnalyzer _lexer;
+    private readonly SymbolTableStack _table;
 
     public SemanticParser(LexicalAnalyzer lexer)
     {
         _lexer = lexer;
+        _table = new SymbolTableStack();
         _lexer.GetLexeme();
     }
 
