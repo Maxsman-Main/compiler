@@ -1,7 +1,6 @@
 ﻿using System.Collections.Specialized;
 using Compiler.Constants;
 using Compiler.Exceptions;
-using Compiler.Parser.Tree;
 
 namespace Compiler.Semantic;
 
@@ -38,6 +37,20 @@ public class SymbolTableStack
         }
 
         throw new CompilerException(name + " identifier wasn't defined");
+    }
+
+    public void Push(SymbolTable table)
+    {
+        Tables.Add(table);
+        _head++;
+    }
+
+    public SymbolTable Pop()
+    {
+        var item = Tables[_head];
+        Tables.RemoveAt(_head);
+        _head -= 1;
+        return item;
     }
 
     private void InitializeStack()

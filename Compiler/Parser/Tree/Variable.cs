@@ -2,21 +2,22 @@
 
 namespace Compiler.Parser.Tree;
 
-public class Variable : INodeExpression
+public class Variable : INodeExpression, IVariable
 {
-    private readonly string? _name;
     private readonly SymbolVariable? _symbol;
     private readonly List<INodeExpression> _expressions;
     
+    public string Name { get; }
+
     public Variable(string name)
     {
-        _name = name;
+        Name = name;
         _expressions = new List<INodeExpression>();
     }
     
     public Variable(string name, List<INodeExpression> expressions)
     {
-        _name = name;
+        Name = name;
         _expressions = expressions;
     }
 
@@ -40,7 +41,7 @@ public class Variable : INodeExpression
             value += " ";
         }
 
-        value += _name;
+        value += Name;
         if (_expressions.Count != 0)
         {
             value += "[]";

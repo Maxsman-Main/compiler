@@ -1,4 +1,5 @@
-﻿using Compiler.Constants;
+﻿using System.Collections.Specialized;
+using Compiler.Constants;
 using Compiler.Exceptions;
 using Compiler.Lexeme;
 using Compiler.LexicalAnalyzerStateMachine;
@@ -7,34 +8,31 @@ using Compiler.Semantic;
 using Char = Compiler.Parser.Tree.Char;
 using CompoundStatement = Compiler.Parser.Tree.CompoundStatement;
 using String = Compiler.Parser.Tree.String;
-using Type = Compiler.Parser.Tree.Type;
 
 namespace Compiler.Parser;
 
 public class SemanticParser
 {
     private readonly LexicalAnalyzer _lexer;
-    private readonly SymbolTableStack _table;
-
+    private readonly SymbolTableStack _stack;
+    
     public SemanticParser(LexicalAnalyzer lexer)
     {
         _lexer = lexer;
-        _table = new SymbolTableStack();
         _lexer.GetLexeme();
+        _stack = new SymbolTableStack();
     }
 
-    public INode ParseProgram()
+    public void ParseProgram()
     {
-        Variable? identifier = null;
         var lexeme = _lexer.CurrentLexeme;
         if (lexeme is IKeyWordLexeme {Value: KeyWordValue.Program})
         {
             _lexer.GetLexeme();
             var nextToken = _lexer.CurrentLexeme;
-            if (nextToken is IIdentifierLexeme identifierLexeme)
+            if (nextToken is IIdentifierLexeme)
             {
                 _lexer.GetLexeme();
-                identifier = new Variable(identifierLexeme.Value);
             }
             else
             {
@@ -47,66 +45,58 @@ public class SemanticParser
                 throw new CompilerException(_lexer.Coordinate + " ; was expected");
             }
             _lexer.GetLexeme();
-            
         }
 
-        lexeme = _lexer.CurrentLexeme;
-        List<INodeDeclaration> declarations = new();
-        while (lexeme is IKeyWordLexeme
-               {
-                   Value: 
-                   KeyWordValue.Const or
-                   KeyWordValue.Var or
-                   KeyWordValue.Type or
-                   KeyWordValue.Function or
-                   KeyWordValue.Procedure
-               })
-        {
-            declarations.Add(ParseDeclaration());
-            lexeme = _lexer.CurrentLexeme;
-        }
-
-        var mainBlock = ParseCompoundStatement();
-
+        ParseDeclaration();
+        ParseCompoundStatement();
         lexeme = _lexer.CurrentLexeme;
         if (lexeme is not ISeparatorLexeme {Value: SeparatorValue.Point})
         {
             throw new CompilerException(_lexer.Coordinate + " . was expected");
         }
         _lexer.GetLexeme();
-
-        return identifier is null ? new Compiler.Parser.Tree.Program(declarations, mainBlock) : new Compiler.Parser.Tree.Program(identifier, declarations, mainBlock);
     }
 
-    private INodeDeclaration ParseDeclaration()
+    private void ParseDeclaration()
     {
         var lexeme = _lexer.CurrentLexeme;
-        switch (lexeme)
+        while (lexeme is IKeyWordLexeme
+               {
+                   Value: KeyWordValue.Type or /*KeyWordValue.Const or*/ KeyWordValue.Var or KeyWordValue.Function
+                   or KeyWordValue.Procedure
+               })
         {
-            case IKeyWordLexeme {Value: KeyWordValue.Type}:
-                _lexer.GetLexeme();
-                return ParseTypeDeclaration();
-            case IKeyWordLexeme {Value: KeyWordValue.Const}:
-                _lexer.GetLexeme();
-                return ParseConstDeclaration();
-            case IKeyWordLexeme{Value: KeyWordValue.Var}:
-                _lexer.GetLexeme();
-                return ParseVarDeclaration();
-            case IKeyWordLexeme {Value: KeyWordValue.Function}:
-                _lexer.GetLexeme();
-                return ParseFunctionDeclaration();
-            case IKeyWordLexeme{Value: KeyWordValue.Procedure}:
-                _lexer.GetLexeme();
-                return ParseProcedureDeclaration();
-            default:
-                throw new CompilerException(_lexer.Coordinate + " keyword type was expected");
+            switch (lexeme)
+            {
+                case IKeyWordLexeme {Value: KeyWordValue.Type}:
+                    _lexer.GetLexeme();
+                    ParseTypeDeclaration();
+                    break;
+                /*
+                case IKeyWordLexeme {Value: KeyWordValue.Const}:
+                    _lexer.GetLexeme();
+                    ParseConstDeclaration();
+                    break;
+                */
+                case IKeyWordLexeme {Value: KeyWordValue.Var}:
+                    _lexer.GetLexeme();
+                    ParseVarDeclaration();
+                    break;
+                case IKeyWordLexeme {Value: KeyWordValue.Function}:
+                    _lexer.GetLexeme();
+                    ParseFunctionDeclaration();
+                    break;
+                case IKeyWordLexeme {Value: KeyWordValue.Procedure}:
+                    _lexer.GetLexeme();
+                    ParseProcedureDeclaration();
+                    break;
+            }
         }
     }
 
-    private INodeDeclaration ParseTypeDeclaration()
+    private void ParseTypeDeclaration()
     {
         ILexeme lexeme;
-        var typesDeclarations = new List<TypeDeclarationPair>();
         do
         {
             lexeme = _lexer.CurrentLexeme;
@@ -134,18 +124,15 @@ public class SemanticParser
             }
             _lexer.GetLexeme();
             
-            TypeDeclarationPair typeDeclaration;
-            typeDeclaration.Identifier = identifier;
-            typeDeclaration.Type = type;
-            typesDeclarations.Add(typeDeclaration);
+            _stack.Add(identifier.Name, new SymbolTypeAlias(identifier.Name, type));
             
             lexeme = _lexer.CurrentLexeme;
         } while (lexeme is IIdentifierLexeme);
 
-        return new TypeDeclaration(typesDeclarations);
     }
 
-    private INodeDeclaration ParseConstDeclaration()
+    /*
+    private void ParseConstDeclaration()
     {
         ILexeme lexeme;
         var constDeclarations = new List<ConstDeclarationData>();
@@ -195,13 +182,12 @@ public class SemanticParser
             lexeme = _lexer.CurrentLexeme;
         } while (lexeme is IIdentifierLexeme);
 
-        return new ConstDeclaration(constDeclarations);
     }
+    */
 
-    private INodeDeclaration ParseVarDeclaration()
+    private void ParseVarDeclaration()
     {
         ILexeme lexeme;
-        var varDeclarations = new List<VarDeclarationData>();   
         do
         {
             List<Variable> identifierList = new();
@@ -257,11 +243,7 @@ public class SemanticParser
 
                 foreach (var identifier in identifierList)
                 {
-                    VarDeclarationData varDeclaration;
-                    varDeclaration.Identifier = identifier;
-                    varDeclaration.Type = type;
-                    varDeclaration.Expression = null;
-                    varDeclarations.Add(varDeclaration);
+                    _stack.Add(identifier.Name, new SymbolVariable(identifier.Name, type));
                 }
 
                 lexeme = _lexer.CurrentLexeme;
@@ -289,11 +271,7 @@ public class SemanticParser
                     
                     foreach (var identifier in identifierList)
                     {
-                        VarDeclarationData varDeclaration;
-                        varDeclaration.Identifier = identifier;
-                        varDeclaration.Type = type;
-                        varDeclaration.Expression = null;
-                        varDeclarations.Add(varDeclaration);
+                        _stack.Add(identifier.Name, new SymbolVariable(identifier.Name, type));
                     }
 
                     lexeme = _lexer.CurrentLexeme;
@@ -313,22 +291,16 @@ public class SemanticParser
 
                     foreach (var identifier in identifierList)
                     {
-                        VarDeclarationData varDeclaration;
-                        varDeclaration.Identifier = identifier;
-                        varDeclaration.Type = type;
-                        varDeclaration.Expression = expression;
-                        varDeclarations.Add(varDeclaration);
+                        _stack.Add(identifier.Name, new SymbolVariable(identifier.Name, type));
                     }
 
                     lexeme = _lexer.CurrentLexeme;
                 }
             }
         } while (lexeme is IIdentifierLexeme);
-
-        return new VarDeclaration(varDeclarations);
     }
 
-    private INodeDeclaration ParseFunctionDeclaration()
+    private void ParseFunctionDeclaration()
     {
         var lexeme = _lexer.CurrentLexeme;
         if (lexeme is not IIdentifierLexeme identifierLexeme)
@@ -373,36 +345,7 @@ public class SemanticParser
 
         lexeme = _lexer.CurrentLexeme;
         List<INodeDeclaration> declarations = new();
-        while (lexeme is IKeyWordLexeme {Value: KeyWordValue.Const or KeyWordValue.Var or KeyWordValue.Type})
-        {
-            switch (lexeme)
-            {
-                case IKeyWordLexeme {Value: KeyWordValue.Const}:
-                {
-                    _lexer.GetLexeme();
-                    var declaration = ParseConstDeclaration();
-                    declarations.Add(declaration);
-                    break;
-                }
-                case IKeyWordLexeme {Value: KeyWordValue.Var}:
-                {
-                    _lexer.GetLexeme();
-                    var declaration = ParseVarDeclaration();
-                    declarations.Add(declaration);
-                    break;
-                }
-                case IKeyWordLexeme {Value: KeyWordValue.Type}:
-                {
-                    _lexer.GetLexeme();
-                    var declaration = ParseTypeDeclaration();
-                    declarations.Add(declaration);
-                    break;
-                }
-            }
-
-            lexeme = _lexer.CurrentLexeme;
-        }
-
+        ParseDeclaration();
         var statement = ParseCompoundStatement();
 
         lexeme = _lexer.CurrentLexeme;
@@ -411,11 +354,9 @@ public class SemanticParser
             throw new CompilerException(_lexer.Coordinate + " ; was expected");
         }
         _lexer.GetLexeme();
-        
-        return new FunctionDeclaration(identifier, parameters, type, declarations, statement);
     }
 
-    private INodeDeclaration ParseProcedureDeclaration()
+    private void ParseProcedureDeclaration()
     {
         var lexeme = _lexer.CurrentLexeme;
         if (lexeme is not IIdentifierLexeme identifierLexeme)
@@ -449,38 +390,8 @@ public class SemanticParser
         }
         _lexer.GetLexeme();
 
-        lexeme = _lexer.CurrentLexeme;
-        List<INodeDeclaration> declarations = new();
-        while (lexeme is IKeyWordLexeme {Value: KeyWordValue.Const or KeyWordValue.Var or KeyWordValue.Type})
-        {
-            switch (lexeme)
-            {
-                case IKeyWordLexeme {Value: KeyWordValue.Const}:
-                {
-                    _lexer.GetLexeme();
-                    var declaration = ParseConstDeclaration();
-                    declarations.Add(declaration);
-                    break;
-                }
-                case IKeyWordLexeme {Value: KeyWordValue.Var}:
-                {
-                    _lexer.GetLexeme();
-                    var declaration = ParseVarDeclaration();
-                    declarations.Add(declaration);
-                    break;
-                }
-                case IKeyWordLexeme {Value: KeyWordValue.Type}:
-                {
-                    _lexer.GetLexeme();
-                    var declaration = ParseTypeDeclaration();
-                    declarations.Add(declaration);
-                    break;
-                }
-            }
-
-            lexeme = _lexer.CurrentLexeme;
-        }
-
+        
+        ParseDeclaration();
         var statement = ParseCompoundStatement();
         
         lexeme = _lexer.CurrentLexeme;
@@ -489,16 +400,15 @@ public class SemanticParser
             throw new CompilerException(_lexer.Coordinate + " ; was expected");
         }
         _lexer.GetLexeme();
-
-        return new ProcedureDeclaration(identifier, parameters, declarations, statement);
+        
+        _stack.Add(identifier.Name, new SymbolProcedure(identifier.Name, parameters,  parameters, statement));
     }
     
-    private List<Parameter> ParseParameters()
+    private SymbolTable ParseParameters()
     {
-        List<Parameter> parametersResult = new();
-
+        OrderedDictionary parametersResult = new();
         var lexeme = _lexer.CurrentLexeme;
-        List<Parameter> parameters;
+        List<Symbol> parameters;
         
         if (lexeme is KeyWordLexeme {Value: KeyWordValue.Var})
         {
@@ -512,12 +422,12 @@ public class SemanticParser
 
         if (parameters.Count == 0)
         {
-            return parametersResult;
+            return new SymbolTable(parametersResult);
         }
         
         foreach (var parameter in parameters)
         {
-            parametersResult.Add(parameter);
+            parametersResult.Add(parameter.Name, parameter);
         }
         
         lexeme = _lexer.CurrentLexeme;
@@ -536,19 +446,19 @@ public class SemanticParser
             }
             foreach (var parameter in parameters)
             {
-                parametersResult.Add(parameter);
+                parametersResult.Add(parameter.Name, parameter);
             }
 
             lexeme = _lexer.CurrentLexeme;
         }
 
-        return parametersResult;
+        return new SymbolTable(parametersResult);
     }
 
-    private List<Parameter> ParseValueParameter()
+    private List<Symbol> ParseValueParameter()
     {
         var identifierList = ParseIdentifierList();
-        List<Parameter> parameters = new();
+        List<Symbol> parameters = new();
 
         if (identifierList.Count == 0)
         {
@@ -564,19 +474,14 @@ public class SemanticParser
 
         var type = ParseType();
 
-        foreach (var identifier in identifierList)
-        {
-            var parameter = new ValueParameter(identifier, type);
-            parameters.Add(parameter);
-        }
-
+        parameters.AddRange(identifierList.Select(identifier => new SymbolVariable(identifier.Name, type)).Cast<Symbol>());
         return parameters;
     }
 
-    private List<Parameter> ParseVarParameter()
+    private List<Symbol> ParseVarParameter()
     {
         var identifierList = ParseIdentifierList();
-        List<Parameter> parameters = new();
+        List<Symbol> parameters = new();
 
         if (identifierList.Count == 0)
         {
@@ -592,12 +497,7 @@ public class SemanticParser
 
         var type = ParseType();
 
-        foreach (var identifier in identifierList)
-        {
-            var parameter = new VarParameter(identifier, type);
-            parameters.Add(parameter);
-        }
-
+        parameters.AddRange(identifierList.Select(identifier => new SymbolVariable(identifier.Name, type)).Cast<Symbol>());
         return parameters;
     }
 
@@ -631,47 +531,46 @@ public class SemanticParser
         return identifiers;
     }
     
-    private INodeType ParseType()
+    private SymbolType ParseType()
     {
         var lexeme = _lexer.CurrentLexeme;
-        Type type;
         switch (lexeme)
         {
             case IKeyWordLexeme {Value: KeyWordValue.Integer}:
                 _lexer.GetLexeme();
-                type = new Type(KeyWordValue.Integer);
-                break;
+                return new SymbolInteger("Integer");
             case IKeyWordLexeme {Value: KeyWordValue.Double}:
                 _lexer.GetLexeme();
-                type = new Type(KeyWordValue.Double);
-                break;
+                return new SymbolDouble("Double");
             case IKeyWordLexeme {Value: KeyWordValue.String}:
                 _lexer.GetLexeme();
-                type = new Type(KeyWordValue.String);
-                break;
+                return new SymbolString("String");
             case IKeyWordLexeme {Value: KeyWordValue.Char}:    
                 _lexer.GetLexeme();
-                type = new Type(KeyWordValue.Char);
-                break;
+                return new SymbolChar("Char");
             case IKeyWordLexeme{Value: KeyWordValue.Array}:
                 return ParseArrayType();
             case IKeyWordLexeme{Value: KeyWordValue.Record}:
                 return ParseRecordType();
             case IIdentifierLexeme identifierLexeme:
                 _lexer.GetLexeme();
-                return new IdentifierType(new Variable(identifierLexeme.Value));
+                var symbol = _stack.Get(identifierLexeme.Value);
+                if (symbol is not IAlias alias)
+                {
+                    throw new CompilerException(_lexer.Coordinate + " " + identifierLexeme.Value + " isn't alias");
+                }
+
+                return alias.Original;
             default:
                 throw new CompilerException(_lexer.Coordinate + " can't find type for this lexeme");
         }
-
-        return type;
     }
 
-    private INodeType ParseRecordType()
+    private SymbolRecord ParseRecordType()
     {
         _lexer.GetLexeme();
 
-        var recordSections = ParseRecordSections();
+        var fields = ParseRecordSections();
 
         var lexeme = _lexer.CurrentLexeme;
         if (lexeme is not IKeyWordLexeme {Value: KeyWordValue.End})
@@ -680,20 +579,24 @@ public class SemanticParser
         }
         _lexer.GetLexeme();
         
-        return new RecordType(recordSections);
+        return new SymbolRecord("Record", fields);
     }
 
-    private List<INode> ParseRecordSections()
+    private SymbolTable ParseRecordSections()
     {
         var lexeme = _lexer.CurrentLexeme;
-        List<INode> fixedPart = new();
+        OrderedDictionary fields = new();
         if (lexeme is not IIdentifierLexeme)
         {
-            return fixedPart;
+            return new SymbolTable(fields);
         }
 
-        var recordSection = ParseRecordSection();
-        fixedPart.Add(recordSection);
+        var fieldsPart = ParseRecordSection();
+        foreach (var field in fieldsPart)
+        {
+            fields.Add(field.Key, field.Value);
+        }
+        
         lexeme = _lexer.CurrentLexeme;
         while (lexeme is ISeparatorLexeme {Value: SeparatorValue.Semicolon})
         {
@@ -701,17 +604,20 @@ public class SemanticParser
             lexeme = _lexer.CurrentLexeme;
             if (lexeme is not IIdentifierLexeme)
             {
-                return fixedPart;
+                return new SymbolTable(fields);
             }
-            recordSection = ParseRecordSection();
-            fixedPart.Add(recordSection);
+            fieldsPart = ParseRecordSection();
+            foreach (var field in fieldsPart)
+            {
+                fields.Add(field.Key, field.Value);
+            }
             lexeme = _lexer.CurrentLexeme;
         }
 
-        return fixedPart;
+        return new SymbolTable(fields);
     }
 
-    private INode ParseRecordSection()
+    private List<Pair> ParseRecordSection()
     {
         var lexeme = _lexer.CurrentLexeme;
         if (lexeme is not IIdentifierLexeme)
@@ -730,10 +636,10 @@ public class SemanticParser
 
         var type = ParseType();
 
-        return new RecordSection(identifierList, type);
+        return identifierList.Select(identifier => new Pair {Key = identifier.Name, Value = type}).ToList();
     }
     
-    private INodeType ParseArrayType()
+    private SymbolArray ParseArrayType()
     {
         _lexer.GetLexeme();
                 
@@ -761,13 +667,20 @@ public class SemanticParser
         _lexer.GetLexeme();
 
         var type = ParseType();
+        var lastElement = bounds.Count - 1;
+        var preLastElement = bounds.Count - 2;
+        var arrayType = new SymbolArray("", type, bounds[lastElement].LeftBound, bounds[lastElement].RightBound);
+        for (var i = preLastElement; i >= 0; i--)
+        {
+            arrayType = new SymbolArray("Array", arrayType, bounds[i].LeftBound, bounds[i].RightBound);
+        }
 
-        return new ArrayType(type, bounds);
+        return arrayType;
     }
     
-    private List<INode> ParseBounds()
+    private List<IBound> ParseBounds()
     {
-        List<INode> indexes = new();
+        List<IBound> indexes = new();
         var lexeme = _lexer.CurrentLexeme;
         if (lexeme is not IIntegerLexeme leftBound)
         {

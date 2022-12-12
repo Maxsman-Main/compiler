@@ -2,6 +2,12 @@
 
 namespace Compiler.Semantic;
 
+public struct Pair
+{
+    public string Key;
+    public Symbol Value;
+}
+
 public class SymbolTable
 {
     private readonly OrderedDictionary _data;

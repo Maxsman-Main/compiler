@@ -1,11 +1,11 @@
 ﻿namespace Compiler.Semantic;
 
-public class SymbolTypeAlias : SymbolType
+public class SymbolTypeAlias : SymbolType, IAlias
 {
-    private SymbolType _original;
+    public SymbolType Original { get; }
 
     public SymbolTypeAlias(string name, SymbolType original) : base(name)
     {
-        _original = original;
+        Original = original;
     }
 }

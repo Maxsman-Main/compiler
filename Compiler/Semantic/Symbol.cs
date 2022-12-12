@@ -2,10 +2,10 @@
 
 public abstract class Symbol
 {
-    private string _name;
+    public string Name { get; }
 
     protected Symbol(string name)
     {
-        _name = name;
+        Name = name;
     }
 }

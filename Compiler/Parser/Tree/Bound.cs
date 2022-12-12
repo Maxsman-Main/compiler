@@ -1,14 +1,14 @@
 ﻿namespace Compiler.Parser.Tree;
 
-public class Bound : INode
+public class Bound : IBound
 {
-    private readonly int _leftBound;
-    private readonly int _rightBound;
-    
+    public int LeftBound { get; }
+    public int RightBound { get; }
+
     public Bound(int leftBound, int rightBound)
     {
-        _leftBound = leftBound;
-        _rightBound = rightBound;
+        LeftBound = leftBound;
+        RightBound = rightBound;
     }
     
     public string GetPrint(int level)
@@ -19,7 +19,7 @@ public class Bound : INode
             result += " ";
         }
 
-        result += _leftBound + ".." + _rightBound;
+        result += LeftBound + ".." + RightBound;
 
         return result;
     }

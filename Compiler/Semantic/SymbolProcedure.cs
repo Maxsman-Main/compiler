@@ -6,9 +6,9 @@ public class SymbolProcedure : Symbol
 {
     private SymbolTable _parameters;
     private SymbolTable _locals;
-    private CompoundStatement _body;
+    private INodeStatement _body;
 
-    protected SymbolProcedure(string name, SymbolTable parameters, SymbolTable locals, CompoundStatement body) : base(name)
+    public SymbolProcedure(string name, SymbolTable parameters, SymbolTable locals, INodeStatement body) : base(name)
     {
         _parameters = parameters;
         _locals = locals;
