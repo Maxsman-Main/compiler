@@ -9,9 +9,9 @@ namespace Compiler
     {
         public static void Main(string[] args)
         {
-            //args = new string[10];
-            //args[0] = "-p";
-            //args[1] = "-t";
+            args = new string[10];
+            args[0] = "-p";
+            args[1] = "-t";
             //args[1] = "a.txt";
             switch (args[0])
             {

@@ -1,8 +1,11 @@
-﻿namespace Compiler.Parser.Tree;
+﻿using Compiler.Semantic;
+
+namespace Compiler.Parser.Tree;
 
 public class Call : INodeExpression
 {
-    private readonly string _name;
+    private readonly string? _name;
+    private readonly SymbolFunction? _function;
     private readonly List<INodeExpression> _arguments;
 
     public Call(string name, List<INodeExpression> arguments)
@@ -10,7 +13,13 @@ public class Call : INodeExpression
         _name = name;
         _arguments = arguments;
     }
-    
+
+    public Call(SymbolFunction function, List<INodeExpression> arguments)
+    {
+        _function = function;
+        _arguments = arguments;
+    }
+
     public string GetPrint(int level)
     {
         var value = "";
