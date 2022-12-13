@@ -1,2 +1,16 @@
-﻿begin
+﻿var
+    a : integer;
+    g : array [1..2] of integer;
+procedure abc(a : integer; b : integer);
+    var
+        c : integer;
+        k : integer;
+        z : integer;
+        g : array[1..2] of integer;
+    begin
+        a := g[2];
+    end;
+begin
+    if 1 then
+        a := 2;
 end.

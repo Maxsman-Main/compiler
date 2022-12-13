@@ -4,8 +4,8 @@ namespace Compiler.Parser.Tree;
 
 public class Call : INodeExpression
 {
-    private readonly string? _name;
-    private readonly SymbolFunction? _function;
+    private readonly string _name;
+    private readonly SymbolProcedure? _function;
     private readonly List<INodeExpression> _arguments;
 
     public Call(string name, List<INodeExpression> arguments)
@@ -14,10 +14,11 @@ public class Call : INodeExpression
         _arguments = arguments;
     }
 
-    public Call(SymbolFunction function, List<INodeExpression> arguments)
+    public Call(SymbolProcedure function, List<INodeExpression> arguments)
     {
         _function = function;
         _arguments = arguments;
+        _name = function.Name;
     }
 
     public string GetPrint(int level)

@@ -63,5 +63,19 @@ public class SymbolTableStack
         }
         Tables.Add(new SymbolTable(dictionary));
         _head++;
+        Tables.Add(new SymbolTable(new OrderedDictionary()));
+        _head++;
+    }
+
+    public string GetPrint()
+    {
+        var result = "";
+        foreach (var table in Tables)
+        {
+            result += table.GetPrint(0);
+            result += "\n";
+        }
+
+        return result;
     }
 }

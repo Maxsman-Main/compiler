@@ -14,4 +14,15 @@ public class SymbolProcedure : Symbol
         _locals = locals;
         _body = body;
     }
+
+    public override string GetPrint(int level)
+    {
+        var result = "";
+        result += _parameters.GetPrint(level);
+        result += "\n";
+        result += _locals.GetPrint(level);
+        result += "\n";
+        result += _body.GetPrint(level);
+        return result;
+    }
 }

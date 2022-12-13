@@ -78,7 +78,9 @@ namespace Compiler
                     var parser = new SemanticParser(lexer);
                     try
                     {
-                        parser.ParseProgram();
+                        var program = parser.ParseProgram();
+                        Console.WriteLine(program.Stack.GetPrint());
+                        Console.WriteLine(program.Block.GetPrint(0));
                     }
                     catch (CompilerException exception)
                     {

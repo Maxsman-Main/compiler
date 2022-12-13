@@ -25,12 +25,14 @@ public class Variable : INodeExpression, IVariable
     {
         _symbol = symbol;
         _expressions = new List<INodeExpression>();
+        Name = symbol.Name;
     }
     
     public Variable(SymbolVariable symbol, List<INodeExpression> expressions)
     {
         _symbol = symbol;
         _expressions = expressions;
+        Name = symbol.Name;
     }
 
     public string GetPrint(int level)

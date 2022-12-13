@@ -2,10 +2,22 @@
 
 public class SymbolVariable : Symbol
 {
-    private SymbolType _type;
+    public SymbolType Type { get; }
 
     public SymbolVariable(string name, SymbolType type) : base(name)
     {
-        _type = type;
+        Type = type;
+    }
+
+    public override string GetPrint(int level)
+    {
+        var result = "";
+        for (var i = 0; i < level; i++)
+        {
+            result += " ";
+        }
+
+        result += Name + " " + Type.GetPrint(0);
+        return result;
     }
 }
