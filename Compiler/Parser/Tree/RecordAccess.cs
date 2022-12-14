@@ -1,4 +1,5 @@
 ﻿using Compiler.Constants;
+using Compiler.Exceptions;
 using Compiler.Semantic;
 
 namespace Compiler.Parser.Tree;
@@ -21,6 +22,12 @@ public class RecordAccess : INodeExpression
     {
         _left = left;
         _field = field;
+    }
+
+    public SymbolType GetExpressionType()
+    {
+        if (_field != null) return _field.Type;
+        throw new CompilerException("can't get type for field");
     }
     
     public string GetPrint(int level)

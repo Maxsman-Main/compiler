@@ -1,4 +1,6 @@
-﻿namespace Compiler.Parser.Tree;
+﻿using Compiler.Semantic;
+
+namespace Compiler.Parser.Tree;
 
 public interface INode
 {
@@ -7,7 +9,7 @@ public interface INode
 
 public interface INodeExpression : INode
 {
-    
+    public SymbolType GetExpressionType();
 }
 
 public interface IBound : INode

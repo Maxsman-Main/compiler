@@ -1,4 +1,6 @@
-﻿namespace Compiler.Parser.Tree;
+﻿using Compiler.Semantic;
+
+namespace Compiler.Parser.Tree;
 
 public class Number : INodeExpression
 {
@@ -8,6 +10,12 @@ public class Number : INodeExpression
     {
         _value = value;
     }
+
+    public SymbolType GetExpressionType()
+    {
+        return new SymbolInteger("integer");
+    }
+    
     public string GetPrint(int level)
     {
         var value = "";

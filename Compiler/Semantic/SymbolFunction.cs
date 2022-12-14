@@ -4,10 +4,10 @@ namespace Compiler.Semantic;
 
 public class SymbolFunction : SymbolProcedure
 {
-    private SymbolType _returnType;
-    
+    public SymbolType ReturnType { get; }
+
     public SymbolFunction(string name, SymbolTable parameters, SymbolTable locals, INodeStatement body, SymbolType returnType) : base(name, parameters, locals, body)
     {
-        _returnType = returnType;
+        ReturnType = returnType;
     }
 }

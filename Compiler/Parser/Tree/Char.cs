@@ -1,4 +1,6 @@
-﻿namespace Compiler.Parser.Tree;
+﻿using Compiler.Semantic;
+
+namespace Compiler.Parser.Tree;
 
 public class Char : INodeExpression
 {
@@ -7,6 +9,11 @@ public class Char : INodeExpression
     public Char(string value)
     {
         _value = value;
+    }
+
+    public SymbolType GetExpressionType()
+    {
+        return new SymbolChar("Char");
     }
 
     public string GetPrint(int level)

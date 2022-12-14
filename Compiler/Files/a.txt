@@ -12,7 +12,7 @@ function abc(a : integer; b : integer) : integer;
         z : integer;
         g : array[1..2] of integer;
     begin
-        a := g[1];
+        a := g;
     end;
 begin
     if 1 then

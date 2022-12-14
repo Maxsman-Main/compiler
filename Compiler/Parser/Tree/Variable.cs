@@ -1,4 +1,5 @@
-﻿using Compiler.Semantic;
+﻿using Compiler.Exceptions;
+using Compiler.Semantic;
 
 namespace Compiler.Parser.Tree;
 
@@ -33,6 +34,13 @@ public class Variable : INodeExpression, IVariable
         _symbol = symbol;
         _expressions = expressions;
         Name = symbol.Name;
+    }
+    
+    
+    public SymbolType GetExpressionType()
+    {
+        if (_symbol != null) return _symbol.Type;
+        throw new CompilerException("can't get type for variable");
     }
 
     public string GetPrint(int level)

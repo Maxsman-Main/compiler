@@ -1,4 +1,5 @@
-﻿using Compiler.Semantic;
+﻿using Compiler.Exceptions;
+using Compiler.Semantic;
 
 namespace Compiler.Parser.Tree;
 
@@ -19,6 +20,14 @@ public class Call : INodeExpression
         _function = function;
         _arguments = arguments;
         _name = function.Name;
+    }
+
+    public SymbolType GetExpressionType()
+    {
+        if (_function is null)
+            throw new CompilerException("can't find function");
+        var function = _function as SymbolFunction ?? throw new CompilerException(_function.Name + " procedure can't return type");
+        return function.ReturnType;
     }
 
     public string GetPrint(int level)

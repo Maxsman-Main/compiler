@@ -1,14 +1,20 @@
 ﻿using System.Globalization;
+using Compiler.Semantic;
 
 namespace Compiler.Parser.Tree;
 
 public class DoubleNumber : INodeExpression
 {
     private readonly double _value;
-
+    
     public DoubleNumber(double value)
     {
         _value = value;
+    }
+
+    public SymbolType GetExpressionType()
+    {
+        return new SymbolDouble("Double");
     }
     
     public string GetPrint(int level)

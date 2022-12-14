@@ -1,16 +1,28 @@
 ﻿using Compiler.Constants;
+using Compiler.Exceptions;
+using Compiler.Semantic;
 
 namespace Compiler.Parser.Tree;
 
 public class UnaryOperation : INodeExpression
 {
     private readonly OperatorValue _operation;
-    private readonly INode _argument;
+    private readonly INodeExpression _argument;
 
-    public UnaryOperation(OperatorValue operation, INode argument)
+    public UnaryOperation(OperatorValue operation, INodeExpression argument)
     {
         _operation = operation;
         _argument = argument;
+    }
+    
+    public SymbolType GetExpressionType()
+    {
+        if (_argument.GetExpressionType() is SymbolInteger or SymbolDouble)
+        {
+            return _argument.GetExpressionType();
+        }
+
+        throw new CompilerException("argument can't use with unary " + _operation);
     }
     
     public string GetPrint(int level)
