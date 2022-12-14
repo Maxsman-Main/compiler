@@ -12,4 +12,15 @@ public class SymbolArray : SymbolType
         _leftBound = leftBound;
         _rightBound = rightBound;
     }
+
+    public int GetIndexesCount()
+    {
+        var result = 1;
+        if (_itemsType is SymbolArray symbolArray)
+        {
+            result += symbolArray.GetIndexesCount();
+        }
+
+        return result;
+    }
 }

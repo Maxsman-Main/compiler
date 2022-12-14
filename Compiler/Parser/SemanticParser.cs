@@ -680,7 +680,7 @@ public class SemanticParser
 
         var type = ParseType();
 
-        return identifierList.Select(identifier => new Pair {Key = identifier.Name, Value = type}).ToList();
+        return identifierList.Select(identifier => new Pair {Key = identifier.Name, Value = new SymbolVariable(identifier.Name, type)}).ToList();
     }
     
     private SymbolArray ParseArrayType()
@@ -1176,7 +1176,21 @@ public class SemanticParser
                     if (lexeme is not IIdentifierLexeme identifierLexemeRecord)
                         throw new CompilerException(_lexer.Coordinate + " identifier was expected");
                     _lexer.GetLexeme();
-                    return new RecordAccess(new Variable(identifierLexeme.Value), identifierLexemeRecord.Value);
+                    symbol = _stack.Get(identifierLexeme.Value);
+                    var variable = symbol as SymbolVariable ??
+                                   throw new CompilerException(identifierLexeme.Value + " isn't variable");
+                    if (variable.Type is not SymbolRecord symbolRecord)
+                    {
+                        throw new CompilerException(variable.Name + " isn't record");
+                    }
+                    var symbolField = symbolRecord.Fields.Get(identifierLexemeRecord.Value);
+                    if (symbolField is null)
+                    {
+                        throw new CompilerException(identifierLexemeRecord.Value + " identifier wasn't define");
+                    }
+                    var variableField = symbolField as SymbolVariable ??
+                                        throw new CompilerException(identifierLexemeRecord.Value + " isn't variable");
+                    return new RecordAccess(new Variable(new SymbolVariable(variable.Name, variable.Type)), new SymbolVariable(variableField.Name, variableField.Type));
                 }
 
                 lexeme = _lexer.CurrentLexeme;
@@ -1196,9 +1210,16 @@ public class SemanticParser
                     symbol = _stack.Get(identifierLexeme.Value);
                     var variable = symbol as SymbolVariable ??
                                    throw new CompilerException(identifierLexeme.Value + " isn't variable");
-                    if (variable.Type is not SymbolArray)
+                    if (variable.Type is not SymbolArray symbolArray)
                     {
                         throw new CompilerException(variable.Name + " isn't array");
+                    }
+                    
+                    var indexesCount = symbolArray.GetIndexesCount();
+                    if (expressionList.Count < 1 || expressionList.Count > indexesCount)
+                    {
+                        throw new CompilerException(identifierLexeme.Value + " array has " + indexesCount +
+                                                    " indexes, but " + expressionList.Count + " was received");
                     }
 
                     return new Variable(variable, expressionList);
@@ -1218,7 +1239,13 @@ public class SemanticParser
                 {
                     _lexer.GetLexeme();
                     symbol = _stack.Get(identifierLexeme.Value);
-                    return new Call(symbol as SymbolProcedure ?? throw new CompilerException(identifierLexeme.Value + " isn't procedure variable"), new List<INodeExpression>());
+                    var procedure = symbol as SymbolProcedure ?? throw new CompilerException(identifierLexeme.Value + " isn't procedure variable");
+                    if (procedure.Parameters.Count != 0)
+                    {
+                        throw new CompilerException(identifierLexeme.Value + " has " + procedure.Parameters.Count +
+                                                    " parameters, but 0 was received");
+                    }
+                    return new Call(procedure, new List<INodeExpression>());
                 }
                 
                 List<INodeExpression> expressions = new() {ParseExpression()};
@@ -1239,7 +1266,13 @@ public class SemanticParser
                 _lexer.GetLexeme();
 
                 symbol = _stack.Get(identifierLexeme.Value);
-                return new Call(symbol as SymbolProcedure ?? throw new CompilerException(identifierLexeme.Value + " isn't procedure variable"), expressions);
+                var symbolProcedure = symbol as SymbolProcedure ?? throw new CompilerException(identifierLexeme.Value + " isn't procedure variable");
+                if (symbolProcedure.Parameters.Count != expressions.Count)
+                {
+                    throw new CompilerException(identifierLexeme.Value + " has " + symbolProcedure.Parameters.Count +
+                                                " parameters, but " + expressions.Count + " was received");
+                }
+                return new Call(symbolProcedure, expressions);
             default:
                 if (lexeme is not ISeparatorLexeme {Value: SeparatorValue.LeftBracket})
                 {

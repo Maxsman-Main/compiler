@@ -4,13 +4,14 @@ namespace Compiler.Semantic;
 
 public class SymbolProcedure : Symbol
 {
-    private SymbolTable _parameters;
     private SymbolTable _locals;
     private INodeStatement _body;
 
+    public SymbolTable Parameters { get; }
+
     public SymbolProcedure(string name, SymbolTable parameters, SymbolTable locals, INodeStatement body) : base(name)
     {
-        _parameters = parameters;
+        Parameters = parameters;
         _locals = locals;
         _body = body;
     }
@@ -18,7 +19,7 @@ public class SymbolProcedure : Symbol
     public override string GetPrint(int level)
     {
         var result = "";
-        result += _parameters.GetPrint(level);
+        result += Parameters.GetPrint(level);
         result += "\n";
         result += _locals.GetPrint(level);
         result += "\n";

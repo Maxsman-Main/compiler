@@ -2,10 +2,10 @@
 
 public class SymbolRecord : SymbolType
 {
-    private SymbolTable _fields;
+    public SymbolTable Fields { get; }
 
     public SymbolRecord(string name, SymbolTable fields) : base(name)
     {
-        _fields = fields;
+        Fields = fields;
     }
 }

@@ -1,16 +1,20 @@
 ﻿var
     a : integer;
-    g : array [1..2] of integer;
-procedure abc(a : integer; b : integer);
+    g : array [1..2, 2..3] of integer;
+    z : record
+            a, b, c : integer;
+            o : integer;
+        end;
+function abc(a : integer; b : integer) : integer;
     var
         c : integer;
         k : integer;
         z : integer;
         g : array[1..2] of integer;
     begin
-        a := g[2];
+        a := g[1];
     end;
 begin
     if 1 then
-        a := 2;
+        a := abc(1, 2);
 end.
