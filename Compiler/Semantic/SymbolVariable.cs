@@ -1,18 +1,28 @@
-﻿namespace Compiler.Semantic;
+﻿using Compiler.Parser.Tree;
+
+namespace Compiler.Semantic;
 
 public class SymbolVariable : Symbol
 {
     public SymbolType Type { get; }
+    public INodeExpression? Value { get; }
 
     public SymbolVariable(string name, SymbolType type) : base(name)
     {
         Type = type;
+        Value = null;
+    }
+
+    public SymbolVariable(string name, SymbolType type, INodeExpression expression) : base(name)
+    {
+        Type = type;
+        Value = expression;
     }
 
     public override string GetPrint(int level)
     {
         var result = "";
-        for (var i = 0; i < level; i++)
+        for (var i = 0; i < level * 4; i++)
         {
             result += " ";
         }

@@ -1,4 +1,7 @@
-﻿namespace Compiler.Parser.Tree;
+﻿using Compiler.Exceptions;
+using Compiler.Semantic;
+
+namespace Compiler.Parser.Tree;
 
 public class WhileStatement : INodeStatement
 {

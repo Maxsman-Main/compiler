@@ -60,7 +60,7 @@ namespace Compiler.LexicalAnalyzerStateMachine
                     _currentLexeme = lexemeDecimal;
                     return lexemeDecimal;
                 }
-                
+
                 if (_currentState is CommentEndState)
                 {
                     _currentState = new StartState();

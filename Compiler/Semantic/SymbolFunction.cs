@@ -10,4 +10,17 @@ public class SymbolFunction : SymbolProcedure
     {
         ReturnType = returnType;
     }
+
+    public override string GetPrint(int level)
+    {
+        var result = "";
+        result += Name;
+        result += "\n";
+        result += Parameters.GetPrint(level + 1);
+        result += Locals.GetPrint(level + 1);
+        result += Body.GetPrint(level + 1);
+        result += "\n";
+        result += ReturnType.GetPrint(level + 1);
+        return result;
+    }
 }

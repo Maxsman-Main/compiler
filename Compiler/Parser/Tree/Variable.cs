@@ -1,4 +1,5 @@
-﻿using Compiler.Exceptions;
+﻿using System.Reflection.PortableExecutable;
+using Compiler.Exceptions;
 using Compiler.Semantic;
 
 namespace Compiler.Parser.Tree;
@@ -39,8 +40,29 @@ public class Variable : INodeExpression, IVariable
     
     public SymbolType GetExpressionType()
     {
-        if (_symbol != null) return _symbol.Type;
-        throw new CompilerException("can't get type for variable");
+        if (_expressions.Count != 0)
+        {
+            var type = _symbol?.Type as SymbolArray ?? throw new CompilerException(_symbol?.Name + " isn't array");
+            var itemsType = type.ItemsType;
+            for (var i = 1; i < _expressions.Count; i++)
+            {
+                if (itemsType is not SymbolArray arrayType)
+                {
+                    throw new CompilerException(_symbol.Name +  " array has " + i + " indexes, but " + _expressions.Count + " received");
+                }
+
+                itemsType = arrayType.ItemsType;
+            }
+
+            return itemsType;
+        }
+
+        if (_symbol == null) throw new CompilerException("can't get type for variable");
+        if(_symbol.Value is null)
+        {
+            throw new CompilerException(_symbol.Name + " isn't initialize");
+        }
+        return _symbol.Type;
     }
 
     public string GetPrint(int level)

@@ -79,7 +79,7 @@ namespace Compiler
                     try
                     {
                         var program = parser.ParseProgram();
-                        Console.WriteLine(program.Stack.GetPrint());
+                        Console.Write(program.Stack.GetPrint());
                         Console.WriteLine(program.Block.GetPrint(0));
                     }
                     catch (CompilerException exception)

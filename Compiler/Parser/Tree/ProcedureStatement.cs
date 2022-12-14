@@ -1,13 +1,23 @@
-﻿namespace Compiler.Parser.Tree;
+﻿using Compiler.Semantic;
+
+namespace Compiler.Parser.Tree;
 
 public class ProcedureStatement : INodeStatement
 {
     private readonly Variable _identifier;
+    private readonly SymbolProcedure? _procedure;
     private readonly List<INodeExpression>? _parameters;
-
+    
     public ProcedureStatement(Variable identifier, List<INodeExpression>? parameters)
     {
         _identifier = identifier;
+        _parameters = parameters;
+    }
+
+    public ProcedureStatement(SymbolProcedure procedure, List<INodeExpression> parameters)
+    {
+        _identifier = new Variable(procedure.Name);
+        _procedure = procedure;
         _parameters = parameters;
     }
 

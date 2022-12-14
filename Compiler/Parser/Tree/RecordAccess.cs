@@ -22,6 +22,7 @@ public class RecordAccess : INodeExpression
     {
         _left = left;
         _field = field;
+        _right = field.Name;
     }
 
     public SymbolType GetExpressionType()

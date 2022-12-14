@@ -293,7 +293,7 @@ public class SemanticParser
                 {
                     _lexer.GetLexeme();
                     
-                    //var expression = ParseExpression();
+                    var expression = ParseExpression();
 
                     lexeme = _lexer.CurrentLexeme;
                     if (lexeme is not ISeparatorLexeme {Value: SeparatorValue.Semicolon})
@@ -304,7 +304,7 @@ public class SemanticParser
 
                     foreach (var identifier in identifierList)
                     {
-                        _stack.Add(identifier.Name, new SymbolVariable(identifier.Name, type));
+                        _stack.Add(identifier.Name, new SymbolVariable(identifier.Name, type, expression));
                     }
 
                     lexeme = _lexer.CurrentLexeme;
@@ -447,8 +447,8 @@ public class SemanticParser
             throw new CompilerException(_lexer.Coordinate + " ; was expected");
         }
         _lexer.GetLexeme();
-        
-        _stack.Add(identifier.Name, new SymbolProcedure(identifier.Name, parameters,  locals, statement));
+
+        _stack.Add(identifier.Name, new SymbolProcedure(identifier.Name, parameters, locals, statement));
     }
     
     private void ParseParameters()
@@ -713,10 +713,10 @@ public class SemanticParser
         var type = ParseType();
         var lastElement = bounds.Count - 1;
         var preLastElement = bounds.Count - 2;
-        var arrayType = new SymbolArray("", type, bounds[lastElement].LeftBound, bounds[lastElement].RightBound);
+        var arrayType = new SymbolArray("array", type, bounds[lastElement].LeftBound, bounds[lastElement].RightBound);
         for (var i = preLastElement; i >= 0; i--)
         {
-            arrayType = new SymbolArray("Array", arrayType, bounds[i].LeftBound, bounds[i].RightBound);
+            arrayType = new SymbolArray("array", arrayType, bounds[i].LeftBound, bounds[i].RightBound);
         }
 
         return arrayType;
@@ -821,7 +821,7 @@ public class SemanticParser
     private INodeStatement ParseSimpleStatement()
     {
         var lexeme = _lexer.CurrentLexeme;
-        var identifier = new Variable(((IIdentifierLexeme) lexeme).Value);
+        var identifier = ((IdentifierLexeme)lexeme).Value;
         _lexer.GetLexeme();
 
         lexeme = _lexer.CurrentLexeme;
@@ -832,11 +832,14 @@ public class SemanticParser
         };
     }
 
-    private INodeStatement ParseProcedureStatement(Variable identifier)
+    private INodeStatement ParseProcedureStatement(string identifier)
     {
+        var symbol = _stack.Get(identifier);
+        var procedure = symbol as SymbolProcedure ?? throw new CompilerException(identifier + " isn't procedure");
+        
         var lexeme = _lexer.CurrentLexeme;
         if (lexeme is not ISeparatorLexeme {Value: SeparatorValue.LeftBracket})
-            return new ProcedureStatement(identifier, null);
+            throw new CompilerException(_lexer.Coordinate + " ( was expected");
         _lexer.GetLexeme();
         
         lexeme = _lexer.CurrentLexeme;
@@ -850,22 +853,57 @@ public class SemanticParser
             }
             _lexer.GetLexeme();
 
-            return new ProcedureStatement(identifier, expressionList);
+            if (procedure.Parameters.Count != expressionList.Count)
+            {
+                throw new CompilerException( procedure.Name + " procedure has " + procedure.Parameters.Count + " parameters, but " +
+                                            expressionList.Count + " received");
+            }
+
+            for (var i = 0; i < expressionList.Count; i++)
+            {
+                var expressionType = expressionList[i].GetExpressionType();
+                var parameterType = (procedure.Parameters.Data[i] as SymbolVariable)?.Type;
+                if (expressionType.GetType() != parameterType?.GetType())
+                {
+                    throw new CompilerException(procedure.Name + " parameter type is " + parameterType?.Name + " but " +
+                                                expressionType.Name + " received");
+                }
+            }
+            
+            return new ProcedureStatement(procedure, expressionList);
         }
 
         _lexer.GetLexeme();
-        return new ProcedureStatement(identifier, new List<INodeExpression>());
+        if (procedure.Parameters.Count != 0)
+        {
+            throw new CompilerException(procedure.Name + " procedure has " + procedure.Parameters.Count + " parameters, but 0 received");
+        }
+        return new ProcedureStatement(procedure, new List<INodeExpression>());
     }
 
-    private INodeStatement ParseAssignmentStatement(Variable identifier)
+    private INodeStatement ParseAssignmentStatement(string identifier)
     {
         var lexeme = _lexer.CurrentLexeme;
+        var symbol = _stack.Get(identifier);
+        var variable = symbol as SymbolVariable ?? throw new CompilerException(identifier + " isn't variable");
         if (lexeme is not IOperatorLexeme {Value: OperatorValue.Assignment})
             throw new CompilerException(_lexer.Coordinate + " := was expected");
         _lexer.GetLexeme();
         var expression = ParseExpression();
-        return new AssignmentStatement(identifier, expression);
 
+        var variableType = variable.Type;
+        var expressionType = expression.GetExpressionType();
+        if (variableType.GetType() == expressionType.GetType()) return new AssignmentStatement(variable, expression);
+        if (variableType is SymbolDouble && expressionType is SymbolInteger)
+        {
+            expression = new CastToDouble(expression);
+        }
+        else
+        {
+            throw new CompilerException(variableType.Name + " can't assigment " + expressionType.Name + " type");
+        }
+
+        return new AssignmentStatement(variable, expression);
     }
     
     private INodeStatement ParseStructuredStatement()
@@ -917,6 +955,11 @@ public class SemanticParser
 
         var statement = ParseStatement();
 
+        
+        if (expression.GetExpressionType() is not SymbolInteger)
+        {
+            throw new CompilerException("while condition can't be not integer");
+        }
         return new WhileStatement(expression, statement);
     }
 
@@ -931,7 +974,10 @@ public class SemanticParser
         }
         _lexer.GetLexeme();
 
-        var identifier = new Variable(identifierLexeme.Value);
+        var symbol = _stack.Get(identifierLexeme.Value);
+        var variable = symbol as SymbolVariable ??
+                       throw new CompilerException(identifierLexeme.Value + " isn't variable");
+        var identifier = new Variable(variable);
 
         lexeme = _lexer.CurrentLexeme;
         if (lexeme is not OperatorLexeme {Value: OperatorValue.Assignment})
@@ -941,6 +987,10 @@ public class SemanticParser
         _lexer.GetLexeme();
 
         var startExpression = ParseExpression();
+        if (startExpression.GetExpressionType() is not SymbolInteger)
+        {
+            throw new CompilerException("fot left bound can't be not integer");
+        }
 
         lexeme = _lexer.CurrentLexeme;
         if (lexeme is not IKeyWordLexeme {Value: KeyWordValue.To})
@@ -950,6 +1000,10 @@ public class SemanticParser
         _lexer.GetLexeme();
 
         var endExpression = ParseExpression();
+        if (endExpression.GetExpressionType() is not SymbolInteger)
+        {
+            throw new CompilerException("for right bound can't be not integer");
+        }
 
         lexeme = _lexer.CurrentLexeme;
         if (lexeme is not IKeyWordLexeme {Value: KeyWordValue.Do})
@@ -968,6 +1022,10 @@ public class SemanticParser
         _lexer.GetLexeme();
 
         var expression = ParseExpression();
+        if (expression.GetExpressionType() is not SymbolInteger)
+        {
+            throw new CompilerException("if condition can't be not integer");
+        }
 
         var lexeme = _lexer.CurrentLexeme;
         if (lexeme is not IKeyWordLexeme {Value: KeyWordValue.Then})
@@ -1135,6 +1193,12 @@ public class SemanticParser
                     }
                     _lexer.GetLexeme();
 
+                    var leftType = left.GetExpressionType();
+                    if (leftType is not SymbolRecord)
+                    {
+                        throw new CompilerException("left part in record access isn't record");
+                    }
+
                     left = new RecordAccess(left, identifierLexeme.Value);
                     break;
                 }
@@ -1186,7 +1250,7 @@ public class SemanticParser
                     var symbolField = symbolRecord.Fields.Get(identifierLexemeRecord.Value);
                     if (symbolField is null)
                     {
-                        throw new CompilerException(identifierLexemeRecord.Value + " identifier wasn't define");
+                        throw new CompilerException(identifierLexemeRecord.Value + " identifier wasn't defined");
                     }
                     var variableField = symbolField as SymbolVariable ??
                                         throw new CompilerException(identifierLexemeRecord.Value + " isn't variable");
@@ -1199,6 +1263,10 @@ public class SemanticParser
                     _lexer.GetLexeme();
                     
                     var expressionList = ParseExpressionList();
+                    if (expressionList.Any(expressionArray => expressionArray.GetExpressionType() is not SymbolInteger))
+                    {
+                        throw new CompilerException(identifierLexeme.Value + " indexes can't be not integer");
+                    }
 
                     lexeme = _lexer.CurrentLexeme;
                     if (lexeme is not ISeparatorLexeme {Value: SeparatorValue.SquareRightBracket})
@@ -1272,6 +1340,18 @@ public class SemanticParser
                     throw new CompilerException(identifierLexeme.Value + " has " + symbolProcedure.Parameters.Count +
                                                 " parameters, but " + expressions.Count + " was received");
                 }
+                
+                for (var i = 0; i < expressions.Count; i++)
+                {
+                    var expressionType = expressions[i].GetExpressionType();
+                    var parameterType = (symbolProcedure.Parameters.Data[i] as SymbolVariable)?.Type;
+                    if (expressionType.GetType() != parameterType?.GetType())
+                    {
+                        throw new CompilerException(symbolProcedure.Name + " parameter type is " + parameterType?.Name + " but " +
+                                                    expressionType.Name + " received");
+                    }
+                }
+                
                 return new Call(symbolProcedure, expressions);
             default:
                 if (lexeme is not ISeparatorLexeme {Value: SeparatorValue.LeftBracket})
@@ -1299,7 +1379,12 @@ public class SemanticParser
                         throw new CompilerException(_lexer.Coordinate + " identifier was expected");
                     }
                     _lexer.GetLexeme();
-                    
+
+                    if (expression.GetExpressionType() is not SymbolRecord)
+                    {
+                        throw new CompilerException("expression in record access isn't record type");
+                    }
+
                     return new RecordAccess(expression, identifierLexeme.Value);
                 }
                 

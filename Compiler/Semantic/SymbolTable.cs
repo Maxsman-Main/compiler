@@ -11,8 +11,7 @@ public struct Pair
 
 public class SymbolTable
 {
-    private OrderedDictionary Data { get; }
-
+    public OrderedDictionary Data { get; }
     public int Count => Data.Count;
 
     public SymbolTable(OrderedDictionary data)

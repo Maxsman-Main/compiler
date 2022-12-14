@@ -1,8 +1,11 @@
-﻿namespace Compiler.Parser.Tree;
+﻿using Compiler.Semantic;
+
+namespace Compiler.Parser.Tree;
 
 public class AssignmentStatement : INodeStatement
 {
     private readonly Variable _identifier;
+    private readonly SymbolVariable? _variable;
     private readonly INodeExpression _expression;
 
     public AssignmentStatement(Variable identifier, INodeExpression expression)
@@ -11,6 +14,13 @@ public class AssignmentStatement : INodeStatement
         _expression = expression;
     }
 
+    public AssignmentStatement(SymbolVariable variable, INodeExpression expression)
+    {
+        _variable = variable;
+        _identifier = new Variable(variable.Name);
+        _expression = expression;
+    }
+    
     public string GetPrint(int level)
     {
         var result = "";
