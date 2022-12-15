@@ -22,82 +22,65 @@ public class Parser
 
     public INode ParseProgram()
     {
-        Variable? identifier = null;
+        Variable? variable = null;
+        
         var lexeme = _lexer.CurrentLexeme;
         if (lexeme is IKeyWordLexeme {Value: KeyWordValue.Program})
         {
             _lexer.GetLexeme();
-            var nextToken = _lexer.CurrentLexeme;
-            if (nextToken is IIdentifierLexeme identifierLexeme)
-            {
-                _lexer.GetLexeme();
-                identifier = new Variable(identifierLexeme.Value);
-            }
-            else
-            {
-                throw new CompilerException(_lexer.Coordinate + " identifier was expected");
-            }
-
-            nextToken = _lexer.CurrentLexeme;
-            if (nextToken is not ISeparatorLexeme {Value: SeparatorValue.Semicolon})
-            {
-                throw new CompilerException(_lexer.Coordinate + " ; was expected");
-            }
-            _lexer.GetLexeme();
-            
+            var identifier = RequireIdentifier();
+            RequireSeparator(SeparatorValue.Semicolon);
+            variable = new Variable(identifier.Value);
         }
 
-        lexeme = _lexer.CurrentLexeme;
-        List<INodeDeclaration> declarations = new();
-        while (lexeme is IKeyWordLexeme
-               {
-                   Value: 
-                   KeyWordValue.Const or
-                   KeyWordValue.Var or
-                   KeyWordValue.Type or
-                   KeyWordValue.Function or
-                   KeyWordValue.Procedure
-               })
-        {
-            declarations.Add(ParseDeclaration());
-            lexeme = _lexer.CurrentLexeme;
-        }
-
+        var declarations = ParseDeclarations();
         var mainBlock = ParseCompoundStatement();
+        RequireSeparator(SeparatorValue.Point);
 
-        lexeme = _lexer.CurrentLexeme;
-        if (lexeme is not ISeparatorLexeme {Value: SeparatorValue.Point})
-        {
-            throw new CompilerException(_lexer.Coordinate + " . was expected");
-        }
-        _lexer.GetLexeme();
-
-        return identifier is null ? new Tree.Program(declarations, mainBlock) : new Tree.Program(identifier, declarations, mainBlock);
+        return new Tree.Program(variable, declarations, mainBlock);
     }
 
-    private INodeDeclaration ParseDeclaration()
+    private List<INodeDeclaration> ParseDeclarations()
     {
+        List<INodeDeclaration> declarations = new();
         var lexeme = _lexer.CurrentLexeme;
-        switch (lexeme)
+        while (lexeme is IKeyWordLexeme
+               {
+                   Value: KeyWordValue.Type or KeyWordValue.Const or KeyWordValue.Var or KeyWordValue.Function
+                   or KeyWordValue.Procedure
+               })
         {
-            case IKeyWordLexeme {Value: KeyWordValue.Type}:
-                _lexer.GetLexeme();
-                return ParseTypeDeclaration();
-            case IKeyWordLexeme {Value: KeyWordValue.Const}:
-                _lexer.GetLexeme();
-                return ParseConstDeclaration();
-            case IKeyWordLexeme{Value: KeyWordValue.Var}:
-                _lexer.GetLexeme();
-                return ParseVarDeclaration();
-            case IKeyWordLexeme {Value: KeyWordValue.Function}:
-                _lexer.GetLexeme();
-                return ParseFunctionDeclaration();
-            case IKeyWordLexeme{Value: KeyWordValue.Procedure}:
-                _lexer.GetLexeme();
-                return ParseProcedureDeclaration();
-            default:
-                throw new CompilerException(_lexer.Coordinate + " keyword type was expected");
+            switch (lexeme)
+            {
+                case IKeyWordLexeme {Value: KeyWordValue.Type}:
+                    _lexer.GetLexeme();
+                    declarations.Add(ParseTypeDeclaration());
+                    lexeme = _lexer.CurrentLexeme;
+                    break;
+                case IKeyWordLexeme {Value: KeyWordValue.Const}:
+                    _lexer.GetLexeme();
+                    declarations.Add(ParseConstDeclaration());
+                    lexeme = _lexer.CurrentLexeme;
+                    break;
+                case IKeyWordLexeme{Value: KeyWordValue.Var}:
+                    _lexer.GetLexeme();
+                    declarations.Add(ParseVarDeclaration());
+                    lexeme = _lexer.CurrentLexeme;
+                    break;
+                case IKeyWordLexeme {Value: KeyWordValue.Function}:
+                    _lexer.GetLexeme();
+                    declarations.Add(ParseFunctionDeclaration());
+                    lexeme = _lexer.CurrentLexeme;
+                    break;
+                case IKeyWordLexeme{Value: KeyWordValue.Procedure}:
+                    _lexer.GetLexeme();
+                    declarations.Add(ParseProcedureDeclaration());
+                    lexeme = _lexer.CurrentLexeme;
+                    break;
+            }   
         }
+
+        return declarations;
     }
 
     private INodeDeclaration ParseTypeDeclaration()
@@ -106,34 +89,13 @@ public class Parser
         var typesDeclarations = new List<TypeDeclarationPair>();
         do
         {
-            lexeme = _lexer.CurrentLexeme;
-            if (lexeme is not IIdentifierLexeme identifierLexeme)
-            {
-                throw new CompilerException(_lexer.Coordinate + " identifier was expected");
-            }
-            _lexer.GetLexeme();
-
-            var identifier = new Variable(identifierLexeme.Value);
-
-            lexeme = _lexer.CurrentLexeme;
-            if (lexeme is not IOperatorLexeme {Value: OperatorValue.Equal})
-            {
-                throw new CompilerException(_lexer.Coordinate + " = was expected");
-            }
-            _lexer.GetLexeme();
-
+            var identifierLexeme = RequireIdentifier();
+            RequireOperator(OperatorValue.Equal);
             var type = ParseType();
-
-            lexeme  = _lexer.CurrentLexeme;
-            if (lexeme is not ISeparatorLexeme {Value: SeparatorValue.Semicolon})
-            {
-                throw new CompilerException(_lexer.Coordinate + " ; was expected");
-            }
-            _lexer.GetLexeme();
+            RequireSeparator(SeparatorValue.Semicolon);
             
-            TypeDeclarationPair typeDeclaration;
-            typeDeclaration.Identifier = identifier;
-            typeDeclaration.Type = type;
+            var variable = new Variable(identifierLexeme.Value);
+            TypeDeclarationPair typeDeclaration = new(){Identifier = variable, Type = type};
             typesDeclarations.Add(typeDeclaration);
             
             lexeme = _lexer.CurrentLexeme;
@@ -149,44 +111,15 @@ public class Parser
         do
         {
 
-            lexeme = _lexer.CurrentLexeme;
-            if (lexeme is not IIdentifierLexeme identifierLexeme)
-            {
-                throw new CompilerException(_lexer.Coordinate + " Identifier was expected");
-            }
-            _lexer.GetLexeme();
-
-            var identifier = new Variable(identifierLexeme.Value);
-
-            lexeme = _lexer.CurrentLexeme;
-            if (lexeme is not IOperatorLexeme {Value: OperatorValue.DoublePoint})
-            {
-                throw new CompilerException(_lexer.Coordinate + " : was expected");
-            }
-            _lexer.GetLexeme();
-
+            var identifierLexeme = RequireIdentifier();
+            RequireOperator(OperatorValue.DoublePoint);
             var type = ParseType();
-            
-            lexeme  = _lexer.CurrentLexeme;
-            if (lexeme is not IOperatorLexeme {Value: OperatorValue.Equal})
-            {
-                throw new CompilerException(_lexer.Coordinate + " = was expected");
-            }
-            _lexer.GetLexeme();
-
+            RequireOperator(OperatorValue.Equal);
             var expression = ParseExpression();
+            RequireSeparator(SeparatorValue.Semicolon);
 
-            lexeme  = _lexer.CurrentLexeme;
-            if (lexeme is not ISeparatorLexeme {Value: SeparatorValue.Semicolon})
-            {
-                throw new CompilerException(_lexer.Coordinate + " ; was expected");
-            }
-            _lexer.GetLexeme();
-
-            ConstDeclarationData constData;
-            constData.Identifier = identifier;
-            constData.Type = type;
-            constData.Expression = expression;
+            var variable = new Variable(identifierLexeme.Value);
+            ConstDeclarationData constData = new(){Identifier = variable, Type = type, Expression = expression};
             constDeclarations.Add(constData);
             
             lexeme = _lexer.CurrentLexeme;
@@ -201,125 +134,26 @@ public class Parser
         var varDeclarations = new List<VarDeclarationData>();   
         do
         {
-            List<Variable> identifierList = new();
-            lexeme = _lexer.CurrentLexeme;
-            if (lexeme is not IIdentifierLexeme identifierLexeme)
+            var identifierList = ParseIdentifierList();
+            if (identifierList.Count == 0)
             {
                 throw new CompilerException(_lexer.Coordinate + " identifier was expected");
             }
-            _lexer.GetLexeme();
-
-            identifierList.Add(new Variable(identifierLexeme.Value));
+            RequireOperator(OperatorValue.DoublePoint);
+            var type = ParseType();
+            
+            INodeExpression? expression = null;
+            lexeme = _lexer.CurrentLexeme;
+            if (lexeme is IOperatorLexeme {Value: OperatorValue.Equal})
+            {
+                _lexer.GetLexeme();
+                expression = ParseExpression();
+            }
+            
+            RequireSeparator(SeparatorValue.Semicolon);
+            varDeclarations.AddRange(identifierList.Select(variable => new VarDeclarationData() {Identifier = variable, Type = type, Expression = expression}));
 
             lexeme = _lexer.CurrentLexeme;
-            if (lexeme is ISeparatorLexeme {Value: SeparatorValue.Comma})
-            {
-                do
-                {
-                    lexeme = _lexer.CurrentLexeme;
-                    if (lexeme is not ISeparatorLexeme {Value: SeparatorValue.Comma})
-                    {
-                        throw new CompilerException(_lexer.Coordinate + " , was expected");
-                    }
-                    _lexer.GetLexeme();
-                    
-                    lexeme = _lexer.CurrentLexeme;
-                    if (lexeme is not IIdentifierLexeme identifierLexemeCycle)
-                    {
-                        throw new CompilerException(_lexer.Coordinate + " identifier was expected");
-                    }
-                    _lexer.GetLexeme();
-                
-                    var identifier = new Variable(identifierLexemeCycle.Value);
-                    identifierList.Add(identifier);
-                    
-                    lexeme = _lexer.CurrentLexeme;
-                } while (lexeme is ISeparatorLexeme {Value: SeparatorValue.Comma});
-
-                lexeme = _lexer.CurrentLexeme;
-                if (lexeme is not IOperatorLexeme {Value: OperatorValue.DoublePoint})
-                {
-                    throw new CompilerException(_lexer.Coordinate + " : was expected");
-                }
-                _lexer.GetLexeme();
-
-                var type = ParseType();
-
-                lexeme = _lexer.CurrentLexeme;
-                if (lexeme is not ISeparatorLexeme {Value: SeparatorValue.Semicolon})
-                {
-                    throw new CompilerException(_lexer.Coordinate + " ; was expected");
-                }
-                _lexer.GetLexeme();
-
-                foreach (var identifier in identifierList)
-                {
-                    VarDeclarationData varDeclaration;
-                    varDeclaration.Identifier = identifier;
-                    varDeclaration.Type = type;
-                    varDeclaration.Expression = null;
-                    varDeclarations.Add(varDeclaration);
-                }
-
-                lexeme = _lexer.CurrentLexeme;
-            }
-            else
-            {
-                lexeme = _lexer.CurrentLexeme;
-                if (lexeme is not IOperatorLexeme {Value: OperatorValue.DoublePoint})
-                {
-                    throw new CompilerException(_lexer.Coordinate + " : was expected");
-                }
-                _lexer.GetLexeme();
-
-                var type = ParseType();
-
-                lexeme = _lexer.CurrentLexeme;
-                if (lexeme is not IOperatorLexeme {Value: OperatorValue.Equal})
-                {
-                    lexeme = _lexer.CurrentLexeme;
-                    if (lexeme is not ISeparatorLexeme {Value: SeparatorValue.Semicolon})
-                    {
-                        throw new CompilerException(_lexer.Coordinate + " ; was expected");
-                    }
-                    _lexer.GetLexeme();
-                    
-                    foreach (var identifier in identifierList)
-                    {
-                        VarDeclarationData varDeclaration;
-                        varDeclaration.Identifier = identifier;
-                        varDeclaration.Type = type;
-                        varDeclaration.Expression = null;
-                        varDeclarations.Add(varDeclaration);
-                    }
-
-                    lexeme = _lexer.CurrentLexeme;
-                }
-                else
-                {
-                    _lexer.GetLexeme();
-                    
-                    var expression = ParseExpression();
-
-                    lexeme = _lexer.CurrentLexeme;
-                    if (lexeme is not ISeparatorLexeme {Value: SeparatorValue.Semicolon})
-                    {
-                        throw new CompilerException(_lexer.Coordinate + " ; was expected");
-                    }
-                    _lexer.GetLexeme();
-
-                    foreach (var identifier in identifierList)
-                    {
-                        VarDeclarationData varDeclaration;
-                        varDeclaration.Identifier = identifier;
-                        varDeclaration.Type = type;
-                        varDeclaration.Expression = expression;
-                        varDeclarations.Add(varDeclaration);
-                    }
-
-                    lexeme = _lexer.CurrentLexeme;
-                }
-            }
         } while (lexeme is IIdentifierLexeme);
 
         return new VarDeclaration(varDeclarations);
@@ -327,217 +161,72 @@ public class Parser
 
     private INodeDeclaration ParseFunctionDeclaration()
     {
-        var lexeme = _lexer.CurrentLexeme;
-        if (lexeme is not IIdentifierLexeme identifierLexeme)
-        {
-            throw new CompilerException(_lexer.Coordinate + " identifier was expected");
-        }
-        _lexer.GetLexeme();
-
-        var identifier = new Variable(identifierLexeme.Value);
-
-        lexeme = _lexer.CurrentLexeme;
-        if (lexeme is not ISeparatorLexeme {Value: SeparatorValue.LeftBracket})
-        {
-            throw new CompilerException(_lexer.Coordinate + " ( was expected");
-        }
-        _lexer.GetLexeme();
-
+        var identifierLexeme = RequireIdentifier();
+        var variable = new Variable(identifierLexeme.Value);
+        RequireSeparator(SeparatorValue.LeftBracket);
         var parameters = ParseParameters();
-        
-        lexeme = _lexer.CurrentLexeme;
-        if (lexeme is not ISeparatorLexeme {Value: SeparatorValue.RightBracket})
-        {
-            throw new CompilerException(_lexer.Coordinate + " ) was expected");
-        }
-        _lexer.GetLexeme();
-
-        lexeme = _lexer.CurrentLexeme;
-        if (lexeme is not IOperatorLexeme {Value: OperatorValue.DoublePoint})
-        {
-            throw new CompilerException(_lexer.Coordinate + " : was expected");
-        }
-        _lexer.GetLexeme();
-        
+        RequireSeparator(SeparatorValue.RightBracket);
+        RequireOperator(OperatorValue.DoublePoint);
         var type = ParseType();
-
-        lexeme = _lexer.CurrentLexeme;
-        if (lexeme is not ISeparatorLexeme {Value: SeparatorValue.Semicolon})
-        {
-            throw new CompilerException(_lexer.Coordinate + "; was expected");
-        }
-        _lexer.GetLexeme();
-
-        lexeme = _lexer.CurrentLexeme;
-        List<INodeDeclaration> declarations = new();
-        while (lexeme is IKeyWordLexeme {Value: KeyWordValue.Const or KeyWordValue.Var or KeyWordValue.Type})
-        {
-            switch (lexeme)
-            {
-                case IKeyWordLexeme {Value: KeyWordValue.Const}:
-                {
-                    _lexer.GetLexeme();
-                    var declaration = ParseConstDeclaration();
-                    declarations.Add(declaration);
-                    break;
-                }
-                case IKeyWordLexeme {Value: KeyWordValue.Var}:
-                {
-                    _lexer.GetLexeme();
-                    var declaration = ParseVarDeclaration();
-                    declarations.Add(declaration);
-                    break;
-                }
-                case IKeyWordLexeme {Value: KeyWordValue.Type}:
-                {
-                    _lexer.GetLexeme();
-                    var declaration = ParseTypeDeclaration();
-                    declarations.Add(declaration);
-                    break;
-                }
-            }
-
-            lexeme = _lexer.CurrentLexeme;
-        }
-
+        RequireSeparator(SeparatorValue.Semicolon);
+        var declarations = ParseDeclarations();
         var statement = ParseCompoundStatement();
-
-        lexeme = _lexer.CurrentLexeme;
-        if (lexeme is not ISeparatorLexeme {Value: SeparatorValue.Semicolon})
-        {
-            throw new CompilerException(_lexer.Coordinate + " ; was expected");
-        }
-        _lexer.GetLexeme();
+        RequireSeparator(SeparatorValue.Semicolon);
         
-        return new FunctionDeclaration(identifier, parameters, type, declarations, statement);
+        return new FunctionDeclaration(variable, parameters, type, declarations, statement);
     }
 
     private INodeDeclaration ParseProcedureDeclaration()
     {
-        var lexeme = _lexer.CurrentLexeme;
-        if (lexeme is not IIdentifierLexeme identifierLexeme)
-        {
-            throw new CompilerException(_lexer.Coordinate + " identifier was expected");
-        }
-        _lexer.GetLexeme();
-
-        var identifier = new Variable(identifierLexeme.Value);
-
-        lexeme = _lexer.CurrentLexeme;
-        if (lexeme is not ISeparatorLexeme {Value: SeparatorValue.LeftBracket})
-        {
-            throw new CompilerException(_lexer.Coordinate + " ( was expected");
-        }
-        _lexer.GetLexeme();
-
+        var identifierLexeme = RequireIdentifier();
+        var variable = new Variable(identifierLexeme.Value);
+        RequireSeparator(SeparatorValue.LeftBracket);
         var parameters = ParseParameters();
-        
-        lexeme = _lexer.CurrentLexeme;
-        if (lexeme is not ISeparatorLexeme {Value: SeparatorValue.RightBracket})
-        {
-            throw new CompilerException(_lexer.Coordinate + ") was expected");
-        }
-        _lexer.GetLexeme();
-
-        lexeme = _lexer.CurrentLexeme;
-        if (lexeme is not ISeparatorLexeme {Value: SeparatorValue.Semicolon})
-        {
-            throw new CompilerException(_lexer.Coordinate + "; was expected");
-        }
-        _lexer.GetLexeme();
-
-        lexeme = _lexer.CurrentLexeme;
-        List<INodeDeclaration> declarations = new();
-        while (lexeme is IKeyWordLexeme {Value: KeyWordValue.Const or KeyWordValue.Var or KeyWordValue.Type})
-        {
-            switch (lexeme)
-            {
-                case IKeyWordLexeme {Value: KeyWordValue.Const}:
-                {
-                    _lexer.GetLexeme();
-                    var declaration = ParseConstDeclaration();
-                    declarations.Add(declaration);
-                    break;
-                }
-                case IKeyWordLexeme {Value: KeyWordValue.Var}:
-                {
-                    _lexer.GetLexeme();
-                    var declaration = ParseVarDeclaration();
-                    declarations.Add(declaration);
-                    break;
-                }
-                case IKeyWordLexeme {Value: KeyWordValue.Type}:
-                {
-                    _lexer.GetLexeme();
-                    var declaration = ParseTypeDeclaration();
-                    declarations.Add(declaration);
-                    break;
-                }
-            }
-
-            lexeme = _lexer.CurrentLexeme;
-        }
-
+        RequireSeparator(SeparatorValue.RightBracket);
+        RequireSeparator(SeparatorValue.Semicolon);
+        var declarations = ParseDeclarations();
         var statement = ParseCompoundStatement();
-        
-        lexeme = _lexer.CurrentLexeme;
-        if (lexeme is not ISeparatorLexeme {Value: SeparatorValue.Semicolon})
-        {
-            throw new CompilerException(_lexer.Coordinate + " ; was expected");
-        }
-        _lexer.GetLexeme();
+        RequireSeparator(SeparatorValue.Semicolon);
 
-        return new ProcedureDeclaration(identifier, parameters, declarations, statement);
+        return new ProcedureDeclaration(variable, parameters, declarations, statement);
     }
     
     private List<Parameter> ParseParameters()
     {
+        ILexeme lexeme;
+        var counter = 0;
         List<Parameter> parametersResult = new();
+        do
+        {
+            if (counter != 0)
+            {
+                _lexer.GetLexeme();
+            }
 
-        var lexeme = _lexer.CurrentLexeme;
-        List<Parameter> parameters;
-        
-        if (lexeme is KeyWordLexeme {Value: KeyWordValue.Var})
-        {
-            _lexer.GetLexeme();
-            parameters = ParseVarParameter();
-        }
-        else
-        {
-            parameters = ParseValueParameter();
-        }
-
-        if (parameters.Count == 0)
-        {
-            return parametersResult;
-        }
-        
-        foreach (var parameter in parameters)
-        {
-            parametersResult.Add(parameter);
-        }
-        
-        lexeme = _lexer.CurrentLexeme;
-        while (lexeme is ISeparatorLexeme {Value: SeparatorValue.Semicolon})
-        {
-            _lexer.GetLexeme();
+            List<Parameter> parameters;
             lexeme = _lexer.CurrentLexeme;
             if (lexeme is KeyWordLexeme {Value: KeyWordValue.Var})
             {
                 _lexer.GetLexeme();
                 parameters = ParseVarParameter();
+                if (parameters.Count == 0)
+                {
+                    throw new CompilerException(_lexer.Coordinate + " identifier was expected");
+                }
             }
             else
             {
                 parameters = ParseValueParameter();
-            }
-            foreach (var parameter in parameters)
-            {
-                parametersResult.Add(parameter);
+                if (parameters.Count == 0 && counter == 0)
+                {
+                    return parametersResult;
+                }
             }
 
+            parametersResult.AddRange(parameters);
             lexeme = _lexer.CurrentLexeme;
-        }
+            counter += 1;
+        } while (lexeme is ISeparatorLexeme {Value: SeparatorValue.Semicolon});
 
         return parametersResult;
     }
@@ -552,21 +241,10 @@ public class Parser
             return parameters;
         }
         
-        var lexeme = _lexer.CurrentLexeme;
-        if (lexeme is not IOperatorLexeme {Value: OperatorValue.DoublePoint})
-        {
-            throw new CompilerException(_lexer.Coordinate + ": was expected");
-        }
-        _lexer.GetLexeme();
-
+        RequireOperator(OperatorValue.DoublePoint);
         var type = ParseType();
-
-        foreach (var identifier in identifierList)
-        {
-            var parameter = new ValueParameter(identifier, type);
-            parameters.Add(parameter);
-        }
-
+        
+        parameters.AddRange(identifierList.Select(identifier => new ValueParameter(identifier, type)));
         return parameters;
     }
 
@@ -580,52 +258,36 @@ public class Parser
             return parameters;
         }
         
-        var lexeme = _lexer.CurrentLexeme;
-        if (lexeme is not IOperatorLexeme {Value: OperatorValue.DoublePoint})
-        {
-            throw new CompilerException(_lexer.Coordinate + ": was expected");
-        }
-        _lexer.GetLexeme();
-
+        RequireOperator(OperatorValue.DoublePoint);
         var type = ParseType();
 
-        foreach (var identifier in identifierList)
-        {
-            var parameter = new VarParameter(identifier, type);
-            parameters.Add(parameter);
-        }
-
+        parameters.AddRange(identifierList.Select(identifier => new VarParameter(identifier, type)));
         return parameters;
     }
 
     private List<Variable> ParseIdentifierList()
     {
         var lexeme = _lexer.CurrentLexeme;
-        List<Variable> identifiers = new();
+        List<Variable> variables = new();
         if (lexeme is not IIdentifierLexeme identifierLexeme)
         {
-            return identifiers;
+            return variables;
         }
         _lexer.GetLexeme();
         
-        identifiers.Add(new Variable(identifierLexeme.Value));
+        variables.Add(new Variable(identifierLexeme.Value));
         lexeme = _lexer.CurrentLexeme;
         while (lexeme is ISeparatorLexeme {Value: SeparatorValue.Comma})
         {
             _lexer.GetLexeme();
-
-            lexeme = _lexer.CurrentLexeme;
-            if (lexeme is not IIdentifierLexeme identifierLexemeCycle)
-            {
-                throw new CompilerException(_lexer.Coordinate + "identifier was expected");
-            }
-            _lexer.GetLexeme();
             
-            identifiers.Add(new Variable(identifierLexemeCycle.Value));
+            var identifierLexemeCycle = RequireIdentifier();
+            
+            variables.Add(new Variable(identifierLexemeCycle.Value));
             lexeme = _lexer.CurrentLexeme;
         }
         
-        return identifiers;
+        return variables;
     }
     
     private INodeType ParseType()
@@ -651,8 +313,10 @@ public class Parser
                 type = new Type(KeyWordValue.Char);
                 break;
             case IKeyWordLexeme{Value: KeyWordValue.Array}:
+                _lexer.GetLexeme();
                 return ParseArrayType();
             case IKeyWordLexeme{Value: KeyWordValue.Record}:
+                _lexer.GetLexeme();
                 return ParseRecordType();
             case IIdentifierLexeme identifierLexeme:
                 _lexer.GetLexeme();
@@ -666,97 +330,54 @@ public class Parser
 
     private INodeType ParseRecordType()
     {
-        _lexer.GetLexeme();
-
         var recordSections = ParseRecordSections();
-
-        var lexeme = _lexer.CurrentLexeme;
-        if (lexeme is not IKeyWordLexeme {Value: KeyWordValue.End})
-        {
-            throw new CompilerException(_lexer.Coordinate + " end was expected");
-        }
-        _lexer.GetLexeme();
+        RequireKeyWord(KeyWordValue.End);
         
         return new RecordType(recordSections);
     }
 
     private List<INode> ParseRecordSections()
     {
-        var lexeme = _lexer.CurrentLexeme;
-        List<INode> fixedPart = new();
-        if (lexeme is not IIdentifierLexeme)
+        List<INode> fieldPart = new();
+        ILexeme lexeme;
+        var counter = 0;
+        do
         {
-            return fixedPart;
-        }
+            if (counter != 0)
+            {
+                _lexer.GetLexeme();
+            }
 
-        var recordSection = ParseRecordSection();
-        fixedPart.Add(recordSection);
-        lexeme = _lexer.CurrentLexeme;
-        while (lexeme is ISeparatorLexeme {Value: SeparatorValue.Semicolon})
-        {
-            _lexer.GetLexeme();
             lexeme = _lexer.CurrentLexeme;
             if (lexeme is not IIdentifierLexeme)
             {
-                return fixedPart;
+                return fieldPart;
             }
-            recordSection = ParseRecordSection();
-            fixedPart.Add(recordSection);
+            
+            var recordSection = ParseRecordSection();
+            fieldPart.Add(recordSection);
             lexeme = _lexer.CurrentLexeme;
-        }
+            counter += 1;
+        } while (lexeme is ISeparatorLexeme {Value: SeparatorValue.Semicolon});
 
-        return fixedPart;
+        return fieldPart;
     }
 
     private INode ParseRecordSection()
     {
-        var lexeme = _lexer.CurrentLexeme;
-        if (lexeme is not IIdentifierLexeme)
-        {
-            throw new CompilerException(_lexer.Coordinate + " identifier was expected");
-        }
-        
         var identifierList = ParseIdentifierList();
-
-        lexeme = _lexer.CurrentLexeme;
-        if (lexeme is not IOperatorLexeme {Value: OperatorValue.DoublePoint})
-        {
-            throw new CompilerException(_lexer.Coordinate + " : was expected");
-        }
-        _lexer.GetLexeme();
-
+        RequireOperator(OperatorValue.DoublePoint);
         var type = ParseType();
 
         return new RecordSection(identifierList, type);
     }
     
     private INodeType ParseArrayType()
-    {
-        _lexer.GetLexeme();
-                
-        var lexeme = _lexer.CurrentLexeme;
-        if (lexeme is not ISeparatorLexeme {Value: SeparatorValue.SquareLeftBracket})
-        {
-            throw new CompilerException(_lexer.Coordinate + " [ was expected");
-        }
-        _lexer.GetLexeme();
-
+    {   
+        RequireSeparator(SeparatorValue.SquareLeftBracket);
         var bounds = ParseBounds();
-
-        lexeme = _lexer.CurrentLexeme;
-        if (lexeme is not ISeparatorLexeme {Value: SeparatorValue.SquareRightBracket})
-        {
-            throw new CompilerException(_lexer.Coordinate + " ] was expected");
-        }
-        _lexer.GetLexeme();
-                
-        lexeme = _lexer.CurrentLexeme;
-        if (lexeme is not IKeyWordLexeme{Value: KeyWordValue.Of})
-        {
-            throw new CompilerException(_lexer.Coordinate + " of was expected");
-        }
-        _lexer.GetLexeme();
-
+        RequireSeparator(SeparatorValue.SquareRightBracket);
+        RequireKeyWord(KeyWordValue.Of);
         var type = ParseType();
 
         return new ArrayType(type, bounds);
@@ -765,60 +386,24 @@ public class Parser
     private List<INode> ParseBounds()
     {
         List<INode> indexes = new();
-        var lexeme = _lexer.CurrentLexeme;
-        if (lexeme is not IIntegerLexeme leftBound)
+        ILexeme lexeme;
+        var counter = 0;
+        do
         {
-            throw new CompilerException(_lexer.Coordinate + " integer was expected");
-        }
-        _lexer.GetLexeme();
-
-        lexeme = _lexer.CurrentLexeme;
-        if (lexeme is not IOperatorLexeme {Value: OperatorValue.Range})
-        {
-            throw new CompilerException(_lexer.Coordinate + " .. was expected");
-        }
-        _lexer.GetLexeme();
-            
-        lexeme = _lexer.CurrentLexeme;
-        if (lexeme is not IIntegerLexeme rightBound)
-        {
-            throw new CompilerException(_lexer.Coordinate + " integer was expected");
-        }
-        _lexer.GetLexeme();
-            
-        lexeme = _lexer.CurrentLexeme;
-
-        indexes.Add(new Bound(leftBound.Value, rightBound.Value));
-        
-        while(lexeme is ISeparatorLexeme{Value: SeparatorValue.Comma})
-        {
-            _lexer.GetLexeme();
-            
-            lexeme = _lexer.CurrentLexeme;
-            if (lexeme is not IIntegerLexeme leftBoundCycle)
+            if (counter != 0)
             {
-                throw new CompilerException(_lexer.Coordinate + " integer was expected");
+                _lexer.GetLexeme();
             }
-            _lexer.GetLexeme();
+            
+            var leftBound = RequireInteger();
+            RequireOperator(OperatorValue.Range);
+            var rightBound = RequireInteger();
+
+            indexes.Add(new Bound(leftBound.Value, rightBound.Value));
 
             lexeme = _lexer.CurrentLexeme;
-            if (lexeme is not IOperatorLexeme {Value: OperatorValue.Range})
-            {
-                throw new CompilerException(_lexer.Coordinate + " .. was expected");
-            }
-            _lexer.GetLexeme();
-            
-            lexeme = _lexer.CurrentLexeme;
-            if (lexeme is not IIntegerLexeme rightBoundCycle)
-            {
-                throw new CompilerException(_lexer.Coordinate + " integer was expected");
-            }
-            _lexer.GetLexeme();
-            
-            lexeme = _lexer.CurrentLexeme;
-
-            indexes.Add(new Bound(leftBoundCycle.Value, rightBoundCycle.Value));
-        }
+            counter += 1;
+        } while (lexeme is ISeparatorLexeme{Value: SeparatorValue.Comma});
 
         return indexes;
     }
@@ -831,6 +416,7 @@ public class Parser
         {
             statements.Add(statementFirst);
         }
+        
         var lexeme = _lexer.CurrentLexeme;
         while (lexeme is ISeparatorLexeme {Value: SeparatorValue.Semicolon})
         {
@@ -861,50 +447,38 @@ public class Parser
     private INodeStatement ParseSimpleStatement()
     {
         var lexeme = _lexer.CurrentLexeme;
-        var identifier = new Variable(((IIdentifierLexeme) lexeme).Value);
+        var variable = new Variable(((IIdentifierLexeme) lexeme).Value);
         _lexer.GetLexeme();
 
         lexeme = _lexer.CurrentLexeme;
         return lexeme switch
         {
-            IOperatorLexeme {Value: OperatorValue.Assignment} => ParseAssignmentStatement(identifier),
-            _ => ParseProcedureStatement(identifier)
+            IOperatorLexeme {Value: OperatorValue.Assignment} => ParseAssignmentStatement(variable),
+            _ => ParseProcedureStatement(variable)
         };
     }
 
-    private INodeStatement ParseProcedureStatement(Variable identifier)
+    private INodeStatement ParseProcedureStatement(Variable variable)
     {
+        List<INodeExpression> expressionList = new(); 
+
+        RequireSeparator(SeparatorValue.LeftBracket);
         var lexeme = _lexer.CurrentLexeme;
-        if (lexeme is not ISeparatorLexeme {Value: SeparatorValue.LeftBracket})
-            return new ProcedureStatement(identifier, null);
-        _lexer.GetLexeme();
-        
-        lexeme = _lexer.CurrentLexeme;
-        if (lexeme is not ISeparatorLexeme {Value: SeparatorValue.RightBracket})
+        if (lexeme is not SeparatorLexeme {Value: SeparatorValue.RightBracket})
         {
-            var expressionList = ParseExpressionList();
-            lexeme = _lexer.CurrentLexeme;
-            if (lexeme is not ISeparatorLexeme {Value: SeparatorValue.RightBracket})
-            {
-                throw new CompilerException(_lexer.Coordinate + " ) was expected");
-            }
-            _lexer.GetLexeme();
-
-            return new ProcedureStatement(identifier, expressionList);
+            expressionList = ParseExpressionList();
         }
+        RequireSeparator(SeparatorValue.RightBracket);
 
-        _lexer.GetLexeme();
-        return new ProcedureStatement(identifier, new List<INodeExpression>());
+        return new ProcedureStatement(variable, expressionList);
+        
     }
 
-    private INodeStatement ParseAssignmentStatement(Variable identifier)
+    private INodeStatement ParseAssignmentStatement(Variable variable)
     {
-        var lexeme = _lexer.CurrentLexeme;
-        if (lexeme is not IOperatorLexeme {Value: OperatorValue.Assignment})
-            throw new CompilerException(_lexer.Coordinate + " := was expected");
-        _lexer.GetLexeme();
+        RequireOperator(OperatorValue.Assignment);
         var expression = ParseExpression();
-        return new AssignmentStatement(identifier, expression);
+        return new AssignmentStatement(variable, expression);
 
     }
     
@@ -923,21 +497,9 @@ public class Parser
 
     private INodeStatement ParseCompoundStatement()
     {
-        var lexeme = _lexer.CurrentLexeme;
-        if (lexeme is not KeyWordLexeme {Value: KeyWordValue.Begin})
-        {
-            throw new CompilerException(_lexer.Coordinate + " begin was expected");
-        }
-        _lexer.GetLexeme();
-
+        RequireKeyWord(KeyWordValue.Begin);
         var statements = ParseStatementSequence();
-        
-        lexeme = _lexer.CurrentLexeme;
-        if (lexeme is not KeyWordLexeme {Value: KeyWordValue.End})
-        {
-            throw new CompilerException(_lexer.Coordinate + " end was expected");
-        }
-        _lexer.GetLexeme();
+        RequireKeyWord(KeyWordValue.End);
 
         return new CompoundStatement(statements);
     }
@@ -947,14 +509,7 @@ public class Parser
         _lexer.GetLexeme();
 
         var expression = ParseExpression();
-
-        var lexeme = _lexer.CurrentLexeme;
-        if (lexeme is not IKeyWordLexeme {Value: KeyWordValue.Do})
-        {
-            throw new CompilerException(_lexer.Coordinate + " do was expected");
-        }
-        _lexer.GetLexeme();
-
+        RequireKeyWord(KeyWordValue.Do);
         var statement = ParseStatement();
 
         return new WhileStatement(expression, statement);
@@ -964,66 +519,37 @@ public class Parser
     {
         _lexer.GetLexeme();
 
-        var lexeme = _lexer.CurrentLexeme;
-        if (lexeme is not IdentifierLexeme identifierLexeme)
-        {
-            throw new CompilerException(_lexer.Coordinate + " identifier was expected");
-        }
-        _lexer.GetLexeme();
-
-        var identifier = new Variable(identifierLexeme.Value);
-
-        lexeme = _lexer.CurrentLexeme;
-        if (lexeme is not OperatorLexeme {Value: OperatorValue.Assignment})
-        {
-            throw new CompilerException(_lexer.Coordinate + " := was expected");
-        }
-        _lexer.GetLexeme();
-
+        var identifierLexeme = RequireIdentifier();
+        RequireOperator(OperatorValue.Assignment);
         var startExpression = ParseExpression();
-
-        lexeme = _lexer.CurrentLexeme;
-        if (lexeme is not IKeyWordLexeme {Value: KeyWordValue.To})
-        {
-            throw new CompilerException(_lexer.Coordinate + " to was expected");
-        }
-        _lexer.GetLexeme();
-
+        RequireKeyWord(KeyWordValue.To);
         var endExpression = ParseExpression();
-
-        lexeme = _lexer.CurrentLexeme;
-        if (lexeme is not IKeyWordLexeme {Value: KeyWordValue.Do})
-        {
-            throw new CompilerException(_lexer.Coordinate + " do was expected");
-        }
-        _lexer.GetLexeme();
-
+        RequireKeyWord(KeyWordValue.Do);
         var statement = ParseStatement();
-
-        return new ForStatement(identifier, startExpression, endExpression, statement);
+        
+        var variable = new Variable(identifierLexeme.Value);
+        
+        return new ForStatement(variable, startExpression, endExpression, statement);
     }
 
     private INodeStatement ParseIfStatement()
     {
         _lexer.GetLexeme();
 
+        INodeStatement? elsePart = null;
+        
         var expression = ParseExpression();
-
-        var lexeme = _lexer.CurrentLexeme;
-        if (lexeme is not IKeyWordLexeme {Value: KeyWordValue.Then})
-        {
-            throw new CompilerException(_lexer.Coordinate + " then was expected");
-        }
-        _lexer.GetLexeme();
-
+        RequireKeyWord(KeyWordValue.Then);
         var statement = ParseStatement();
-        lexeme = _lexer.CurrentLexeme;
+        
+        var lexeme = _lexer.CurrentLexeme;
         if (lexeme is not IKeyWordLexeme {Value: KeyWordValue.Else})
-            return new IfStatement(expression, statement, null);
+            return new IfStatement(expression, statement, elsePart);
+        
         _lexer.GetLexeme();
-        var elsePart = ParseStatement();
-        return new IfStatement(expression, statement, elsePart);
+        elsePart = ParseStatement();
 
+        return new IfStatement(expression, statement, elsePart);
     }
     
     public INodeExpression ParseExpression()
@@ -1047,56 +573,22 @@ public class Parser
         }
 
         return leftSimpleExpression;
-
     }
 
     private INodeExpression ParseSimpleExpression()
     {
         var lexeme = _lexer.CurrentLexeme;
-        var counter = 0;
-        while (lexeme is IOperatorLexeme {Value: OperatorValue.Minus or OperatorValue.Plus})
+        var sign = OperatorValue.Plus;
+        if (lexeme is IOperatorLexeme {Value: OperatorValue.Minus or OperatorValue.Plus})
         {
-            if (lexeme is IOperatorLexeme {Value: OperatorValue.Minus})
-            {
-                counter += 1;
-            }
-            _lexer.GetLexeme();
-            lexeme = _lexer.CurrentLexeme;
+            sign = ConvertPlusMinusRow();
         }
-
-        INodeExpression left;
-        if (counter > 0 && counter % 2 != 0)
-        {
-            left = new UnaryOperation(OperatorValue.Minus, ParseTerm());
-        }
-        else
-        {
-            left = ParseTerm();
-        }
+        var left = sign == OperatorValue.Minus ? new UnaryOperation(OperatorValue.Minus, ParseTerm()) : ParseTerm();
         
         lexeme = _lexer.CurrentLexeme;
         while (lexeme is IOperatorLexeme {Value: OperatorValue.Plus or OperatorValue.Minus})
         {
-            counter = 0;
-            while (lexeme is IOperatorLexeme {Value: OperatorValue.Minus or OperatorValue.Plus})
-            {
-                if (lexeme is IOperatorLexeme {Value: OperatorValue.Minus})
-                {
-                    counter += 1;
-                }
-                _lexer.GetLexeme();
-                lexeme = _lexer.CurrentLexeme;
-            }
-
-            OperatorValue operatorValue;
-            if (counter > 0 && counter % 2 != 0)
-            {
-                operatorValue = OperatorValue.Minus;
-            }
-            else
-            {
-                operatorValue = OperatorValue.Plus;
-            }
+            var operatorValue = ConvertPlusMinusRow();
             left = new BinOperation(operatorValue, left, ParseTerm());
             lexeme = _lexer.CurrentLexeme;
         }
@@ -1117,72 +609,38 @@ public class Parser
         var lexeme = _lexer.CurrentLexeme;
         while (lexeme is IOperatorLexeme {Value: OperatorValue.Multiplication or OperatorValue.Div} | lexeme is IKeyWordLexeme{Value: KeyWordValue.And} | lexeme is SeparatorLexeme{Value: SeparatorValue.Point})
         {
-            var counter = 0;
+            var sign = OperatorValue.Plus;
             switch (lexeme)
-            {  
-                case IKeyWordLexeme:
+            {
+                case IKeyWordLexeme or IOperatorLexeme:
+                {
+                    var operatorLexeme = lexeme;
                     _lexer.GetLexeme();
                     lexeme = _lexer.CurrentLexeme;
-                    while (lexeme is IOperatorLexeme {Value: OperatorValue.Minus or OperatorValue.Plus} plusMinusOperator)
+                    if (lexeme is IOperatorLexeme {Value: OperatorValue.Minus or OperatorValue.Plus})
                     {
-                        _lexer.GetLexeme();
-                        if (plusMinusOperator.Value is OperatorValue.Minus)
-                        {
-                            counter += 1;
-                        }
-                        lexeme = _lexer.CurrentLexeme;
+                        sign = ConvertPlusMinusRow();
                     }
 
-                    if (counter > 0 && counter % 2 != 0)
+                    var operatorValue = OperatorValue.And;
+                    if (operatorLexeme is IOperatorLexeme)
                     {
-                        left = new BinOperation(OperatorValue.And, left, new UnaryOperation(OperatorValue.Minus, ParseFactor()));
+                        operatorValue = ((IOperatorLexeme)operatorLexeme).Value;
                     }
-                    else
-                    {
-                        left = new BinOperation(OperatorValue.And, left, ParseFactor());
-                    }
+                
+                    left = sign == OperatorValue.Minus ? new BinOperation(operatorValue, left, new UnaryOperation(OperatorValue.Minus, ParseFactor())) : new BinOperation(operatorValue, left, ParseFactor());
                     break;
-                case IOperatorLexeme operatorLexeme:
-                    _lexer.GetLexeme();
-                    lexeme = _lexer.CurrentLexeme;
-                    while (lexeme is IOperatorLexeme {Value: OperatorValue.Minus or OperatorValue.Plus} plusMinusOperator)
-                    {
-                        _lexer.GetLexeme();
-                        if (plusMinusOperator.Value is OperatorValue.Minus)
-                        {
-                            counter += 1;
-                        }
-                        lexeme = _lexer.CurrentLexeme;
-                    }
-
-                    if (counter > 0 && counter % 2 != 0)
-                    {
-                        left = new BinOperation(operatorLexeme.Value, left, new UnaryOperation(OperatorValue.Minus, ParseFactor()));
-                    }
-                    else
-                    {
-                        left = new BinOperation(operatorLexeme.Value, left, ParseFactor());
-                    }
-                    break;
+                }
                 case ISeparatorLexeme:
                 {
                     _lexer.GetLexeme();
-                
-                    lexeme = _lexer.CurrentLexeme;
-                    if (lexeme is not IIdentifierLexeme identifierLexeme)
-                    {
-                        throw  new CompilerException(_lexer.Coordinate + " identifier was expected");
-                    }
-                    _lexer.GetLexeme();
-
+                    var identifierLexeme = RequireIdentifier();
                     left = new RecordAccess(left, identifierLexeme.Value);
                     break;
                 }
             }
-
             lexeme = _lexer.CurrentLexeme;
         }
-        
         return left;
     }
 
@@ -1210,11 +668,7 @@ public class Parser
                 if (lexeme is ISeparatorLexeme {Value: SeparatorValue.Point})
                 {
                     _lexer.GetLexeme();
-
-                    lexeme = _lexer.CurrentLexeme;
-                    if (lexeme is not IIdentifierLexeme identifierLexemeRecord)
-                        throw new CompilerException(_lexer.Coordinate + " identifier was expected");
-                    _lexer.GetLexeme();
+                    var identifierLexemeRecord = RequireIdentifier();
                     return new RecordAccess(new Variable(identifierLexeme.Value), identifierLexemeRecord.Value);
                 }
 
@@ -1222,20 +676,11 @@ public class Parser
                 if (lexeme is ISeparatorLexeme {Value: SeparatorValue.SquareLeftBracket})
                 {
                     _lexer.GetLexeme();
-                    
                     var expressionList = ParseExpressionList();
-
-                    lexeme = _lexer.CurrentLexeme;
-                    if (lexeme is not ISeparatorLexeme {Value: SeparatorValue.SquareRightBracket})
-                    {
-                        throw new CompilerException(_lexer.Coordinate + " ] was expected");
-                    }
-                    _lexer.GetLexeme();
-
+                    RequireSeparator(SeparatorValue.SquareRightBracket);
                     return new Variable(identifierLexeme.Value, expressionList);
                 }
-                
-                
+
                 lexeme = _lexer.CurrentLexeme;
                 if (lexeme is not ISeparatorLexeme {Value: SeparatorValue.LeftBracket})
                     return new Variable(identifierLexeme.Value);
@@ -1249,7 +694,6 @@ public class Parser
                 }
                 
                 List<INodeExpression> expressions = new() {ParseExpression()};
-
                 lexeme = _lexer.CurrentLexeme;
                 while (lexeme is ISeparatorLexeme {Value: SeparatorValue.Comma})
                 {
@@ -1257,42 +701,25 @@ public class Parser
                     expressions.Add(ParseExpression());
                     lexeme = _lexer.CurrentLexeme;
                 }
-
-                lexeme = _lexer.CurrentLexeme;
-                if (lexeme is not ISeparatorLexeme {Value: SeparatorValue.RightBracket})
-                {
-                    throw new CompilerException(_lexer.Coordinate + " ) was expected");
-                }
-                _lexer.GetLexeme();
-
+                RequireSeparator(SeparatorValue.RightBracket);
                 return new Call(identifierLexeme.Value, expressions);
             default:
-                if (lexeme is not ISeparatorLexeme {Value: SeparatorValue.LeftBracket})
+                try
+                {
+                    RequireSeparator(SeparatorValue.LeftBracket);
+                }
+                catch (CompilerException)
                 {
                     throw new FactorException(_lexer.Coordinate + " factor was expected");
                 }
-                _lexer.GetLexeme();
-                
                 var expression = ParseExpression();
-                
-                var nextToken = _lexer.CurrentLexeme;
-                if (nextToken is not ISeparatorLexeme {Value: SeparatorValue.RightBracket})
-                {
-                    throw new CompilerException(_lexer.Coordinate + " ) was expected");
-                }
-                _lexer.GetLexeme();
+                RequireSeparator(SeparatorValue.RightBracket);
 
-                nextToken = _lexer.CurrentLexeme;
-                if (nextToken is ISeparatorLexeme {Value: SeparatorValue.Point})
+                lexeme = _lexer.CurrentLexeme;
+                if (lexeme is ISeparatorLexeme {Value: SeparatorValue.Point})
                 {
                     _lexer.GetLexeme();
-                    nextToken = _lexer.CurrentLexeme;
-                    if (nextToken is not IIdentifierLexeme identifierLexeme)
-                    {
-                        throw new CompilerException(_lexer.Coordinate + " identifier was expected");
-                    }
-                    _lexer.GetLexeme();
-                    
+                    var identifierLexeme = RequireIdentifier();
                     return new RecordAccess(expression, identifierLexeme.Value);
                 }
                 
@@ -1302,7 +729,6 @@ public class Parser
 
     private List<INodeExpression> ParseExpressionList()
     {
-        
         var expression = ParseExpression();
         List<INodeExpression> expressions = new() {expression};
 
@@ -1315,5 +741,89 @@ public class Parser
         }
 
         return expressions;
+    }
+
+    private void RequireSeparator(SeparatorValue separatorValue)
+    {
+        var lexeme = _lexer.CurrentLexeme;
+        if (lexeme is not ISeparatorLexeme separatorLexeme)
+            throw new CompilerException(_lexer.Coordinate + " " + LexemesSeparators.SeparatorSymbols[separatorValue] + " was expected");
+        
+        if (separatorLexeme.Value != separatorValue)
+        {
+            throw new CompilerException(_lexer.Coordinate + " " + LexemesSeparators.SeparatorSymbols[separatorValue] + " was expected");
+        }
+
+        _lexer.GetLexeme();
+    }
+
+    private void RequireOperator(OperatorValue operatorValue)
+    {
+        var lexeme = _lexer.CurrentLexeme;
+        if (lexeme is not IOperatorLexeme operatorLexeme)
+            throw new CompilerException(_lexer.Coordinate + " " + OperatorConstants.OperatorSymbols[operatorValue] + " was expected");
+        
+        if (operatorLexeme.Value != operatorValue)
+        {
+            throw new CompilerException(_lexer.Coordinate + " " + OperatorConstants.OperatorSymbols[operatorValue] + " was expected");
+        }
+
+        _lexer.GetLexeme();
+    }
+
+    private void RequireKeyWord(KeyWordValue keyWordValue)
+    {
+        var lexeme = _lexer.CurrentLexeme;
+        if (lexeme is not IKeyWordLexeme keyWordLexeme)
+            throw new CompilerException(_lexer.Coordinate + " " + KeyWordsConstants.KeyWordStrings[keyWordValue] + " was expected");
+        
+        if (keyWordLexeme.Value != keyWordValue)
+        {
+            throw new CompilerException(_lexer.Coordinate + " " + KeyWordsConstants.KeyWordStrings[keyWordValue] + " was expected");
+        }
+
+        _lexer.GetLexeme();
+    }
+
+    private IIdentifierLexeme RequireIdentifier()
+    {
+        var lexeme = _lexer.CurrentLexeme;
+        if (lexeme is not IIdentifierLexeme identifierLexeme)
+            throw new CompilerException(_lexer.Coordinate + " identifier was expected");
+        _lexer.GetLexeme();
+
+        return identifierLexeme;
+    }
+
+    private IIntegerLexeme RequireInteger()
+    {
+        var lexeme = _lexer.CurrentLexeme;
+        if (lexeme is not IIntegerLexeme integerLexeme)
+            throw new CompilerException(_lexer.Coordinate + " integer was expected");
+        _lexer.GetLexeme();
+
+        return integerLexeme;
+    }
+
+    private OperatorValue ConvertPlusMinusRow()
+    {
+        var counter = 0;
+        var lexeme = _lexer.CurrentLexeme;
+        while (lexeme is IOperatorLexeme {Value: OperatorValue.Minus or OperatorValue.Plus})
+        {
+            if (lexeme is IOperatorLexeme {Value: OperatorValue.Minus})
+            {
+                counter += 1;
+            }
+            _lexer.GetLexeme();
+            lexeme = _lexer.CurrentLexeme;
+        }
+
+        if (counter > 0 && counter % 2 != 0)
+        {
+            return OperatorValue.Minus;
+        }
+
+        return OperatorValue.Plus;
     }
 }

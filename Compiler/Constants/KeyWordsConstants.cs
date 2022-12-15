@@ -160,7 +160,14 @@ public static class KeyWordsConstants
         foreach(var item in dictionary)
         {
             KeyValuePair<KeyWordValue, string> newItem = new(item.Value, item.Key);
-            newDictionary.Add(newItem.Key, newItem.Value);
+            try
+            {
+                newDictionary.Add(newItem.Key, newItem.Value);
+            }
+            catch(ArgumentException)
+            {
+                
+            }
         }
 
         return newDictionary;

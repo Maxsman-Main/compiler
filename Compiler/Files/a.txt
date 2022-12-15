@@ -1,21 +1,5 @@
-﻿var
-    a : integer;
-    g : array [1..2, 2..3, 2..3] of integer;
-    z : record
-            a, b, c : integer;
-            o : integer;
-        end;
-    k : integer = 2 + 3;
-function abc(a : integer; b : integer) : integer;
-    var
-        c : integer;
-        k : integer;
-        z : integer;
-        g : array[1..2, 1..2] of integer;
-    begin
-        a := g[1,3];
-    end;
+﻿program abc;
+var
+    a : integer = 1 * (2 - 3);
 begin
-    if 1 then
-        a := k + 1;
 end.

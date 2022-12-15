@@ -25,7 +25,7 @@ public class CastToDouble : INodeExpression
     {
         
         var result = "";
-        for (var i = 0; i < level; i++)
+        for (var i = 0; i < level * 4; i++)
         {
             result += " ";
         }

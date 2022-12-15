@@ -8,16 +8,9 @@ public class Program : INodeProgram
     private readonly List<INodeDeclaration> _declarations;
     private readonly INodeStatement _block;
 
-    public Program(Variable identifier, List<INodeDeclaration> declarations, INodeStatement block)
+    public Program(Variable? identifier, List<INodeDeclaration> declarations, INodeStatement block)
     {
         _identifier = identifier;
-        _declarations = declarations;
-        _block = block;
-    }
-
-    public Program(List<INodeDeclaration> declarations, INodeStatement block)
-    {
-        _identifier = null;
         _declarations = declarations;
         _block = block;
     }

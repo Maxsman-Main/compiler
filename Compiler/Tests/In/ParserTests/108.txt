@@ -1,0 +1,5 @@
+﻿procedure abc(var ; a : integer);
+    begin
+    end;
+begin
+end.
