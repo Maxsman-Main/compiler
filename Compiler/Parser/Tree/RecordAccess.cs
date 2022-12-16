@@ -10,7 +10,8 @@ public class RecordAccess : INodeExpression
 
     private readonly INodeExpression _left;
     private readonly string? _right;
-    private readonly SymbolVariable? _field;
+
+    public SymbolVariable? Field { get; }
 
     public RecordAccess(INodeExpression left, string right)
     {
@@ -21,16 +22,16 @@ public class RecordAccess : INodeExpression
     public RecordAccess(INodeExpression left, SymbolVariable field)
     {
         _left = left;
-        _field = field;
+        Field = field;
         _right = field.Name;
     }
 
     public SymbolType GetExpressionType()
     {
-        if (_field != null) return _field.Type;
+        if (Field != null) return Field.Type;
         throw new CompilerException("can't get type for field");
     }
-    
+
     public string GetPrint(int level)
     {
         var value = "";

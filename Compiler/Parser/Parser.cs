@@ -714,7 +714,10 @@ public class Parser
                 {
                     _lexer.GetLexeme();
                     var identifierLexeme = RequireIdentifier();
-                    left = new RecordAccess(left, identifierLexeme.Value);
+                    CheckExpressionTypeRecord(left);
+                    var record = left.GetExpressionType() as SymbolRecord;
+                    var recordField = GetRecordField(record, identifierLexeme.Value);
+                    left = new RecordAccess(left, recordField);
                     break;
                 }
             }
@@ -748,7 +751,11 @@ public class Parser
                 {
                     _lexer.GetLexeme();
                     var identifierLexemeRecord = RequireIdentifier();
-                    return new RecordAccess(new Variable(identifierLexeme.Value), identifierLexemeRecord.Value);
+                    var variableSymbol = GetSymbolVariable(identifierLexeme.Value);
+                    CheckVariableIsRecord(variableSymbol);
+                    var variable = new Variable(variableSymbol);
+                    var field = GetRecordField(variableSymbol.Type as SymbolRecord, identifierLexemeRecord.Value);
+                    return new RecordAccess(variable, field);
                 }
 
                 lexeme = _lexer.CurrentLexeme;
@@ -757,19 +764,26 @@ public class Parser
                     _lexer.GetLexeme();
                     var expressionList = ParseExpressionList();
                     RequireSeparator(SeparatorValue.SquareRightBracket);
-                    return new Variable(identifierLexeme.Value, expressionList);
+                    var variable = GetSymbolVariable(identifierLexeme.Value);
+                    return new Variable(variable, expressionList);
                 }
 
                 lexeme = _lexer.CurrentLexeme;
                 if (lexeme is not ISeparatorLexeme {Value: SeparatorValue.LeftBracket})
-                    return new Variable(identifierLexeme.Value);
+                {
+                    var variable = GetSymbolVariable(identifierLexeme.Value);
+                    return new Variable(variable);
+                }
                 _lexer.GetLexeme();
 
                 lexeme = _lexer.CurrentLexeme;
+                SymbolProcedure procedure;
                 if (lexeme is ISeparatorLexeme {Value: SeparatorValue.RightBracket})
                 {
                     _lexer.GetLexeme();
-                    return new Call(identifierLexeme.Value, new List<INodeExpression>());
+                    procedure = GetSymbolProcedure(identifierLexeme.Value);
+                    CheckProcedureCallAccuracy(procedure, new List<INodeExpression>());
+                    return new Call(procedure, new List<INodeExpression>());
                 }
                 
                 List<INodeExpression> expressions = new() {ParseExpression()};
@@ -781,7 +795,9 @@ public class Parser
                     lexeme = _lexer.CurrentLexeme;
                 }
                 RequireSeparator(SeparatorValue.RightBracket);
-                return new Call(identifierLexeme.Value, expressions);
+                procedure = GetSymbolProcedure(identifierLexeme.Value);
+                CheckProcedureCallAccuracy(procedure, expressions);
+                return new Call(procedure, expressions);
             default:
                 try
                 {
@@ -799,7 +815,10 @@ public class Parser
                 {
                     _lexer.GetLexeme();
                     var identifierLexeme = RequireIdentifier();
-                    return new RecordAccess(expression, identifierLexeme.Value);
+                    CheckExpressionTypeRecord(expression);
+                    var record = expression.GetExpressionType() as SymbolRecord;
+                    var field = GetRecordField(record, identifierLexeme.Value);
+                    return new RecordAccess(expression, field);
                 }
                 
                 return expression;
@@ -920,6 +939,21 @@ public class Parser
         return variable;
     }
 
+    private void CheckVariableIsRecord(SymbolVariable variable)
+    {
+        if (variable.Type is not SymbolRecord)
+        {
+            throw new CompilerException(variable.Name + " isn't record");
+        }
+    }
+    
+    private SymbolVariable GetRecordField(SymbolRecord record, string name)
+    {
+        var symbol = record.Fields.Get(name);
+        var field = symbol as SymbolVariable ?? throw new CompilerException(name + " isn't record field");
+        return field;
+    }
+
     private void CheckProcedureCallAccuracy(SymbolProcedure procedure, IReadOnlyList<INodeExpression> expressions)
     {
         if (procedure.Parameters.Count != expressions.Count)
@@ -960,6 +994,14 @@ public class Parser
         if (expression.GetExpressionType() is not SymbolInteger)
         {
             throw new CompilerException(KeyWordsConstants.KeyWordStrings[cycleName] + " condition can't be not integer");
+        }
+    }
+
+    private void CheckExpressionTypeRecord(INodeExpression expression)
+    {
+        if (expression.GetExpressionType() is not SymbolRecord)
+        {
+            throw new CompilerException("left part in record access isn't record");
         }
     }
 }
