@@ -14,6 +14,11 @@ public class SymbolTable
     public OrderedDictionary Data { get; }
     public int Count => Data.Count;
 
+    public SymbolTable()
+    {
+        Data = new OrderedDictionary();
+    }
+    
     public SymbolTable(OrderedDictionary data)
     {
         Data = data;
@@ -21,7 +26,14 @@ public class SymbolTable
 
     public void Add(string name, Symbol value)
     {
-        Data.Add(name, value);
+        try
+        {
+            Data.Add(name, value);
+        }
+        catch (ArgumentException)
+        {
+            
+        }
     }
 
     public SymbolTable Merge(SymbolTable table)

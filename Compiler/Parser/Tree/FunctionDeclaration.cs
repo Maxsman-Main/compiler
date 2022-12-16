@@ -1,14 +1,16 @@
-﻿namespace Compiler.Parser.Tree;
+﻿using Compiler.Semantic;
+
+namespace Compiler.Parser.Tree;
 
 public abstract class Parameter
 {
     private readonly Variable _identifier;
-    private readonly INodeType _type;
+    private readonly SymbolType _type;
 
     public Variable Identifier => _identifier;
-    public INodeType Type => _type;
+    public SymbolType Type => _type;
 
-    protected Parameter(Variable identifier, INodeType type)
+    protected Parameter(Variable identifier, SymbolType type)
     {
         _identifier = identifier;
         _type = type;
@@ -17,14 +19,14 @@ public abstract class Parameter
 
 public class ValueParameter : Parameter
 {
-    public ValueParameter(Variable identifier, INodeType type) : base(identifier, type)
+    public ValueParameter(Variable identifier, SymbolType type) : base(identifier, type)
     {
     }
 }
 
 public class VarParameter : Parameter
 {
-    public VarParameter(Variable identifier, INodeType type) : base(identifier, type)
+    public VarParameter(Variable identifier, SymbolType type) : base(identifier, type)
     {
     }
 }
@@ -35,11 +37,11 @@ public class FunctionDeclaration : INodeDeclaration
     
     private readonly Variable _identifier;
     private readonly List<Parameter> _parameters;
-    private readonly INodeType _returnType;
+    private readonly SymbolType _returnType;
     private readonly List<INodeDeclaration> _declarations;
     private readonly INodeStatement _block;
-
-    public FunctionDeclaration(Variable identifier, List<Parameter> parameters, INodeType returnType, List<INodeDeclaration> declarations, INodeStatement statements)
+    
+    public FunctionDeclaration(Variable identifier, List<Parameter> parameters, SymbolType returnType, List<INodeDeclaration> declarations, INodeStatement statements)
     {
         _identifier = identifier;
         _parameters = parameters;

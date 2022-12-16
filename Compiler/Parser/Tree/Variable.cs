@@ -4,7 +4,7 @@ using Compiler.Semantic;
 
 namespace Compiler.Parser.Tree;
 
-public class Variable : INodeExpression, IVariable
+public class Variable : INodeExpression
 {
     private readonly SymbolVariable? _symbol;
     private readonly List<INodeExpression> _expressions;
@@ -58,10 +58,6 @@ public class Variable : INodeExpression, IVariable
         }
 
         if (_symbol == null) throw new CompilerException("can't get type for variable");
-        if(_symbol.Value is null)
-        {
-            throw new CompilerException(_symbol.Name + " isn't initialize");
-        }
         return _symbol.Type;
     }
 

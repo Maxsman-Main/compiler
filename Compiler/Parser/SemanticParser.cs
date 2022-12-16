@@ -430,13 +430,6 @@ public class SemanticParser
         locals = _stack.Pop();
 
         var variables = parameters.Merge(locals);
-
-        var name = locals.CompareTablesData(parameters);
-        if (name is not null)
-        {
-            throw new CompilerException(name + " was defined twice");
-        }
-        
         _stack.Push(variables);
         var statement = ParseCompoundStatement();
         _stack.Pop();
@@ -603,7 +596,7 @@ public class SemanticParser
                 {
                     throw new CompilerException(_lexer.Coordinate + " " + identifierLexeme.Value + " isn't alias");
                 }
-
+                
                 return alias.Original;
             default:
                 throw new CompilerException(_lexer.Coordinate + " can't find type for this lexeme");
@@ -989,7 +982,7 @@ public class SemanticParser
         var startExpression = ParseExpression();
         if (startExpression.GetExpressionType() is not SymbolInteger)
         {
-            throw new CompilerException("fot left bound can't be not integer");
+            throw new CompilerException("for left bound can't be not integer");
         }
 
         lexeme = _lexer.CurrentLexeme;

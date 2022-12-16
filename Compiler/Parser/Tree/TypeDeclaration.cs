@@ -1,9 +1,11 @@
-﻿namespace Compiler.Parser.Tree;
+﻿using Compiler.Semantic;
+
+namespace Compiler.Parser.Tree;
 
 public struct TypeDeclarationPair
 {
     public Variable Identifier;
-    public INodeType Type;
+    public SymbolType Type;
 }
 
 public class TypeDeclaration : INodeDeclaration

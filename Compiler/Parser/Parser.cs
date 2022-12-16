@@ -3,21 +3,24 @@ using Compiler.Exceptions;
 using Compiler.Lexeme;
 using Compiler.LexicalAnalyzerStateMachine;
 using Compiler.Parser.Tree;
+using Compiler.Semantic;
 using Char = Compiler.Parser.Tree.Char;
 using CompoundStatement = Compiler.Parser.Tree.CompoundStatement;
+using IVariable = Compiler.Semantic.IVariable;
 using String = Compiler.Parser.Tree.String;
-using Type = Compiler.Parser.Tree.Type;
 
 namespace Compiler.Parser;
 
 public class Parser
 {
     private readonly LexicalAnalyzer _lexer;
+    private readonly SymbolTableStack _stack;
 
     public Parser(LexicalAnalyzer lexer)
     {
         _lexer = lexer;
-        _lexer.GetLexeme();
+        _lexer.GetLexeme(); 
+        _stack = new SymbolTableStack();
     }
 
     public INode ParseProgram()
@@ -31,6 +34,9 @@ public class Parser
             var identifier = RequireIdentifier();
             RequireSeparator(SeparatorValue.Semicolon);
             variable = new Variable(identifier.Value);
+
+            var programVariable = new SymbolVariable(identifier.Value, new SymbolProgram("Program"));
+            _stack.Add(identifier.Value, programVariable);
         }
 
         var declarations = ParseDeclarations();
@@ -97,10 +103,11 @@ public class Parser
             var variable = new Variable(identifierLexeme.Value);
             TypeDeclarationPair typeDeclaration = new(){Identifier = variable, Type = type};
             typesDeclarations.Add(typeDeclaration);
-            
+            _stack.Add(variable.Name, new SymbolTypeAlias(variable.Name, type));
+
             lexeme = _lexer.CurrentLexeme;
         } while (lexeme is IIdentifierLexeme);
-
+        
         return new TypeDeclaration(typesDeclarations);
     }
 
@@ -110,7 +117,6 @@ public class Parser
         var constDeclarations = new List<ConstDeclarationData>();
         do
         {
-
             var identifierLexeme = RequireIdentifier();
             RequireOperator(OperatorValue.DoublePoint);
             var type = ParseType();
@@ -121,6 +127,7 @@ public class Parser
             var variable = new Variable(identifierLexeme.Value);
             ConstDeclarationData constData = new(){Identifier = variable, Type = type, Expression = expression};
             constDeclarations.Add(constData);
+            _stack.Add(variable.Name, new SymbolVariable(variable.Name, type));
             
             lexeme = _lexer.CurrentLexeme;
         } while (lexeme is IIdentifierLexeme);
@@ -152,7 +159,12 @@ public class Parser
             
             RequireSeparator(SeparatorValue.Semicolon);
             varDeclarations.AddRange(identifierList.Select(variable => new VarDeclarationData() {Identifier = variable, Type = type, Expression = expression}));
-
+            foreach (var identifier in identifierList)
+            {
+                var variable = new SymbolVariable(identifier.Name, type);
+                _stack.Add(identifier.Name, variable);
+            }
+            
             lexeme = _lexer.CurrentLexeme;
         } while (lexeme is IIdentifierLexeme);
 
@@ -165,13 +177,22 @@ public class Parser
         var variable = new Variable(identifierLexeme.Value);
         RequireSeparator(SeparatorValue.LeftBracket);
         var parameters = ParseParameters();
+        var parametersTable = CreateTableByParameters(parameters);
         RequireSeparator(SeparatorValue.RightBracket);
         RequireOperator(OperatorValue.DoublePoint);
         var type = ParseType();
         RequireSeparator(SeparatorValue.Semicolon);
+        _stack.Push(new SymbolTable());
         var declarations = ParseDeclarations();
+        var locals = _stack.Pop();
+        var variables = parametersTable.Merge(locals);
+        _stack.Push(variables);
         var statement = ParseCompoundStatement();
         RequireSeparator(SeparatorValue.Semicolon);
+        _stack.Pop();
+
+        var function = new SymbolFunction(variable.Name, parametersTable, locals, statement, type);
+        _stack.Add(variable.Name, function);
         
         return new FunctionDeclaration(variable, parameters, type, declarations, statement);
     }
@@ -182,15 +203,41 @@ public class Parser
         var variable = new Variable(identifierLexeme.Value);
         RequireSeparator(SeparatorValue.LeftBracket);
         var parameters = ParseParameters();
+        var parametersTable = CreateTableByParameters(parameters);
         RequireSeparator(SeparatorValue.RightBracket);
         RequireSeparator(SeparatorValue.Semicolon);
+        _stack.Push(new SymbolTable());
         var declarations = ParseDeclarations();
+        var locals = _stack.Pop();
+        var variables = parametersTable.Merge(locals);
+        _stack.Push(variables);
         var statement = ParseCompoundStatement();
         RequireSeparator(SeparatorValue.Semicolon);
+        _stack.Pop();
 
+        var procedure = new SymbolProcedure(variable.Name, parametersTable, locals, statement);
+        _stack.Add(variable.Name, procedure);
+        
         return new ProcedureDeclaration(variable, parameters, declarations, statement);
     }
-    
+
+    private SymbolTable CreateTableByParameters(List<Parameter> parameters)
+    {
+        var table = new SymbolTable();
+        foreach (var parameter in parameters)
+        {
+            var variable = new SymbolVariable(parameter.Identifier.Name, parameter.Type);
+            if (parameter is VarParameter)
+            {
+                variable = new SymbolVarVariable(parameter.Identifier.Name, parameter.Type);
+            }
+            
+            table.Add(parameter.Identifier.Name, variable);
+        }
+        
+        return table;
+    }
+
     private List<Parameter> ParseParameters()
     {
         ILexeme lexeme;
@@ -290,27 +337,27 @@ public class Parser
         return variables;
     }
     
-    private INodeType ParseType()
+    private SymbolType ParseType()
     {
         var lexeme = _lexer.CurrentLexeme;
-        Type type;
+        SymbolType type;
         switch (lexeme)
         {
             case IKeyWordLexeme {Value: KeyWordValue.Integer}:
                 _lexer.GetLexeme();
-                type = new Type(KeyWordValue.Integer);
+                type = new SymbolInteger("Integer");
                 break;
             case IKeyWordLexeme {Value: KeyWordValue.Double}:
                 _lexer.GetLexeme();
-                type = new Type(KeyWordValue.Double);
+                type = new SymbolDouble("Double");
                 break;
             case IKeyWordLexeme {Value: KeyWordValue.String}:
                 _lexer.GetLexeme();
-                type = new Type(KeyWordValue.String);
+                type = new SymbolString("String");
                 break;
             case IKeyWordLexeme {Value: KeyWordValue.Char}:    
                 _lexer.GetLexeme();
-                type = new Type(KeyWordValue.Char);
+                type = new SymbolChar("Char");
                 break;
             case IKeyWordLexeme{Value: KeyWordValue.Array}:
                 _lexer.GetLexeme();
@@ -320,7 +367,12 @@ public class Parser
                 return ParseRecordType();
             case IIdentifierLexeme identifierLexeme:
                 _lexer.GetLexeme();
-                return new IdentifierType(new Variable(identifierLexeme.Value));
+                var symbol = _stack.Get(identifierLexeme.Value);
+                if (symbol is not IAlias alias)
+                {
+                    throw new CompilerException(_lexer.Coordinate + " " + identifierLexeme.Value + " isn't alias");
+                }
+                return alias.Original;
             default:
                 throw new CompilerException(_lexer.Coordinate + " can't find type for this lexeme");
         }
@@ -328,17 +380,17 @@ public class Parser
         return type;
     }
 
-    private INodeType ParseRecordType()
+    private SymbolRecord ParseRecordType()
     {
-        var recordSections = ParseRecordSections();
+        var fields = ParseRecordSections();
         RequireKeyWord(KeyWordValue.End);
         
-        return new RecordType(recordSections);
+        return new SymbolRecord("Record", fields);
     }
 
-    private List<INode> ParseRecordSections()
+    private SymbolTable ParseRecordSections()
     {
-        List<INode> fieldPart = new();
+        var table = new SymbolTable();
         ILexeme lexeme;
         var counter = 0;
         do
@@ -351,28 +403,31 @@ public class Parser
             lexeme = _lexer.CurrentLexeme;
             if (lexeme is not IIdentifierLexeme)
             {
-                return fieldPart;
+                return table;
             }
             
-            var recordSection = ParseRecordSection();
-            fieldPart.Add(recordSection);
+            var fieldsPart = ParseRecordSection();
+            foreach (var field in fieldsPart)
+            {
+                table.Add(field.Key, field.Value);
+            }
             lexeme = _lexer.CurrentLexeme;
             counter += 1;
         } while (lexeme is ISeparatorLexeme {Value: SeparatorValue.Semicolon});
 
-        return fieldPart;
+        return table;
     }
 
-    private INode ParseRecordSection()
+    private IEnumerable<Pair> ParseRecordSection()
     {
         var identifierList = ParseIdentifierList();
         RequireOperator(OperatorValue.DoublePoint);
         var type = ParseType();
 
-        return new RecordSection(identifierList, type);
+        return (from identifier in identifierList let variable = new SymbolVariable(identifier.Name, type) select new Pair() {Key = identifier.Name, Value = variable}).ToList();
     }
     
-    private INodeType ParseArrayType()
+    private SymbolArray ParseArrayType()
     {   
         RequireSeparator(SeparatorValue.SquareLeftBracket);
         var bounds = ParseBounds();
@@ -380,12 +435,12 @@ public class Parser
         RequireKeyWord(KeyWordValue.Of);
         var type = ParseType();
 
-        return new ArrayType(type, bounds);
+        return CreateArrayByBounds(bounds, type);
     }
-    
-    private List<INode> ParseBounds()
+
+    private List<IBound> ParseBounds()
     {
-        List<INode> indexes = new();
+        List<IBound> indexes = new();
         ILexeme lexeme;
         var counter = 0;
         do
@@ -406,6 +461,21 @@ public class Parser
         } while (lexeme is ISeparatorLexeme{Value: SeparatorValue.Comma});
 
         return indexes;
+    }
+
+    private SymbolArray CreateArrayByBounds(IReadOnlyList<IBound> bounds, SymbolType type)
+    {
+        var lastElementOfArray = bounds.Count - 1;
+        var preLastElementOfArray = bounds.Count - 2;
+        var arrayType = new SymbolArray("array", type, bounds[lastElementOfArray].LeftBound,
+            bounds[lastElementOfArray].RightBound);
+
+        for (var i = preLastElementOfArray; i >= 0; i--)
+        {
+            arrayType = new SymbolArray("array", arrayType, bounds[i].LeftBound, bounds[i].RightBound);
+        }
+
+        return arrayType;
     }
 
     private List<INodeStatement> ParseStatementSequence()
@@ -460,8 +530,10 @@ public class Parser
 
     private INodeStatement ParseProcedureStatement(Variable variable)
     {
-        List<INodeExpression> expressionList = new(); 
+        List<INodeExpression> expressionList = new();
 
+        var procedure = GetSymbolProcedure(variable.Name);
+        
         RequireSeparator(SeparatorValue.LeftBracket);
         var lexeme = _lexer.CurrentLexeme;
         if (lexeme is not SeparatorLexeme {Value: SeparatorValue.RightBracket})
@@ -469,17 +541,19 @@ public class Parser
             expressionList = ParseExpressionList();
         }
         RequireSeparator(SeparatorValue.RightBracket);
-
-        return new ProcedureStatement(variable, expressionList);
         
+        CheckProcedureCallAccuracy(procedure, expressionList);
+
+        return new ProcedureStatement(procedure, expressionList);
     }
 
     private INodeStatement ParseAssignmentStatement(Variable variable)
     {
+        var variableSymbol = GetSymbolVariable(variable.Name);
         RequireOperator(OperatorValue.Assignment);
         var expression = ParseExpression();
-        return new AssignmentStatement(variable, expression);
-
+        CheckAssigmentAccuracy(variableSymbol, ref expression);
+        return new AssignmentStatement(variableSymbol, expression);
     }
     
     private INodeStatement ParseStructuredStatement()
@@ -511,6 +585,7 @@ public class Parser
         var expression = ParseExpression();
         RequireKeyWord(KeyWordValue.Do);
         var statement = ParseStatement();
+        CheckConditionAccuracy(expression, KeyWordValue.While);
 
         return new WhileStatement(expression, statement);
     }
@@ -520,14 +595,17 @@ public class Parser
         _lexer.GetLexeme();
 
         var identifierLexeme = RequireIdentifier();
+        var variableSymbol = GetSymbolVariable(identifierLexeme.Value);
         RequireOperator(OperatorValue.Assignment);
         var startExpression = ParseExpression();
+        CheckConditionAccuracy(startExpression, KeyWordValue.For);
         RequireKeyWord(KeyWordValue.To);
         var endExpression = ParseExpression();
+        CheckConditionAccuracy(endExpression, KeyWordValue.For);
         RequireKeyWord(KeyWordValue.Do);
         var statement = ParseStatement();
-        
-        var variable = new Variable(identifierLexeme.Value);
+
+        var variable = new Variable(variableSymbol);
         
         return new ForStatement(variable, startExpression, endExpression, statement);
     }
@@ -539,6 +617,7 @@ public class Parser
         INodeStatement? elsePart = null;
         
         var expression = ParseExpression();
+        CheckConditionAccuracy(expression, KeyWordValue.If);
         RequireKeyWord(KeyWordValue.Then);
         var statement = ParseStatement();
         
@@ -825,5 +904,62 @@ public class Parser
         }
 
         return OperatorValue.Plus;
+    }
+
+    private SymbolProcedure GetSymbolProcedure(string name)
+    {
+        var symbol = _stack.Get(name);
+        var procedure = symbol as SymbolProcedure ?? throw new CompilerException(name + " isn't procedure");
+        return procedure;
+    }
+
+    private SymbolVariable GetSymbolVariable(string name)
+    {
+        var symbol = _stack.Get(name);
+        var variable = symbol as SymbolVariable ?? throw new CompilerException(name + " isn't variable");
+        return variable;
+    }
+
+    private void CheckProcedureCallAccuracy(SymbolProcedure procedure, IReadOnlyList<INodeExpression> expressions)
+    {
+        if (procedure.Parameters.Count != expressions.Count)
+        {
+            throw new CompilerException( procedure.Name + " procedure has " + procedure.Parameters.Count + " parameters, but " +
+                                         expressions.Count + " received");
+        }
+        
+        for (var i = 0; i < expressions.Count; i++)
+        {
+            var expressionType = expressions[i].GetExpressionType();
+            var parameterType = (procedure.Parameters.Data[i] as SymbolVariable)?.Type;
+            if (expressionType.GetType() != parameterType?.GetType())
+            {
+                throw new CompilerException(procedure.Name + " parameter type is " + parameterType?.Name + " but " +
+                                            expressionType.Name + " received");
+            }
+        }
+    }
+
+    private void CheckAssigmentAccuracy(IVariable variable, ref INodeExpression expression)
+    {
+        var variableType = variable.Type;
+        var expressionType = expression.GetExpressionType();
+        if (variableType.GetType() == expressionType.GetType()) return;
+        if (variableType is SymbolDouble && expressionType is SymbolInteger)
+        {
+            expression = new CastToDouble(expression);
+        }
+        else
+        {
+            throw new CompilerException(variableType.Name + " can't assigment " + expressionType.Name + " type");
+        }
+    }
+
+    private void CheckConditionAccuracy(INodeExpression expression, KeyWordValue cycleName)
+    {
+        if (expression.GetExpressionType() is not SymbolInteger)
+        {
+            throw new CompilerException(KeyWordsConstants.KeyWordStrings[cycleName] + " condition can't be not integer");
+        }
     }
 }

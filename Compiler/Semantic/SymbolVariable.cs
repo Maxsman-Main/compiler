@@ -2,7 +2,7 @@
 
 namespace Compiler.Semantic;
 
-public class SymbolVariable : Symbol
+public class SymbolVariable : Symbol, IVariable
 {
     public SymbolType Type { get; }
     public INodeExpression? Value { get; }
