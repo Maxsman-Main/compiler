@@ -1,5 +1,5 @@
 ﻿program abc;
 type
-    a = Integer;
+    a = integer;
 begin
 end.

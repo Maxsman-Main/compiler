@@ -1,0 +1,13 @@
+﻿write
+    CompoundStatement
+read
+    CompoundStatement
+
+a Integer
+
+CompoundStatement
+    :=
+        a
+        +
+            1
+            2

@@ -1,4 +1,4 @@
-﻿program abc;
+﻿program ab;
 function abc(a : integer; var d : integer; b : integer; var c : integer);
     begin
     end;

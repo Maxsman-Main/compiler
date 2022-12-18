@@ -1,0 +1,8 @@
+﻿write
+    CompoundStatement
+read
+    CompoundStatement
+
+a Integer
+
+CompoundStatement

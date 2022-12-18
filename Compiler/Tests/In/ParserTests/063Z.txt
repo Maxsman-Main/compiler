@@ -1,0 +1,17 @@
+﻿Program ab
+    TypeDeclaration
+        c
+            Record
+                k Integer
+    FunctionDeclaration
+        abc() : Record
+    k Integer
+            CompoundStatement
+    VarDeclaration
+        a
+            Integer
+                .
+                    abc()
+                        arguments
+                    k
+    CompoundStatement

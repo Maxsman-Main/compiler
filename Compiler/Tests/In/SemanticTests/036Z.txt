@@ -1,0 +1,16 @@
+﻿write
+    CompoundStatement
+read
+    CompoundStatement
+
+i Integer
+
+CompoundStatement
+    IfStatement
+        Condition
+            -
+                +
+                    i
+                    2
+                3
+        Body

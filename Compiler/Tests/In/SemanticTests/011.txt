@@ -1,0 +1,4 @@
+﻿const
+    a : string = 1;
+begin
+end.

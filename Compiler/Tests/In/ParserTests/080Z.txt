@@ -1,0 +1,20 @@
+﻿Program ab
+    TypeDeclaration
+        b
+            Record
+                k Integer
+    VarDeclaration
+        a
+            Record
+                k Integer
+    ProcedureDeclaration
+        abc(g:Integer)
+            CompoundStatement
+    CompoundStatement
+        ProcedureStatement
+            Identifier
+                abc
+            arguments
+                .
+                    a
+                    k

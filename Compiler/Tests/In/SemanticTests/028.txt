@@ -1,0 +1,6 @@
+﻿procedure abc(a : integer; b : integer);
+    begin
+    end;
+begin
+    abc(1);
+end.

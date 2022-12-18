@@ -1,5 +1,6 @@
 ﻿program abc;
 var
+    b : integer = 1;
     a : integer = b;
 begin
 end.

@@ -1,0 +1,15 @@
+﻿type
+    g = integer;
+    f = integer;
+function abc(a : integer; b : g) : integer;
+    var
+        c : integer;
+        k : integer;
+    begin
+    end;
+var
+    a : integer;
+    o : f;
+begin
+    a := abc(1, o);
+end.

@@ -1,0 +1,14 @@
+﻿write
+    CompoundStatement
+read
+    CompoundStatement
+
+a array of array of Integer
+b array of Integer
+
+CompoundStatement
+    :=
+        b
+        a[]
+            indexes
+                1

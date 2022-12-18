@@ -1,0 +1,21 @@
+﻿write
+    CompoundStatement
+read
+    CompoundStatement
+
+abc
+    a Integer
+    b Integer
+    c Integer
+    k Integer
+    CompoundStatement
+    Integer
+a Integer
+
+CompoundStatement
+    :=
+        a
+        abc()
+            arguments
+                1
+                2

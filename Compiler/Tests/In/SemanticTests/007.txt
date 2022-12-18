@@ -1,0 +1,4 @@
+﻿var
+    a : integer = 'test';
+begin
+end.

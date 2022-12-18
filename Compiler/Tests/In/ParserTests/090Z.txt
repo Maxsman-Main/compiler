@@ -1,0 +1,30 @@
+﻿Program
+    TypeDeclaration
+        customType
+            Integer
+    VarDeclaration
+        a
+            Integer
+        b
+            String
+        c
+            Char
+        d
+            Double
+        e
+            Record
+                a Integer
+                b Integer
+                c Integer
+                q String
+                w String
+                e String
+        f
+            array of Integer
+        g
+            array of array of Integer
+        h
+            array of array of Integer
+        z
+            Integer
+    CompoundStatement

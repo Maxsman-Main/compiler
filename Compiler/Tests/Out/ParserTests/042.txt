@@ -1,7 +1,0 @@
-﻿Program abc
-    VarDeclaration
-        a
-            Double
-                abc()
-                    arguments
-    CompoundStatement

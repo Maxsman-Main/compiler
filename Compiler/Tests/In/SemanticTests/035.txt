@@ -1,0 +1,13 @@
+﻿var
+    i : integer;
+begin
+    if 1 then
+        begin
+        end;
+    while 1 do
+        begin
+        end;
+    for i := 1 to 100 do
+        begin
+        end;             
+end.

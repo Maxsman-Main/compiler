@@ -1,0 +1,11 @@
+﻿Program ab
+    VarDeclaration
+        abc
+            array of Integer
+    VarDeclaration
+        a
+            Integer
+                abc[]
+                    indexes
+                        0
+    CompoundStatement

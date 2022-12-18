@@ -1,0 +1,6 @@
+﻿var
+    a : integer;
+    arr : array[1..2] of array[1..2] of integer;
+begin
+    a := 1 + 2 + arr[1];
+end.

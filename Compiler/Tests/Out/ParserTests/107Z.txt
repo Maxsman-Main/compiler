@@ -1,0 +1,8 @@
+﻿Program
+    TypeDeclaration
+        testType
+            Integer
+    VarDeclaration
+        a
+            Integer
+    CompoundStatement

@@ -44,11 +44,22 @@ public class Variable : INodeExpression
         {
             var type = _symbol?.Type as SymbolArray ?? throw new CompilerException(_symbol?.Name + " isn't array");
             var itemsType = type.ItemsType;
+            
+            if (_expressions[0].GetExpressionType() is not SymbolInteger)
+            {
+                throw new CompilerException(_symbol.Name +  " array index can't be not integer");
+            }
+            
             for (var i = 1; i < _expressions.Count; i++)
             {
                 if (itemsType is not SymbolArray arrayType)
                 {
                     throw new CompilerException(_symbol.Name +  " array has " + i + " indexes, but " + _expressions.Count + " received");
+                }
+
+                if (_expressions[i].GetExpressionType() is not SymbolInteger)
+                {
+                    throw new CompilerException(_symbol.Name +  " array index can't be not integer");
                 }
 
                 itemsType = arrayType.ItemsType;

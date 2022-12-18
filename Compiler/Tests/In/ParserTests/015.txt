@@ -1,6 +1,6 @@
 ﻿program abc;
 type
-    a = Integer;
-    b = Integer
+    a = integer;
+    b = integer
 begin
 end.

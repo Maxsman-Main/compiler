@@ -8,4 +8,16 @@ public class SymbolTypeAlias : SymbolType, IAlias
     {
         Original = original;
     }
+
+    public override string GetPrint(int level)
+    {
+        var result = "";
+        for (var i = 0; i < level * 4; i++)
+        {
+            result += " ";
+        }
+
+        result += Name + " alias " + Original.GetPrint(0);
+        return result;
+    }
 }

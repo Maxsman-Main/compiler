@@ -1,0 +1,7 @@
+﻿var
+    i : array[1..2] of array[1..2] of integer;
+    g : array[1..10] of integer;
+    c : integer;
+begin
+    c := g[1.2];
+end.

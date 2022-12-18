@@ -1,5 +1,10 @@
 ﻿program abc;
+type
+    c = record 
+            k : integer; 
+        end;
 var
+    arr : array[1..2] of c;
     a : integer = arr[0].k;
 begin
 end.

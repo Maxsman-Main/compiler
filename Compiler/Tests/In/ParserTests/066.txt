@@ -1,5 +1,9 @@
-﻿program abc;
+﻿program ab;
+function abc() : integer;
+    begin
+    end;
 var
+    arr : array[1..2] of array[1..2] of integer;
     a : integer = arr[2, abc() * (2 + 3)];
 begin
 end.

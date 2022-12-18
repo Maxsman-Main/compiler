@@ -1,0 +1,5 @@
+﻿var
+    a : string;
+begin
+    a := 1 + 2;
+end.

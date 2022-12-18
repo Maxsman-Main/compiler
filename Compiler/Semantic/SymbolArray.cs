@@ -30,7 +30,7 @@ public class SymbolArray : SymbolType
     public override string GetPrint(int level)
     {
         var result = "";
-        for (var i = 0; i < level; i++)
+        for (var i = 0; i < level * 4; i++)
         {
             result += " ";
         }

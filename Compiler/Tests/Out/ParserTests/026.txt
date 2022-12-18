@@ -1,5 +1,0 @@
-﻿Program abc
-    FunctionDeclaration
-        abc(a:Integer, b:Integer, c:Integer, d:Integer) : Integer
-            CompoundStatement
-    CompoundStatement

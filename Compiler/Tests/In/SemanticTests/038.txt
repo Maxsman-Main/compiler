@@ -1,0 +1,5 @@
+﻿var
+    i : integer;
+begin
+    i := k + 1;
+end.

@@ -1,3 +1,6 @@
-﻿begin
+﻿var
+    a : integer;
+    b : integer;
+begin
     a := b.
 end.

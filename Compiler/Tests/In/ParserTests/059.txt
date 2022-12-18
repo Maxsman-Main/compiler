@@ -1,5 +1,10 @@
-﻿program abc;
+﻿program ab;
+function cba() : integer;
+    begin
+    end;
 var
+    kda : array[1..2] of integer;
+    abc : array[1..2] of array[1..2] of array[1..2] of integer;
     a : integer = abc[0, cba(), kda[0]];
 begin
 end.

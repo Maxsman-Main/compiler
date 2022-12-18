@@ -1,0 +1,15 @@
+﻿var 
+     k : string;
+     b : integer;
+function abc(a : integer; b : integer) : integer;
+    var
+        c : integer;
+        k : integer;
+    begin
+        c := k + 1;
+    end;
+var
+    a : string;
+begin
+    a := k;
+end.

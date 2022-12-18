@@ -1,4 +1,13 @@
-﻿program abc;
+﻿program ab;
+type
+    b = record
+            k : integer;
+        end;
+var
+    a : b;
+procedure abc(g : integer);
+    begin
+    end;
 begin
     abc(a.k)
 end.

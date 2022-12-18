@@ -6,10 +6,16 @@ using Compiler.Parser.Tree;
 using Compiler.Semantic;
 using Char = Compiler.Parser.Tree.Char;
 using CompoundStatement = Compiler.Parser.Tree.CompoundStatement;
-using IVariable = Compiler.Semantic.IVariable;
 using String = Compiler.Parser.Tree.String;
 
 namespace Compiler.Parser;
+
+public struct Program
+{
+    public SymbolTableStack Stack;
+    public INodeStatement MainBlock;
+    public INode SyntaxTree;
+}
 
 public class Parser
 {
@@ -23,7 +29,7 @@ public class Parser
         _stack = new SymbolTableStack();
     }
 
-    public INode ParseProgram()
+    public Program ParseProgram()
     {
         Variable? variable = null;
         
@@ -35,7 +41,7 @@ public class Parser
             RequireSeparator(SeparatorValue.Semicolon);
             variable = new Variable(identifier.Value);
 
-            var programVariable = new SymbolVariable(identifier.Value, new SymbolProgram("Program"));
+            var programVariable = new SymbolVariable(identifier.Value, new SymbolProgram("Program"), null);
             _stack.Add(identifier.Value, programVariable);
         }
 
@@ -43,7 +49,11 @@ public class Parser
         var mainBlock = ParseCompoundStatement();
         RequireSeparator(SeparatorValue.Point);
 
-        return new Tree.Program(variable, declarations, mainBlock);
+        var syntaxTree = new Tree.Program(variable, declarations, mainBlock);
+
+        var program = new Program() {Stack = _stack, MainBlock = mainBlock, SyntaxTree = syntaxTree};
+        
+        return program;
     }
 
     private List<INodeDeclaration> ParseDeclarations()
@@ -127,7 +137,9 @@ public class Parser
             var variable = new Variable(identifierLexeme.Value);
             ConstDeclarationData constData = new(){Identifier = variable, Type = type, Expression = expression};
             constDeclarations.Add(constData);
-            _stack.Add(variable.Name, new SymbolVariable(variable.Name, type));
+            var symbolVariable = new SymbolVariable(variable.Name, type, expression);
+            CheckVariableTypeDeclaration(symbolVariable, expression);
+            _stack.Add(variable.Name, symbolVariable);
             
             lexeme = _lexer.CurrentLexeme;
         } while (lexeme is IIdentifierLexeme);
@@ -156,12 +168,13 @@ public class Parser
                 _lexer.GetLexeme();
                 expression = ParseExpression();
             }
-            
+
             RequireSeparator(SeparatorValue.Semicolon);
             varDeclarations.AddRange(identifierList.Select(variable => new VarDeclarationData() {Identifier = variable, Type = type, Expression = expression}));
             foreach (var identifier in identifierList)
             {
-                var variable = new SymbolVariable(identifier.Name, type);
+                var variable = new SymbolVariable(identifier.Name, type, expression);
+                CheckVariableTypeDeclaration(variable, expression);
                 _stack.Add(identifier.Name, variable);
             }
             
@@ -226,10 +239,10 @@ public class Parser
         var table = new SymbolTable();
         foreach (var parameter in parameters)
         {
-            var variable = new SymbolVariable(parameter.Identifier.Name, parameter.Type);
+            var variable = new SymbolVariable(parameter.Identifier.Name, parameter.Type, null);
             if (parameter is VarParameter)
             {
-                variable = new SymbolVarVariable(parameter.Identifier.Name, parameter.Type);
+                variable = new SymbolVarVariable(parameter.Identifier.Name, parameter.Type, null);
             }
             
             table.Add(parameter.Identifier.Name, variable);
@@ -424,7 +437,7 @@ public class Parser
         RequireOperator(OperatorValue.DoublePoint);
         var type = ParseType();
 
-        return (from identifier in identifierList let variable = new SymbolVariable(identifier.Name, type) select new Pair() {Key = identifier.Name, Value = variable}).ToList();
+        return (from identifier in identifierList let variable = new SymbolVariable(identifier.Name, type, null) select new Pair() {Key = identifier.Name, Value = variable}).ToList();
     }
     
     private SymbolArray ParseArrayType()
@@ -954,6 +967,18 @@ public class Parser
         return field;
     }
 
+    private void CheckVariableTypeDeclaration(SymbolVariable variable, INodeExpression? expression)
+    {
+        if (expression is null)
+        {
+            return;
+        }
+        var variableType = variable.Type;
+        var expressionType = expression.GetExpressionType();
+        if (variableType.GetType() == expressionType.GetType()) return;
+        throw new CompilerException(variable.Name + " can't initialize " + expressionType.Name + " type");
+    }
+
     private void CheckProcedureCallAccuracy(SymbolProcedure procedure, IReadOnlyList<INodeExpression> expressions)
     {
         if (procedure.Parameters.Count != expressions.Count)
@@ -974,7 +999,7 @@ public class Parser
         }
     }
 
-    private void CheckAssigmentAccuracy(IVariable variable, ref INodeExpression expression)
+    private void CheckAssigmentAccuracy(SymbolVariable variable, ref INodeExpression expression)
     {
         var variableType = variable.Type;
         var expressionType = expression.GetExpressionType();
@@ -985,7 +1010,7 @@ public class Parser
         }
         else
         {
-            throw new CompilerException(variableType.Name + " can't assigment " + expressionType.Name + " type");
+            throw new CompilerException(variable.Name + " can't assigment " + expressionType.Name + " type");
         }
     }
 

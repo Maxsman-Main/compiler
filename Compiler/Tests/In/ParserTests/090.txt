@@ -1,4 +1,6 @@
-﻿var
+﻿type
+    customType = integer;
+var
     a : integer;
     b : string;
     c : char;
@@ -10,6 +12,6 @@
     f : array [1..2] of integer;
     g : array [1..2, 3..4] of integer;
     h : array [1..2] of array [3..4] of integer;
-    c : customType;
+    z : customType;
 begin
 end.

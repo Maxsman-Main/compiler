@@ -7,13 +7,7 @@ public class SymbolVariable : Symbol, IVariable
     public SymbolType Type { get; }
     public INodeExpression? Value { get; }
 
-    public SymbolVariable(string name, SymbolType type) : base(name)
-    {
-        Type = type;
-        Value = null;
-    }
-
-    public SymbolVariable(string name, SymbolType type, INodeExpression expression) : base(name)
+    public SymbolVariable(string name, SymbolType type, INodeExpression? expression) : base(name)
     {
         Type = type;
         Value = expression;
@@ -28,6 +22,9 @@ public class SymbolVariable : Symbol, IVariable
         }
 
         result += Name + " " + Type.GetPrint(0);
+        if (Value is null) return result;
+        result += "\n";
+        result += Value.GetPrint(level + 1);
         return result;
     }
 }

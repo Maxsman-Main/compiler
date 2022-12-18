@@ -1,4 +1,12 @@
-﻿program abc;
+﻿program ab;
+function abc(a : integer; b : integer; c : integer; d : integer) : integer;
+    begin
+    end;
+var
+    lim : integer;
+    a : record
+            k : integer;
+        end;
 begin
     abc(1, lim, 1 + 2, a.k);
 end.

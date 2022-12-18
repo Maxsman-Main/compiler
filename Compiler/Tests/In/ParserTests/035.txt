@@ -1,7 +1,7 @@
-﻿program abc;
+﻿program ab;
 function abc(a : integer) : integer;
     var
-        a : integer = 2 + 5;
+        b : integer = 2 + 5;
     begin
     end;
 begin

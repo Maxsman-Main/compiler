@@ -1,0 +1,10 @@
+﻿Program abc
+    FunctionDeclaration
+        bca() : Double
+            CompoundStatement
+    VarDeclaration
+        a
+            Double
+                bca()
+                    arguments
+    CompoundStatement

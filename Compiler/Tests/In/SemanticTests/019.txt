@@ -1,0 +1,9 @@
+﻿var
+    a : integer;
+    b : record
+            k : integer;
+            c : string;
+        end;
+begin
+    a := 1 + 2 + b.c;
+end.

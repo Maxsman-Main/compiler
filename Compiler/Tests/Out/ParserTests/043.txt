@@ -1,8 +1,0 @@
-﻿Program abc
-    VarDeclaration
-        a
-            Double
-                .
-                    b
-                    k
-    CompoundStatement

@@ -1,0 +1,27 @@
+﻿write
+    CompoundStatement
+read
+    CompoundStatement
+
+i Integer
+
+CompoundStatement
+    IfStatement
+        Condition
+            1
+        Body
+            CompoundStatement
+    WhileStatement
+        Condition
+            1
+        Body
+            CompoundStatement
+    ForStatement
+        Identifier
+            i
+        LeftBound
+            1
+        RightBound
+            100
+        Body
+            CompoundStatement

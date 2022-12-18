@@ -1,0 +1,9 @@
+﻿write
+    CompoundStatement
+read
+    CompoundStatement
+
+a alias Integer
+b Integer
+
+CompoundStatement

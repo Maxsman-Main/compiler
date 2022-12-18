@@ -1,4 +1,6 @@
 ﻿program abc;
+var
+    a : integer;
 begin
     a := 2 + 3;
 end.

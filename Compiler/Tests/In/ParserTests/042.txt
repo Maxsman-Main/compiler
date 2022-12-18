@@ -1,5 +1,8 @@
 ﻿program abc;
+function bca() : double;
+    begin
+    end;
 var
-    a : double = abc();
+    a : double = bca();
 begin
 end.

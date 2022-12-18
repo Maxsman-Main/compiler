@@ -1,0 +1,8 @@
+﻿write
+    CompoundStatement
+read
+    CompoundStatement
+
+abc Program
+
+CompoundStatement

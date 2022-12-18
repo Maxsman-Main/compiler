@@ -1,0 +1,11 @@
+﻿function abc() : integer;
+    begin
+    end;
+procedure qwe();
+    begin
+    end;
+var
+    a : integer;
+begin
+    a := qwe();
+end.

@@ -1,6 +1,20 @@
 ﻿program abc;
+function cba(a : integer; b : integer) : integer;
+    begin
+    end;
+function dca() : integer;
+    begin
+    end;
 var
-    a : integer = 1 * k.a / c - arr[0] + -cba(0, dca()) * (2 + 3 * 4);
-    b : double = 2.2 * (k + 1).c - 'str' * 'c';
+    f : record
+            a : integer;
+        end;
+    k : record 
+            c : double;
+        end;
+    c : integer = 1;
+    arr : array[1..2] of integer;
+    a : integer = 1 * f.a / c - arr[0] + -cba(0, dca()) * (2 + 3 * 4);
+    b : double = 2.2 * k.c - 4 * 4.1;
 begin
 end.

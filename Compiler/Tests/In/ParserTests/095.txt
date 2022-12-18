@@ -1,7 +1,7 @@
 ﻿var
     e : record
-            a : Integer;
-            b : String
+            a : integer;
+            b : string
         end;
 begin
 end.

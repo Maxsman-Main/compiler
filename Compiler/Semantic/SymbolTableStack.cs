@@ -1,6 +1,7 @@
 ﻿using System.Collections.Specialized;
 using Compiler.Constants;
 using Compiler.Exceptions;
+using Compiler.Parser.Tree;
 
 namespace Compiler.Semantic;
 
@@ -56,11 +57,13 @@ public class SymbolTableStack
     private void InitializeStack()
     {
         var dictionary = new OrderedDictionary();
-        foreach (var keyWord in KeyWordsConstants.KeyWords)
-        {
-            var variable = new SymbolVariable(keyWord, new SymbolKeyWord(keyWord));
-            dictionary.Add(keyWord, variable);
-        }
+        var nullBlock = new CompoundStatement(new List<INodeStatement>());
+        var writeProcedure = new SymbolProcedure("write", new SymbolTable(new OrderedDictionary()),
+            new SymbolTable(new OrderedDictionary()), nullBlock);
+        var readProcedure = new SymbolProcedure("read", new SymbolTable(new OrderedDictionary()),
+            new SymbolTable(new OrderedDictionary()), nullBlock);
+        dictionary.Add("write", writeProcedure);
+        dictionary.Add("read", readProcedure);
         Tables.Add(new SymbolTable(dictionary));
         _head++;
         Tables.Add(new SymbolTable(new OrderedDictionary()));

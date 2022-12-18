@@ -1,0 +1,16 @@
+﻿Program ab
+    FunctionDeclaration
+        abc(a:Integer, b:Integer) : Integer
+            CompoundStatement
+    VarDeclaration
+        arr
+            array of Integer
+        a
+            Integer
+                abc()
+                    arguments
+                        1
+                        arr[]
+                            indexes
+                                0
+    CompoundStatement

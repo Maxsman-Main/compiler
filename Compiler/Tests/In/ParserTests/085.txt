@@ -1,4 +1,7 @@
 ﻿program abc;
+    var
+        a : integer;
+        k : integer;
 begin
     if 1 then
         begin

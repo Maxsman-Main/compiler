@@ -10,10 +10,6 @@ namespace Compiler
     {
         public static void Main(string[] args)
         {
-            args = new string[10];
-            args[0] = "-s";
-            //args[1] = "-t";
-            args[1] = "a.txt";
             switch (args[0])
             {
                 case "-a" when args[1] == "-t":
@@ -63,7 +59,7 @@ namespace Compiler
                     var parser = new Parser.Parser(lexer);
                     try
                     {
-                        Console.WriteLine(parser.ParseProgram().GetPrint(0));
+                        Console.WriteLine(parser.ParseProgram().SyntaxTree.GetPrint(0));
                     }
                     catch (CompilerException exception)
                     {
@@ -71,16 +67,22 @@ namespace Compiler
                     }
                     break;
                 }
+                case "-s" when args[1] == "-t":
+                {
+                    var testSystemForParser = new TestSystem();
+                    testSystemForParser.TestSemantic();
+                    break;
+                }
                 case "-s":
                 {
                     var lexer = new LexicalAnalyzer();
                     lexer.SetFile("../../../Files/" + args[1]);
-                    var parser = new SemanticParser(lexer);
+                    var parser = new Parser.Parser(lexer);
                     try
                     {
                         var program = parser.ParseProgram();
                         Console.Write(program.Stack.GetPrint());
-                        Console.WriteLine(program.Block.GetPrint(0));
+                        Console.WriteLine(program.MainBlock.GetPrint(0));
                     }
                     catch (CompilerException exception)
                     {

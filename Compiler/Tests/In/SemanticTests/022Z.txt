@@ -1,0 +1,17 @@
+﻿write
+    CompoundStatement
+read
+    CompoundStatement
+
+abc
+    CompoundStatement
+    Integer
+qwe
+    CompoundStatement
+a Integer
+
+CompoundStatement
+    :=
+        a
+        abc()
+            arguments

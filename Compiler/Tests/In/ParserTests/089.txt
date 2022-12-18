@@ -1,14 +1,32 @@
-﻿program abc;
+﻿program ab;
+var
+    o : integer;
+    a : record
+            k : integer;
+        end;
+    b : record
+            c : integer;
+        end;
+    k : integer;
+    i : integer;
+    arr : array[1..2] of array[1..2] of array[1..2] of integer;
+    c : integer;
+function abc(a : integer; b : integer) : integer;
+    begin
+    end;
+procedure kca();
+    begin
+    end;
 begin
     if 1 then
-        a := 3;
+        o := 3;
     while 2 do
         begin
             abc(a.k, b.c);;;;
             k := 2 + 3 * -2;
         end;
     for i := arr[0,2,3] to 200 do
-         a := a + 1;
-    a := 5;
+         c := c + 1;
+    c := 5;
     kca();
 end.

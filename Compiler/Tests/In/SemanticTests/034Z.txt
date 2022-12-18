@@ -1,0 +1,20 @@
+﻿write
+    CompoundStatement
+read
+    CompoundStatement
+
+woman alias Record
+    k Integer
+abc
+    a Record
+    k Integer
+    CompoundStatement
+a Record
+    k Integer
+
+CompoundStatement
+    ProcedureStatement
+        Identifier
+            abc
+        arguments
+            a

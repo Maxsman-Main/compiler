@@ -1,4 +1,11 @@
-﻿program abc;
+﻿program ab;
+type
+    c = record 
+            k : integer; 
+        end;
+function abc() : c;
+    begin
+    end;
 var
     a : integer = abc().k;
 begin

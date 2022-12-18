@@ -1,4 +1,6 @@
-﻿var
+﻿type
+    testType = integer;
+var
     a : testType;
 begin
 end.

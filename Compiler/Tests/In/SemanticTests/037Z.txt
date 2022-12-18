@@ -1,0 +1,1 @@
+﻿if condition can't be not integer

@@ -9,6 +9,7 @@ public class TestSystem
     private const string LexerTestsPath = "../../../Tests/In/LexerTests";
     private const string ParserExpressionTestsPath = "../../../Tests/In/ParserExpressionTests";
     private const string ParserTestsPath = "../../../Tests/In/ParserTests";
+    private const string SemanticTestsPath = "../../../Tests/In/SemanticTests";
 
     private const string LexerOutPath = "../../../Tests/Out/LexerTests";
     private const string ParserExpressionOutPath = "../../../Tests/Out/ParserExpressionTests";
@@ -92,10 +93,13 @@ public class TestSystem
 
     public void TestParser()
     {
-        var files = GetFiles(ParserTestsPath);
-        var outFiles = GetFiles(ParserOutPath);
+        List<string> inFiles = new();
+        List<string> outFiles = new();
         List<bool> results = new();
-        for (int i = 0; i < files.Count; i++)
+        
+        GetFilesFromOneDirectory(ref inFiles, ref outFiles, ParserTestsPath);
+        
+        for (var i = 0; i < inFiles.Count; i++)
         {
             if (_writer.IsOpened == false)
             {
@@ -105,9 +109,9 @@ public class TestSystem
             try
             {
                 var analyzer = new LexicalAnalyzer();
-                analyzer.SetFile(files[i]);
+                analyzer.SetFile(inFiles[i]);
                 var parser = new Parser.Parser(analyzer);
-                _writer.WriteLine(parser.ParseProgram().GetPrint(0));
+                _writer.WriteLine(parser.ParseProgram().SyntaxTree.GetPrint(0));
 
                 _writer.CloseFile();
                 results.Add(CompareFiles(outFiles[i]));
@@ -119,8 +123,43 @@ public class TestSystem
                 results.Add(CompareFiles(outFiles[i]));
             }
         }
+        PrintResults(results, inFiles);
+    }
+
+    public void TestSemantic()
+    {
+        List<string> inFiles = new();
+        List<string> outFiles = new();
+        List<bool> results = new();
         
-        PrintResults(results, files);
+        GetFilesFromOneDirectory(ref inFiles, ref outFiles, SemanticTestsPath);
+        
+        for (var i = 0; i < inFiles.Count; i++)
+        {
+            if (_writer.IsOpened == false)
+            {
+                _writer.OpenFile();
+            }
+
+            try
+            {
+                var analyzer = new LexicalAnalyzer();
+                analyzer.SetFile(inFiles[i]);
+                var parser = new Parser.Parser(analyzer);
+                var program = parser.ParseProgram();
+                _writer.WriteLine(program.Stack.GetPrint() + program.MainBlock.GetPrint(0));
+                
+                _writer.CloseFile();
+                results.Add(CompareFiles(outFiles[i]));
+            }
+            catch (CompilerException exception)
+            {
+                _writer.WriteLine(exception.Message);
+                _writer.CloseFile();
+                results.Add(CompareFiles(outFiles[i]));
+            }
+        }
+        PrintResults(results, inFiles);
     }
 
     private bool CompareFiles(string firstFile)
@@ -160,11 +199,29 @@ public class TestSystem
         foreach (var file in files)
         {
             var name = file;
+            Console.WriteLine(name);
             names.Add(name);
         }
 
         names.Sort();
         return names;
+    }
+
+    private void GetFilesFromOneDirectory(ref List<string> inFiles, ref List<string> outFiles, string path)
+    {
+        var files = Directory.GetFiles(path);
+        for (var index = 0; index < files.Length; index++)
+        {
+            var name = files[index];
+            if (index % 2 == 0)
+            {
+                inFiles.Add(name);
+            }
+            else
+            {
+                outFiles.Add(name);
+            }
+        }
     }
 
     private void PrintResults(List<bool> results, List<string> files)

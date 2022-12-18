@@ -1,0 +1,15 @@
+﻿write
+    CompoundStatement
+read
+    CompoundStatement
+
+a Integer
+abc Double
+
+CompoundStatement
+    :=
+        abc
+        +
+            2.2
+            CastToDouble
+                a

@@ -1,0 +1,20 @@
+﻿write
+    CompoundStatement
+read
+    CompoundStatement
+
+a Integer
+b Record
+    k Integer
+    c String
+
+CompoundStatement
+    :=
+        a
+        +
+            +
+                1
+                2
+            .
+                b
+                k

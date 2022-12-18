@@ -1,0 +1,25 @@
+﻿write
+    CompoundStatement
+read
+    CompoundStatement
+
+k String
+b Integer
+abc
+    a Integer
+    b Integer
+    c Integer
+    k Integer
+    CompoundStatement
+        :=
+            c
+            +
+                k
+                1
+    Integer
+a String
+
+CompoundStatement
+    :=
+        a
+        k

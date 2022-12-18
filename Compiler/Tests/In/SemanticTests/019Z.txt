@@ -1,0 +1,1 @@
+﻿can't use bin operation for Integer and String

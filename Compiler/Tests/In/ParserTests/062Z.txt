@@ -1,0 +1,24 @@
+﻿Program abc
+    FunctionDeclaration
+        cba(a:Integer, b:Integer) : Integer
+            CompoundStatement
+    FunctionDeclaration
+        dca() : Integer
+            CompoundStatement
+    VarDeclaration
+        a
+            Integer
+                -
+                    1
+                    *
+                        cba()
+                            arguments
+                                0
+                                dca()
+                                    arguments
+                        +
+                            2
+                            *
+                                3
+                                4
+    CompoundStatement

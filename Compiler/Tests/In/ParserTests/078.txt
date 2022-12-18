@@ -1,4 +1,7 @@
-﻿program abc;
+﻿program ab;
+procedure abc();
+    begin
+    end;
 begin
     abc();;;;;;;
 end.

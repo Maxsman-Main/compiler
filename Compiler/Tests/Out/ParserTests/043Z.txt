@@ -1,0 +1,10 @@
+﻿Program abc
+    VarDeclaration
+        b
+            Record
+        a
+            Double
+                .
+                    b
+                    k
+    CompoundStatement

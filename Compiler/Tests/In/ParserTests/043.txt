@@ -1,5 +1,8 @@
 ﻿program abc;
 var
+    b : record
+            k : double;
+        end;
     a : double = b.k;
 begin
 end.

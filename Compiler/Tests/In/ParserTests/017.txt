@@ -1,5 +1,5 @@
 ﻿program abc;
 const
-    a : Integer = 1 + 2;
+    a : integer = 1 + 2;
 begin
 end.

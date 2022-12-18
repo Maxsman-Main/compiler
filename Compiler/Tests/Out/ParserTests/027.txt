@@ -1,5 +1,0 @@
-﻿Program abc
-    FunctionDeclaration
-        abc(var a:Integer) : Integer
-            CompoundStatement
-    CompoundStatement

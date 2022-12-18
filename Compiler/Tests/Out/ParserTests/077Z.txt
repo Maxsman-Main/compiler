@@ -1,0 +1,22 @@
+﻿Program ab
+    FunctionDeclaration
+        abc(a:Integer, b:Integer, c:Integer, d:Integer) : Integer
+            CompoundStatement
+    VarDeclaration
+        lim
+            Integer
+        a
+            Record
+    CompoundStatement
+        ProcedureStatement
+            Identifier
+                abc
+            arguments
+                1
+                lim
+                +
+                    1
+                    2
+                .
+                    a
+                    k

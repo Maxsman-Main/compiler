@@ -1,0 +1,6 @@
+﻿var
+    a : integer;
+    abc : double;
+begin
+    abc := 2.2 + a;
+end.

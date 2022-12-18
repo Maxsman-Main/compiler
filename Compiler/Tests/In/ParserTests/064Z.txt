@@ -1,0 +1,17 @@
+﻿Program abc
+    TypeDeclaration
+        c
+            Record
+                k Integer
+    VarDeclaration
+        arr
+            array of Record
+    k Integer
+        a
+            Integer
+                .
+                    arr[]
+                        indexes
+                            0
+                    k
+    CompoundStatement

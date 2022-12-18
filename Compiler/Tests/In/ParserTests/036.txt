@@ -1,4 +1,4 @@
-﻿program abc;
+﻿program ab;
 var
     a : integer;
     b : integer;

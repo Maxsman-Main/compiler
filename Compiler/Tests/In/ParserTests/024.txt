@@ -1,4 +1,4 @@
-﻿program abc;
+﻿program ab;
 function abc(a : integer; b : integer) : integer;
     begin
     end;
