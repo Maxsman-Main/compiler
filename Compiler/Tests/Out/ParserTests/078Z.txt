@@ -1,0 +1,9 @@
+﻿Program ab
+    ProcedureDeclaration
+        abc()
+            CompoundStatement
+    CompoundStatement
+        ProcedureStatement
+            Identifier
+                abc
+            arguments

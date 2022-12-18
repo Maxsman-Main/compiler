@@ -1,0 +1,19 @@
+﻿Program ab
+    FunctionDeclaration
+        abc() : Integer
+            CompoundStatement
+    VarDeclaration
+        arr
+            array of array of Integer
+        a
+            Integer
+                arr[]
+                    indexes
+                        2
+                        *
+                            abc()
+                                arguments
+                            +
+                                2
+                                3
+    CompoundStatement

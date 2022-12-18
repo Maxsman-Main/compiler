@@ -1,0 +1,6 @@
+﻿Program abc
+    VarDeclaration
+        a
+            String
+                "str"
+    CompoundStatement

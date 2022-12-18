@@ -1,0 +1,5 @@
+﻿Program abc
+    TypeDeclaration
+        a
+            Integer
+    CompoundStatement

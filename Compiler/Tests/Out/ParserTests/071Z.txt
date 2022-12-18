@@ -1,0 +1,7 @@
+﻿Program abc
+    CompoundStatement
+        WhileStatement
+            Condition
+                1
+            Body
+                CompoundStatement

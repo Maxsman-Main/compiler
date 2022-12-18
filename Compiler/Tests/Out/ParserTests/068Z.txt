@@ -1,0 +1,6 @@
+﻿Program abc
+    CompoundStatement
+        IfStatement
+            Condition
+                1
+            Body

@@ -1,0 +1,20 @@
+﻿Program ab
+    FunctionDeclaration
+        cba() : Integer
+            CompoundStatement
+    VarDeclaration
+        kda
+            array of Integer
+        abc
+            array of array of array of Integer
+        a
+            Integer
+                abc[]
+                    indexes
+                        0
+                        cba()
+                            arguments
+                        kda[]
+                            indexes
+                                0
+    CompoundStatement

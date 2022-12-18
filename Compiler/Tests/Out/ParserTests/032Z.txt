@@ -1,0 +1,5 @@
+﻿Program ab
+    FunctionDeclaration
+        abc(a:Integer, var d:Integer, b:Integer, var c:Integer) : Integer
+            CompoundStatement
+    CompoundStatement

@@ -1,0 +1,14 @@
+﻿Program abc
+    VarDeclaration
+        i
+            Integer
+    CompoundStatement
+        ForStatement
+            Identifier
+                i
+            LeftBound
+                1
+            RightBound
+                5
+            Body
+                CompoundStatement

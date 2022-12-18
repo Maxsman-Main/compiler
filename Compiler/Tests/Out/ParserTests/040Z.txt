@@ -1,0 +1,6 @@
+﻿Program abc
+    VarDeclaration
+        a
+            Char
+                's'
+    CompoundStatement

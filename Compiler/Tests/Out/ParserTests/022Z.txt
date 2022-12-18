@@ -1,0 +1,5 @@
+﻿Program ab
+    FunctionDeclaration
+        abc() : Integer
+            CompoundStatement
+    CompoundStatement
