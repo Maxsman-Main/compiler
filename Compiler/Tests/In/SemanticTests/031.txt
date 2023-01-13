@@ -7,9 +7,10 @@ function abc(a : integer; b : g) : integer;
         k : integer;
     begin
     end;
+    return 1;
 var
     a : integer;
-    o : f;
+    o : array[1..2] of integer;
 begin
-    a := abc(1, o);
+    a := abc(1, o[1]);
 end.

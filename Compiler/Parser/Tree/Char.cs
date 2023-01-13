@@ -16,6 +16,11 @@ public class Char : INodeExpression
         return new SymbolChar("Char");
     }
 
+    public void Generate(Generator.Generator generator)
+    {
+        throw new NotImplementedException();
+    }
+
     public string GetPrint(int level)
     {
         var value = "";

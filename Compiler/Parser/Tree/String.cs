@@ -15,7 +15,12 @@ public class String : INodeExpression
     {
         return new SymbolString("string");
     }
-    
+
+    public void Generate(Generator.Generator generator)
+    {
+        throw new NotImplementedException();
+    }
+
     public string GetPrint(int level)
     {
         var value = "";

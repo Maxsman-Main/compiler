@@ -2,6 +2,7 @@
 function abc(a : integer; b : integer) : integer;
     begin
     end;
+    return 1;
 var
     arr : array[1..2] of integer;
     a : integer = abc(1, arr[0]);

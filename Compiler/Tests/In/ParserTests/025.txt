@@ -2,5 +2,6 @@
 function abc(a, b, c : integer) : integer;
     begin
     end;
+    return 1;
 begin
 end.

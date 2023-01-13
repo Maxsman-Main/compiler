@@ -32,6 +32,11 @@ public class RecordAccess : INodeExpression
         throw new CompilerException("can't get type for field");
     }
 
+    public void Generate(Generator.Generator generator)
+    {
+        throw new NotImplementedException();
+    }
+
     public string GetPrint(int level)
     {
         var value = "";

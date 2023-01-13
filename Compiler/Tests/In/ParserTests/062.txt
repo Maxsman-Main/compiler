@@ -2,9 +2,11 @@
 function cba(a : integer; b : integer) : integer;
     begin
     end;
+    return 1;
 function dca() : integer;
     begin
     end;
+    return 1;
 var
     a : integer = 1  +- cba(0, dca()) * (2 + 3 * 4);
 begin

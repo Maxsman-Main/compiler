@@ -6,6 +6,7 @@ type
 function abc() : c;
     begin
     end;
+    return 1;
 var
     a : integer = abc().k;
 begin

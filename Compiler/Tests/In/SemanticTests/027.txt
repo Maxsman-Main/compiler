@@ -1,6 +1,7 @@
 ﻿function abc(a : integer; b : integer) : string;
     begin
     end;
+    return 'abc';
 var
     a : integer;
 begin

@@ -2,6 +2,7 @@
 function abc(a : integer; b : integer; c : integer; d : integer) : integer;
     begin
     end;
+    return 1;
 var
     lim : integer;
     a : record

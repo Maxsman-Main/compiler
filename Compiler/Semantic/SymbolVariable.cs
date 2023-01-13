@@ -1,4 +1,5 @@
-﻿using Compiler.Parser.Tree;
+﻿using Compiler.Generator;
+using Compiler.Parser.Tree;
 
 namespace Compiler.Semantic;
 

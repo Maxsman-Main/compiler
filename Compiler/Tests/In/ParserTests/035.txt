@@ -4,5 +4,6 @@ function abc(a : integer) : integer;
         b : integer = 2 + 5;
     begin
     end;
+    return 1;
 begin
 end.

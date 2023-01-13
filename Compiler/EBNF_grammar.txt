@@ -19,7 +19,7 @@ Declarations
 <type_declaration> ::= "type" <one_type_declaration> {<one_type_declaration>}
 <one_type_declaration> ::= <id> "=" <type>
 
-<function_declaration> ::= <function_header> {<const_declaration> | <var_declaration> | <type_declaration>} <compound_statement> ";"
+<function_declaration> ::= <function_header> {<const_declaration> | <var_declaration> | <type_declaration>} <compound_statement> ";" "return" <expression>";"
 <function_header> ::= "function" <id> "(" <parameters> ")" ":" <type> ";"
 
 <procedure_declaration> ::= <procedure_header> {<const_declaration> | <var_declaration> | <type_declaration>} <compound_statement> ";"

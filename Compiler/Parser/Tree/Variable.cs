@@ -1,5 +1,4 @@
-﻿using System.Reflection.PortableExecutable;
-using Compiler.Exceptions;
+﻿using Compiler.Exceptions;
 using Compiler.Semantic;
 
 namespace Compiler.Parser.Tree;
@@ -70,6 +69,11 @@ public class Variable : INodeExpression
 
         if (_symbol == null) throw new CompilerException("can't get type for variable");
         return _symbol.Type;
+    }
+
+    public void Generate(Generator.Generator generator)
+    {
+        throw new NotImplementedException();
     }
 
     public string GetPrint(int level)

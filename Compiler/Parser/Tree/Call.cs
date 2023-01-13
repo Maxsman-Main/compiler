@@ -30,6 +30,11 @@ public class Call : INodeExpression
         return function.ReturnType;
     }
 
+    public void Generate(Generator.Generator generator)
+    {
+        throw new NotImplementedException();
+    }
+
     public string GetPrint(int level)
     {
         var value = "";

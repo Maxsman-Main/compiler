@@ -4,6 +4,7 @@
         k : integer;
     begin
     end;
+    return 1;
 var
     a : integer;
 begin

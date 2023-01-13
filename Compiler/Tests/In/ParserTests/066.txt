@@ -2,6 +2,7 @@
 function abc() : integer;
     begin
     end;
+    return 1;
 var
     arr : array[1..2] of array[1..2] of integer;
     a : integer = arr[2, abc() * (2 + 3)];

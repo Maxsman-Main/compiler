@@ -13,7 +13,7 @@ abc
     CompoundStatement
     Integer
 a Integer
-o Integer
+o array of Integer
 
 CompoundStatement
     :=
@@ -21,4 +21,6 @@ CompoundStatement
         abc()
             arguments
                 1
-                o
+                o[]
+                    indexes
+                        1

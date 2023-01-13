@@ -51,6 +51,26 @@ public class BinOperation : INodeExpression
         return _type;
     }
 
+    public void Generate(Generator.Generator generator)
+    {
+        _left.Generate(generator);
+        _right.Generate(generator);
+        generator.Add(AssemblerCommand.Pop, AssemblerRegisters.Ebx);
+        generator.Add(AssemblerCommand.Pop, AssemblerRegisters.Eax);
+
+        switch (_operation)
+        {
+            case OperatorValue.Plus:
+                generator.Add(AssemblerCommand.Add, AssemblerRegisters.Eax, AssemblerRegisters.Ebx);
+                break;
+            case OperatorValue.Minus:
+                generator.Add(AssemblerCommand.Sub, AssemblerRegisters.Eax, AssemblerRegisters.Ebx);
+                break;
+        }
+
+        generator.Add(AssemblerCommand.Push, AssemblerRegisters.Eax);
+    }
+
     public string GetPrint(int level)
     {
         var value = "";

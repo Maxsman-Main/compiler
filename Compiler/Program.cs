@@ -1,4 +1,5 @@
-﻿using Compiler.Exceptions;
+﻿using System.Diagnostics;
+using Compiler.Exceptions;
 using Compiler.Lexeme;
 using Compiler.LexicalAnalyzerStateMachine;
 using Compiler.Parser;
@@ -10,6 +11,9 @@ namespace Compiler
     {
         public static void Main(string[] args)
         {
+            args = new string[10];
+            args[0] = "-c";
+            args[1] = "a.txt";
             switch (args[0])
             {
                 case "-a" when args[1] == "-t":
@@ -90,6 +94,16 @@ namespace Compiler
                     }
                     break;
                 }
+                case "-c":
+                {
+                    var process = new Process();
+                    process.StartInfo.FileName = "cmd";
+                    process.StartInfo.Arguments = "/K ";
+                    process.StartInfo.Arguments += "cd ";
+                    process.StartInfo.Arguments = "gcc -m32 -mconsole main.obj";
+                    process.Start();
+                    break;
+                }    
                 default:
                 {
                     Console.WriteLine("No right keys");

@@ -10,6 +10,7 @@ public interface INode
 public interface INodeExpression : INode
 {
     public SymbolType GetExpressionType();
+    public void Generate(Generator.Generator generator);
 }
 
 public interface IBound : INode

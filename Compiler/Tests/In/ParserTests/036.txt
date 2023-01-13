@@ -9,6 +9,7 @@ type
 function abc() : integer;
     begin
     end;
+    return 1;
 procedure bca();
     begin
     end;

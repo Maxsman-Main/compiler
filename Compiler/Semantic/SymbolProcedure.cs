@@ -27,3 +27,10 @@ public class SymbolProcedure : Symbol
         return result;
     }
 }
+
+public class Write : SymbolProcedure
+{
+    public Write(string name, SymbolTable parameters, SymbolTable locals, INodeStatement body) : base(name, parameters, locals, body)
+    {
+    }
+}

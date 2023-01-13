@@ -1,4 +1,5 @@
-﻿using Compiler.Semantic;
+﻿using Compiler.Constants;
+using Compiler.Semantic;
 
 namespace Compiler.Parser.Tree;
 
@@ -14,6 +15,11 @@ public class Number : INodeExpression
     public SymbolType GetExpressionType()
     {
         return new SymbolInteger("integer");
+    }
+
+    public void Generate(Generator.Generator generator)
+    {
+        generator.Add(AssemblerCommand.Push, _value);
     }
     
     public string GetPrint(int level)

@@ -24,7 +24,12 @@ public class UnaryOperation : INodeExpression
 
         throw new CompilerException("argument can't use with unary " + _operation);
     }
-    
+
+    public void Generate(Generator.Generator generator)
+    {
+        throw new NotImplementedException();
+    }
+
     public string GetPrint(int level)
     {
         var value = "";

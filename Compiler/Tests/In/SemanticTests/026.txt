@@ -8,6 +8,7 @@ function abc(a : integer; b : integer) : integer;
     begin
         c := k + 1;
     end;
+    return 1;
 var
     a : string;
 begin

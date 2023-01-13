@@ -1,14 +1,3 @@
-﻿type
-    woman = record
-                k : integer;
-            end;
-
-procedure abc(a : woman);
-    begin
-    end;
-
-var
-    a : woman;
-begin
-    abc(a);
+﻿begin
+    write(1);
 end.

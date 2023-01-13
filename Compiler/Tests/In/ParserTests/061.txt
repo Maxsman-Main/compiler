@@ -2,9 +2,11 @@
 function cba(a : integer; b : integer) : integer;
     begin
     end;
+    return 1;
 function dca() : integer;
     begin
     end;
+    return 1;
 var
     f : record
             a : integer;

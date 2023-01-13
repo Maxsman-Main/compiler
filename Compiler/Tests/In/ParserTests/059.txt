@@ -2,6 +2,7 @@
 function cba() : integer;
     begin
     end;
+    return 1;
 var
     kda : array[1..2] of integer;
     abc : array[1..2] of array[1..2] of array[1..2] of integer;

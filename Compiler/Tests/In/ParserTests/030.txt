@@ -2,5 +2,6 @@
 function abc(var a, b, c : integer; var d, e, f : integer) : integer;
     begin
     end;
+    return 1;
 begin
 end.

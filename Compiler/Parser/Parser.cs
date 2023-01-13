@@ -202,9 +202,12 @@ public class Parser
         _stack.Push(variables);
         var statement = ParseCompoundStatement();
         RequireSeparator(SeparatorValue.Semicolon);
+        RequireKeyWord(KeyWordValue.Return);
+        var returnExpression = ParseExpression();
+        RequireSeparator(SeparatorValue.Semicolon);
         _stack.Pop();
 
-        var function = new SymbolFunction(variable.Name, parametersTable, locals, statement, type);
+        var function = new SymbolFunction(variable.Name, parametersTable, locals, statement, type, returnExpression);
         _stack.Add(variable.Name, function);
         
         return new FunctionDeclaration(variable, parameters, type, declarations, statement);

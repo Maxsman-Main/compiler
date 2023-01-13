@@ -2,6 +2,7 @@
 function bca() : double;
     begin
     end;
+    return 1.2;
 var
     a : double = bca();
 begin

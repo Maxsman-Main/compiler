@@ -16,7 +16,12 @@ public class DoubleNumber : INodeExpression
     {
         return new SymbolDouble("Double");
     }
-    
+
+    public void Generate(Generator.Generator generator)
+    {
+        throw new NotImplementedException();
+    }
+
     public string GetPrint(int level)
     {
         var value = "";
