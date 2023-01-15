@@ -49,7 +49,7 @@ public class FunctionDeclaration : INodeDeclaration
         _declarations = declarations;
         _block = statements;
     }
-    
+
     public string GetPrint(int level)
     {
         var result = "";

@@ -16,7 +16,7 @@ public class ProcedureDeclaration : INodeDeclaration
         _declarations = declarations;
         _statements = statements;
     }
-    
+
     public string GetPrint(int level)
     {
         var result = "";

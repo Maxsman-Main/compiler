@@ -1,1 +1,1 @@
-1 5 identifier was expected
+g array has 1 indexes, but 3 received

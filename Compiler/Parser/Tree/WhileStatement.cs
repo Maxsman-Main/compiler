@@ -44,4 +44,9 @@ public class WhileStatement : INodeStatement
         result += _body is not null ? '\n' + _body.GetPrint(level + 2) : "";
         return result;
     }
+
+    public void Generate(Generator.Generator generator)
+    {
+        throw new NotImplementedException();
+    }
 }

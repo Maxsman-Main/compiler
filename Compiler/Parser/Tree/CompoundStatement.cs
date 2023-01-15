@@ -8,6 +8,14 @@ public partial class CompoundStatement : INodeStatement
     {
         _body = body;
     }
+
+    public void Generate(Generator.Generator generator)
+    {
+        foreach (var statement in _body)
+        {
+            statement.Generate(generator);
+        }
+    }
     
     public string GetPrint(int level)
     {

@@ -16,6 +16,11 @@ public class IfStatement : INodeStatement
         _elsePart = elsePart is NullStatement ? null : elsePart;
     }
 
+    public void Generate(Generator.Generator generator)
+    {
+        throw new NotImplementedException();
+    }
+
     public string GetPrint(int level)
     {
         var result = "";

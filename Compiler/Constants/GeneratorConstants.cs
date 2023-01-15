@@ -8,7 +8,8 @@ public enum AssemblerCommand
     Push,
     Sub,
     Mov,
-    Pop
+    Pop,
+    Call
 }
 
 public enum AssemblerRegisters
@@ -25,6 +26,12 @@ public enum IndirectAssemblerRegisters
     Esp
 }
 
+public enum Format
+{
+    Integer,
+    Double
+}
+
 public static class GeneratorConstants
 {
     public static Dictionary<AssemblerCommand, string> Commands { get; } = new()
@@ -33,7 +40,8 @@ public static class GeneratorConstants
         {AssemblerCommand.Push, "push"},
         {AssemblerCommand.Sub, "sub"},
         {AssemblerCommand.Mov, "mov"},
-        {AssemblerCommand.Pop, "pop"}
+        {AssemblerCommand.Pop, "pop"},
+        {AssemblerCommand.Call, "call"}
     };
 
     public static Dictionary<AssemblerRegisters, string> Registers { get; } = new()
@@ -48,5 +56,11 @@ public static class GeneratorConstants
         {IndirectAssemblerRegisters.Eax, "[eax]"},
         {IndirectAssemblerRegisters.Ebx, "[ebx]"},
         {IndirectAssemblerRegisters.Esp, "[esp]"}
+    };
+
+    public static Dictionary<Format, string> Formats { get; } = new()
+    {
+        {Format.Integer, "integer_format"},
+        {Format.Double, "double_format"}
     };
 }

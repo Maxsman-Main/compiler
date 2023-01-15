@@ -23,7 +23,12 @@ public class ForStatement : INodeStatement
 
         _statement = statement;
     }
-    
+
+    public void Generate(Generator.Generator generator)
+    {
+        throw new NotImplementedException();
+    }
+
     public string GetPrint(int level)
     {
         var result = "";

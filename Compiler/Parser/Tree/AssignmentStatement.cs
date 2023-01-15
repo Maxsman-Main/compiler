@@ -20,7 +20,12 @@ public class AssignmentStatement : INodeStatement
         _identifier = new Variable(variable.Name);
         _expression = expression;
     }
-    
+
+    public void Generate(Generator.Generator generator)
+    {
+        throw new NotImplementedException();
+    }
+
     public string GetPrint(int level)
     {
         var result = "";

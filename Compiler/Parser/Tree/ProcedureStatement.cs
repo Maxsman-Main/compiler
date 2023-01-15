@@ -1,4 +1,5 @@
-﻿using Compiler.Semantic;
+﻿using Compiler.Constants;
+using Compiler.Semantic;
 
 namespace Compiler.Parser.Tree;
 
@@ -19,6 +20,10 @@ public class ProcedureStatement : INodeStatement
         _identifier = new Variable(procedure.Name);
         _procedure = procedure;
         _parameters = parameters;
+    }
+
+    public void Generate(Generator.Generator generator)
+    {
     }
 
     public string GetPrint(int level)

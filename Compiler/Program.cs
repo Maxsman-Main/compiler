@@ -108,6 +108,8 @@ namespace Compiler
                         var directoryMaker = new DirectoryMaker();
                         var assemblerMaker = new AssemblerFileMaker();
                         var assemblerCodeExecutor = new AssemblerCodeExecutor();
+                        program.MainBlock.Generate(generator);
+                        generator.AddOutputFormats();
                         directoryMaker.MakeDirectory(args[1]);
                         assemblerMaker.MakeFile(args[1], generator.Commands);
                         assemblerCodeExecutor.RunAssemblerCode(args[1]);

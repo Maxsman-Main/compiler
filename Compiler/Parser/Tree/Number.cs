@@ -5,11 +5,11 @@ namespace Compiler.Parser.Tree;
 
 public class Number : INodeExpression
 {
-    private readonly int _value;
+    public int Value { get; }
 
     public Number(int value)
     {
-        _value = value;
+        Value = value;
     }
 
     public SymbolType GetExpressionType()
@@ -19,7 +19,7 @@ public class Number : INodeExpression
 
     public void Generate(Generator.Generator generator)
     {
-        generator.Add(AssemblerCommand.Push, _value);
+        generator.Add(AssemblerCommand.Push, Value);
     }
     
     public string GetPrint(int level)
@@ -30,7 +30,7 @@ public class Number : INodeExpression
             value += " ";
         }
 
-        value += _value.ToString();
+        value += Value.ToString();
         return value;
     }
 }

@@ -19,7 +19,7 @@ public class ConstDeclaration : INodeDeclaration
     {
         _constDeclarations = constDeclarations;
     }
-    
+
     public string GetPrint(int level)
     {
         var result = "";

@@ -41,7 +41,8 @@ public enum KeyWordValue
     Integer,
     Double,
     String,
-    Char
+    Char,
+    Write
 }
 
 public static class KeyWordsConstants
@@ -56,7 +57,7 @@ public static class KeyWordsConstants
         "div", "if", "procedure", "var",
         "do", "in", "program", "while",
         "downto", "label", "record", "with",
-        "else", "mod", "repeat", "return",
+        "else", "mod", "repeat", "return", "write",
         "AND", "END", "NIL", "SET", "INTEGER", "DOUBLE", "STRING", "CHAR",
         "ARRAY", "FILE", "NOT", "THEN",
         "BEGIN", "FOR", "OF", "TO",
@@ -65,7 +66,7 @@ public static class KeyWordsConstants
         "DIV", "IF", "PROCEDURE", "VAR",
         "DO", "IN", "PROGRAM", "WHILE",
         "DOWNTO", "LABEL", "RECORD", "WITH",
-        "ELSE", "MOD", "REPEAT", "RETURN"
+        "ELSE", "MOD", "REPEAT", "RETURN", "WRITE"
     };
 
     private static Dictionary<string, KeyWordValue> _keyWordValues = new()
@@ -110,6 +111,7 @@ public static class KeyWordsConstants
         {"mod", KeyWordValue.Mod},
         {"repeat", KeyWordValue.Repeat},
         {"return", KeyWordValue.Return},
+        {"write", KeyWordValue.Write},
         {"AND", KeyWordValue.And},
         {"END", KeyWordValue.End},
         {"NIL", KeyWordValue.Nil},
@@ -149,7 +151,8 @@ public static class KeyWordsConstants
         {"ELSE", KeyWordValue.Else},
         {"MOD", KeyWordValue.Mod},
         {"REPEAT", KeyWordValue.Repeat},
-        {"RETURN", KeyWordValue.Return}
+        {"RETURN", KeyWordValue.Return},
+        {"WRITE", KeyWordValue.Write}
     };
 
     public static Dictionary<string, KeyWordValue> KeyWordValues => _keyWordValues;

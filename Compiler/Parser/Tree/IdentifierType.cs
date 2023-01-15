@@ -8,7 +8,7 @@ public class IdentifierType : INodeType
     {
         _identifier = identifier;
     }
-    
+
     public string GetPrint(int level)
     {
         var result = "";

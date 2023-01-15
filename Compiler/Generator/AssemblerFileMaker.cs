@@ -6,6 +6,7 @@ public class AssemblerFileMaker
     {
         var nameWithoutFormat = name.TakeWhile(lit => lit != '.').Aggregate("", (current, lit) => current + lit);
         var result = commands.Aggregate("", (current, command) => current + (command + "\n"));
+        Console.WriteLine(result);
         var file = File.Create($"./{name}");
         file.Close();
         var fileWriter = new StreamWriter($"./{name}");

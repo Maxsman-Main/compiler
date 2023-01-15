@@ -39,7 +39,6 @@ public class AssemblerCodeExecutor
 
     private void RunExe(string onlyName)
     {
-        
         File.WriteAllText("./run.cmd",
             $"@cd ./{onlyName}\n" +
             $"@{onlyName}.exe\n"

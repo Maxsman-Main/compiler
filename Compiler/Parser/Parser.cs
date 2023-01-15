@@ -524,12 +524,29 @@ public class Parser
         return lexeme switch
         {
             IIdentifierLexeme => ParseSimpleStatement(),
+            IKeyWordLexeme{Value: KeyWordValue.Write} =>  ParseWriteStatement(),
             IKeyWordLexeme {Value: KeyWordValue.Begin or KeyWordValue.While or KeyWordValue.For or KeyWordValue.If} =>
                 ParseStructuredStatement(),
             _ => new NullStatement()
         };
     }
 
+    private INodeStatement ParseWriteStatement()
+    {
+        List<INodeExpression>? parameter = null;
+        
+        _lexer.GetLexeme();
+        RequireSeparator(SeparatorValue.LeftBracket);
+        var lexeme = _lexer.CurrentLexeme;
+        if (lexeme is not SeparatorLexeme{Value: SeparatorValue.RightBracket})
+        {
+            parameter = ParseExpressionList();
+        }
+        RequireSeparator(SeparatorValue.RightBracket);
+
+        return new WriteStatement(parameter);
+    }
+    
     private INodeStatement ParseSimpleStatement()
     {
         var lexeme = _lexer.CurrentLexeme;
@@ -558,11 +575,9 @@ public class Parser
         }
         RequireSeparator(SeparatorValue.RightBracket);
 
-        if (procedure is not SymbolWrite)
-        {
-            CheckProcedureCallAccuracy(procedure, expressionList);
-        }
-
+        
+        CheckProcedureCallAccuracy(procedure, expressionList);
+ 
         return new ProcedureStatement(procedure, expressionList);
     }
 

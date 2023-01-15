@@ -1,3 +1,5 @@
 ﻿begin
-    write(1);
+    write(100 - 22);
+    write(100 + 22);
+    write(5);
 end.

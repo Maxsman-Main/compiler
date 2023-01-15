@@ -10,7 +10,7 @@ public class Bound : IBound
         LeftBound = leftBound;
         RightBound = rightBound;
     }
-    
+
     public string GetPrint(int level)
     {
         var result = "";

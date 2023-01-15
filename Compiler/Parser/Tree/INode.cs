@@ -9,8 +9,8 @@ public interface INode
 
 public interface INodeExpression : INode
 {
-    public SymbolType GetExpressionType();
     public void Generate(Generator.Generator generator);
+    public SymbolType GetExpressionType();
 }
 
 public interface IBound : INode
@@ -21,20 +21,10 @@ public interface IBound : INode
 
 public interface INodeStatement : INode
 {
-    
-}
-
-public interface IVariable : INode
-{
-    public string Name { get; }
+    public void Generate(Generator.Generator generator);
 }
 
 public interface INodeType : INode
-{
-    
-}
-
-public interface INodeArrayType : INodeType
 {
     
 }
@@ -45,11 +35,6 @@ public interface INodeDeclaration : INode
 }
 
 public interface INodeProgram : INode
-{
-    
-}
-
-public interface IMainBlockNode : INode
 {
     
 }
