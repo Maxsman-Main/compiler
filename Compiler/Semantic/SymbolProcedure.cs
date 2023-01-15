@@ -15,7 +15,7 @@ public class SymbolProcedure : Symbol
         Locals = locals;
         Body = body;
     }
-
+    
     public override string GetPrint(int level)
     {
         var result = "";

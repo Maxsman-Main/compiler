@@ -58,7 +58,7 @@ public class SymbolTableStack
     {
         var dictionary = new OrderedDictionary();
         var nullBlock = new CompoundStatement(new List<INodeStatement>());
-        var writeProcedure = new SymbolProcedure("write", new SymbolTable(new OrderedDictionary()),
+        var writeProcedure = new SymbolWrite("write", new SymbolTable(new OrderedDictionary()),
             new SymbolTable(new OrderedDictionary()), nullBlock);
         var readProcedure = new SymbolProcedure("read", new SymbolTable(new OrderedDictionary()),
             new SymbolTable(new OrderedDictionary()), nullBlock);

@@ -557,8 +557,11 @@ public class Parser
             expressionList = ParseExpressionList();
         }
         RequireSeparator(SeparatorValue.RightBracket);
-        
-        CheckProcedureCallAccuracy(procedure, expressionList);
+
+        if (procedure is not SymbolWrite)
+        {
+            CheckProcedureCallAccuracy(procedure, expressionList);
+        }
 
         return new ProcedureStatement(procedure, expressionList);
     }

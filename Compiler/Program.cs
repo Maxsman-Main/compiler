@@ -1,5 +1,7 @@
-﻿using System.Diagnostics;
+﻿using System.Collections.ObjectModel;
+using System.Diagnostics;
 using Compiler.Exceptions;
+using Compiler.Generator;
 using Compiler.Lexeme;
 using Compiler.LexicalAnalyzerStateMachine;
 using Compiler.Parser;
@@ -13,7 +15,7 @@ namespace Compiler
         {
             args = new string[10];
             args[0] = "-c";
-            args[1] = "a.txt";
+            args[1] = "test.txt";
             switch (args[0])
             {
                 case "-a" when args[1] == "-t":
@@ -96,12 +98,24 @@ namespace Compiler
                 }
                 case "-c":
                 {
-                    var process = new Process();
-                    process.StartInfo.FileName = "cmd";
-                    process.StartInfo.Arguments = "/K ";
-                    process.StartInfo.Arguments += "cd ";
-                    process.StartInfo.Arguments = "gcc -m32 -mconsole main.obj";
-                    process.Start();
+                    var lexer = new LexicalAnalyzer();
+                    lexer.SetFile("../../../Files/" + args[1]);
+                    var parser = new Parser.Parser(lexer);
+                    try
+                    {
+                        var program = parser.ParseProgram();
+                        var generator = new Generator.Generator();
+                        var directoryMaker = new DirectoryMaker();
+                        var assemblerMaker = new AssemblerFileMaker();
+                        var assemblerCodeExecutor = new AssemblerCodeExecutor();
+                        directoryMaker.MakeDirectory(args[1]);
+                        assemblerMaker.MakeFile(args[1], generator.Commands);
+                        assemblerCodeExecutor.RunAssemblerCode(args[1]);
+                    }
+                    catch (CompilerException exception)
+                    {
+                        Console.WriteLine(exception.Message);
+                    }
                     break;
                 }    
                 default:

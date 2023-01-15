@@ -5,11 +5,12 @@ namespace Compiler.Generator;
 
 public class Generator
 {
-    private readonly List<string> _commands;
+    public List<string> Commands { get; private set; }
 
     public Generator()
     {
-        _commands = new List<string>();
+        Commands = new List<string>();
+        Initialize();
     }
 
     public void Add(AssemblerCommand command, AssemblerRegisters register)
@@ -94,5 +95,22 @@ public class Generator
     {
         var assemblerCommand =
             $"{GeneratorConstants.Commands[command]} _{left.Name}, {GeneratorConstants.IndirectRegisters[right]}";
+    }
+
+    private void Initialize()
+    {
+        Commands = new List<string>
+        {
+            "global _main",
+            "extern _printf",
+            "extern _scanf",
+            "section .text",
+            "_main:",
+            "push message",
+            "call _printf",
+            "add esp, 4",
+            "message:",
+            "db \"Hello world!\", 10, 0"
+        };
     }
 }
