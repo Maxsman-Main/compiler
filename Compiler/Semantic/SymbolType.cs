@@ -6,6 +6,11 @@ public class SymbolType : Symbol
     {
     }
 
+    public override void Generate(Generator.Generator generator)
+    {
+        throw new NotImplementedException();
+    }
+
     public override string GetPrint(int level)
     {
         var result = "";

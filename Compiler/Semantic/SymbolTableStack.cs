@@ -9,11 +9,30 @@ public class SymbolTableStack
 {
     private List<SymbolTable> Tables { get; }
     private int _head = -1;
+    
+    public int Offset { get; set; }
 
     public SymbolTableStack()
     {
         Tables = new List<SymbolTable>();
+        Offset = 0;
         InitializeStack();
+    }
+
+    public void GenerateForVariables(Generator.Generator generator)
+    {
+        for (var i = 1; i < Tables.Count; i++)
+        {
+            Tables[i].GenerateForVariables(generator);
+        }
+    }
+
+    public void GenerateForProcedures(Generator.Generator generator)
+    {
+        for (var i = 1; i < Tables.Count; i++)
+        {
+            Tables[i].GenerateForProcedures(generator);
+        }
     }
 
     public void Add(string name, Symbol value)
@@ -59,9 +78,9 @@ public class SymbolTableStack
         var dictionary = new OrderedDictionary();
         var nullBlock = new CompoundStatement(new List<INodeStatement>());
         var writeProcedure = new SymbolProcedure("write", new SymbolTable(new OrderedDictionary()),
-            new SymbolTable(new OrderedDictionary()), nullBlock);
+            new SymbolTable(new OrderedDictionary()), nullBlock, this);
         var readProcedure = new SymbolProcedure("read", new SymbolTable(new OrderedDictionary()),
-            new SymbolTable(new OrderedDictionary()), nullBlock);
+            new SymbolTable(new OrderedDictionary()), nullBlock, this);
         dictionary.Add("write", writeProcedure);
         dictionary.Add("read", readProcedure);
         Tables.Add(new SymbolTable(dictionary));

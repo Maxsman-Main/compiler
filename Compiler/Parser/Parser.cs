@@ -207,7 +207,7 @@ public class Parser
         RequireSeparator(SeparatorValue.Semicolon);
         _stack.Pop();
 
-        var function = new SymbolFunction(variable.Name, parametersTable, locals, statement, type, returnExpression);
+        var function = new SymbolFunction(variable.Name, parametersTable, locals, statement, type, returnExpression, _stack);
         _stack.Add(variable.Name, function);
         
         return new FunctionDeclaration(variable, parameters, type, declarations, statement);
@@ -231,7 +231,7 @@ public class Parser
         RequireSeparator(SeparatorValue.Semicolon);
         _stack.Pop();
 
-        var procedure = new SymbolProcedure(variable.Name, parametersTable, locals, statement);
+        var procedure = new SymbolProcedure(variable.Name, parametersTable, locals, statement, _stack);
         _stack.Add(variable.Name, procedure);
         
         return new ProcedureDeclaration(variable, parameters, declarations, statement);

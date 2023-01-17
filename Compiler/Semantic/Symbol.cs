@@ -8,6 +8,7 @@ public abstract class Symbol
     {
         Name = name;
     }
-
+    
     public abstract string GetPrint(int level);
+    public abstract void Generate(Generator.Generator generator);
 }

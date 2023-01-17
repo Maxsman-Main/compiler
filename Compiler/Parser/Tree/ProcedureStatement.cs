@@ -24,6 +24,7 @@ public class ProcedureStatement : INodeStatement
 
     public void Generate(Generator.Generator generator)
     {
+        generator.Add(AssemblerCommand.Call, _identifier);
     }
 
     public string GetPrint(int level)

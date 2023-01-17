@@ -1,4 +1,4 @@
-﻿using Compiler.Generator;
+﻿using Compiler.Constants;
 using Compiler.Parser.Tree;
 
 namespace Compiler.Semantic;
@@ -7,11 +7,27 @@ public class SymbolVariable : Symbol, IVariable
 {
     public SymbolType Type { get; }
     public INodeExpression? Value { get; }
-
+    
     public SymbolVariable(string name, SymbolType type, INodeExpression? expression) : base(name)
     {
         Type = type;
         Value = expression;
+    }
+
+    public override void Generate(Generator.Generator generator)
+    {
+        generator.Add(this, AssemblerCommand.Resd);
+    }
+
+
+    public SymbolVariableLocal ConvertToLocal(SymbolTableStack stack)
+    {
+        return new SymbolVariableLocal(Name, Type, Value, stack);
+    }
+
+    public SymbolVariableParameter ConvertToParameter(SymbolTableStack stack)
+    {
+        return new SymbolVariableParameter(Name, Type, Value, stack);
     }
 
     public override string GetPrint(int level)

@@ -1,4 +1,5 @@
-﻿using Compiler.Exceptions;
+﻿using Compiler.Constants;
+using Compiler.Exceptions;
 using Compiler.Semantic;
 
 namespace Compiler.Parser.Tree;
@@ -35,8 +36,8 @@ public class Variable : INodeExpression
         _expressions = expressions;
         Name = symbol.Name;
     }
-    
-    
+
+
     public SymbolType GetExpressionType()
     {
         if (_expressions.Count != 0)
@@ -73,7 +74,7 @@ public class Variable : INodeExpression
 
     public void Generate(Generator.Generator generator)
     {
-        throw new NotImplementedException();
+        generator.Add(AssemblerCommand.Push, AssemblerCommand.Dword, this);
     }
 
     public string GetPrint(int level)

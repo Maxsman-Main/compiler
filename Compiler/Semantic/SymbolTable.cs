@@ -24,6 +24,30 @@ public class SymbolTable
         Data = data;
     }
 
+    public void GenerateForVariables(Generator.Generator generator)
+    {
+        foreach (var symbol in Data.Values)
+        {
+            var sym = ((Symbol)symbol);
+            if (sym is SymbolVariable)
+            {
+                sym.Generate(generator);
+            }
+        }
+    }
+
+    public void GenerateForProcedures(Generator.Generator generator)
+    {
+        foreach (var symbol in Data.Values)
+        {
+            var sym = ((Symbol)symbol);
+            if (sym is SymbolProcedure)
+            {
+                sym.Generate(generator);
+            }
+        }
+    }
+
     public void Add(string name, Symbol value)
     {
         try

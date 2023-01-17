@@ -7,13 +7,13 @@ public class SymbolFunction : SymbolProcedure
     public SymbolType ReturnType { get; }
     public INodeExpression? ReturnValue { get; }
 
-    public SymbolFunction(string name, SymbolTable parameters, SymbolTable locals, INodeStatement body, SymbolType returnType) : base(name, parameters, locals, body)
+    public SymbolFunction(string name, SymbolTable parameters, SymbolTable locals, INodeStatement body, SymbolType returnType, SymbolTableStack stack) : base(name, parameters, locals, body, stack)
     {
         ReturnType = returnType;
         ReturnValue = null;
     }
     
-    public SymbolFunction(string name, SymbolTable parameters, SymbolTable locals, INodeStatement body, SymbolType returnType, INodeExpression returnValue) : base(name, parameters, locals, body)
+    public SymbolFunction(string name, SymbolTable parameters, SymbolTable locals, INodeStatement body, SymbolType returnType, INodeExpression returnValue, SymbolTableStack stack) : base(name, parameters, locals, body, stack)
     {
         ReturnType = returnType;
         ReturnValue = returnValue;

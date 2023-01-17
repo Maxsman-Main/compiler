@@ -1,10 +1,7 @@
-﻿using System.Collections.ObjectModel;
-using System.Diagnostics;
-using Compiler.Exceptions;
+﻿using Compiler.Exceptions;
 using Compiler.Generator;
 using Compiler.Lexeme;
 using Compiler.LexicalAnalyzerStateMachine;
-using Compiler.Parser;
 using Compiler.Tests;
 
 namespace Compiler
@@ -108,8 +105,12 @@ namespace Compiler
                         var directoryMaker = new DirectoryMaker();
                         var assemblerMaker = new AssemblerFileMaker();
                         var assemblerCodeExecutor = new AssemblerCodeExecutor();
+                        generator.AddSectionBss();
+                        program.Stack.GenerateForVariables(generator);
+                        generator.AddSectionText();
+                        program.Stack.GenerateForProcedures(generator);
+                        generator.AddMain();
                         program.MainBlock.Generate(generator);
-                        generator.AddOutputFormats();
                         directoryMaker.MakeDirectory(args[1]);
                         assemblerMaker.MakeFile(args[1], generator.Commands);
                         assemblerCodeExecutor.RunAssemblerCode(args[1]);

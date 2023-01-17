@@ -1,5 +1,13 @@
-﻿begin
-    write(100 - 22);
-    write(100 + 22);
-    write(5);
+﻿var
+    x : integer;
+
+procedure abc();
+    begin
+        write(4 - 2);
+    end;
+
+begin
+    x := 11;
+    write(3 + 7 + x);
+    abc();
 end.

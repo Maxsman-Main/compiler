@@ -9,7 +9,11 @@ public enum AssemblerCommand
     Sub,
     Mov,
     Pop,
-    Call
+    Call,
+    DD,
+    Dword,
+    Ret,
+    Resd
 }
 
 public enum AssemblerRegisters
@@ -41,7 +45,11 @@ public static class GeneratorConstants
         {AssemblerCommand.Sub, "sub"},
         {AssemblerCommand.Mov, "mov"},
         {AssemblerCommand.Pop, "pop"},
-        {AssemblerCommand.Call, "call"}
+        {AssemblerCommand.Call, "call"},
+        {AssemblerCommand.DD, "dd"},
+        {AssemblerCommand.Dword, "dword"},
+        {AssemblerCommand.Ret, "ret"},
+        {AssemblerCommand.Resd, "resd"}
     };
 
     public static Dictionary<AssemblerRegisters, string> Registers { get; } = new()

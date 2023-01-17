@@ -1,4 +1,5 @@
-﻿using Compiler.Semantic;
+﻿using Compiler.Constants;
+using Compiler.Semantic;
 
 namespace Compiler.Parser.Tree;
 
@@ -23,7 +24,8 @@ public class AssignmentStatement : INodeStatement
 
     public void Generate(Generator.Generator generator)
     {
-        throw new NotImplementedException();
+        _expression.Generate(generator);
+        generator.Add(AssemblerCommand.Pop, _identifier);
     }
 
     public string GetPrint(int level)
