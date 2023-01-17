@@ -13,10 +13,13 @@ public class SymbolTable
 {
     public OrderedDictionary Data { get; }
     public int Count => Data.Count;
+    
+    public int Size { get; set; }
 
     public SymbolTable()
     {
         Data = new OrderedDictionary();
+        Size = 0;
     }
     
     public SymbolTable(OrderedDictionary data)

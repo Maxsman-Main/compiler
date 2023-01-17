@@ -74,6 +74,17 @@ public class Variable : INodeExpression
 
     public void Generate(Generator.Generator generator)
     {
+        if (_symbol is SymbolVariableParameter parameter)
+        {
+            generator.AddRight(AssemblerCommand.Push, IndirectAssemblerRegisters.Ebp, 8 + parameter.Offset);
+            return;
+        }
+
+        if (_symbol is SymbolVariableLocal local)
+        {
+            generator.AddLeft(AssemblerCommand.Push, IndirectAssemblerRegisters.Ebp, local.Offset);
+            return;
+        }
         generator.Add(AssemblerCommand.Push, AssemblerCommand.Dword, this);
     }
 

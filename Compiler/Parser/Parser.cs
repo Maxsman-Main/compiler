@@ -1,4 +1,5 @@
-﻿using Compiler.Constants;
+﻿using System.Collections.Specialized;
+using Compiler.Constants;
 using Compiler.Exceptions;
 using Compiler.Lexeme;
 using Compiler.LexicalAnalyzerStateMachine;
@@ -191,6 +192,7 @@ public class Parser
         RequireSeparator(SeparatorValue.LeftBracket);
         var parameters = ParseParameters();
         var parametersTable = CreateTableByParameters(parameters);
+        parametersTable = ConvertTableToParametersVariables(parametersTable);
         RequireSeparator(SeparatorValue.RightBracket);
         RequireOperator(OperatorValue.DoublePoint);
         var type = ParseType();
@@ -198,6 +200,7 @@ public class Parser
         _stack.Push(new SymbolTable());
         var declarations = ParseDeclarations();
         var locals = _stack.Pop();
+        locals = ConvertTableToLocalsVariables(locals);
         var variables = parametersTable.Merge(locals);
         _stack.Push(variables);
         var statement = ParseCompoundStatement();
@@ -207,7 +210,7 @@ public class Parser
         RequireSeparator(SeparatorValue.Semicolon);
         _stack.Pop();
 
-        var function = new SymbolFunction(variable.Name, parametersTable, locals, statement, type, returnExpression, _stack);
+        var function = new SymbolFunction(variable.Name, parametersTable, locals, statement, type, returnExpression);
         _stack.Add(variable.Name, function);
         
         return new FunctionDeclaration(variable, parameters, type, declarations, statement);
@@ -220,21 +223,49 @@ public class Parser
         RequireSeparator(SeparatorValue.LeftBracket);
         var parameters = ParseParameters();
         var parametersTable = CreateTableByParameters(parameters);
+        parametersTable = ConvertTableToParametersVariables(parametersTable);
         RequireSeparator(SeparatorValue.RightBracket);
         RequireSeparator(SeparatorValue.Semicolon);
         _stack.Push(new SymbolTable());
         var declarations = ParseDeclarations();
         var locals = _stack.Pop();
+        locals = ConvertTableToLocalsVariables(locals);
         var variables = parametersTable.Merge(locals);
         _stack.Push(variables);
         var statement = ParseCompoundStatement();
         RequireSeparator(SeparatorValue.Semicolon);
         _stack.Pop();
 
-        var procedure = new SymbolProcedure(variable.Name, parametersTable, locals, statement, _stack);
+        var procedure = new SymbolProcedure(variable.Name, parametersTable, locals, statement);
         _stack.Add(variable.Name, procedure);
         
         return new ProcedureDeclaration(variable, parameters, declarations, statement);
+    }
+    
+    private SymbolTable ConvertTableToParametersVariables(SymbolTable parameters)
+    {
+        var dictionary = new OrderedDictionary();
+        foreach (var parameter in parameters.Data.Values)
+        {
+            var symbol = (SymbolVariable) parameter;
+            var symbolParameter = symbol.ConvertToParameter();
+            dictionary.Add(symbolParameter.Name, symbolParameter);
+        }
+
+        return new SymbolTable(dictionary);
+    }
+
+    private SymbolTable ConvertTableToLocalsVariables(SymbolTable locals)
+    {
+        var dictionary = new OrderedDictionary();
+        foreach (var local in locals.Data.Values)
+        {
+            var symbol = (SymbolVariable) local;
+            var symbolLocal = symbol.ConvertToLocal();
+            dictionary.Add(symbolLocal.Name, symbolLocal); 
+        }
+        
+        return new SymbolTable(dictionary);
     }
 
     private SymbolTable CreateTableByParameters(List<Parameter> parameters)

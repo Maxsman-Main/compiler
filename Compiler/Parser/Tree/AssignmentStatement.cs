@@ -25,7 +25,18 @@ public class AssignmentStatement : INodeStatement
     public void Generate(Generator.Generator generator)
     {
         _expression.Generate(generator);
-        generator.Add(AssemblerCommand.Pop, _identifier);
+        switch (_variable)
+        {
+            case SymbolVariableParameter parameter:
+                generator.AddRight(AssemblerCommand.Pop, IndirectAssemblerRegisters.Ebp, 8 + parameter.Offset);
+                return;
+            case SymbolVariableLocal local:
+                generator.AddLeft(AssemblerCommand.Pop, IndirectAssemblerRegisters.Ebp, local.Offset);
+                return;
+            default:
+                generator.Add(AssemblerCommand.Pop, _identifier);
+                break;
+        }
     }
 
     public string GetPrint(int level)

@@ -178,6 +178,18 @@ public class Generator
         Commands.Add(assemblerCommand);
     }
 
+    public void AddLeft(AssemblerCommand command, IndirectAssemblerRegisters register, int offset)
+    {
+        var assemblerCommand = $"{GeneratorConstants.Commands[command]} dword [{GeneratorConstants.IndirectRegisters[register]} - {offset}]";
+        Commands.Add(assemblerCommand);
+    }
+
+    public void AddRight(AssemblerCommand command, IndirectAssemblerRegisters register, int offset)
+    {
+        var assemblerCommand = $"{GeneratorConstants.Commands[command]} dword [{GeneratorConstants.IndirectRegisters[register]} + {offset}]";
+        Commands.Add(assemblerCommand);
+    }
+
     public void AddProLog()
     {
         Commands.Add("push ebp");

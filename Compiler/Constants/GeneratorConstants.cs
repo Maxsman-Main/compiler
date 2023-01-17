@@ -27,7 +27,8 @@ public enum IndirectAssemblerRegisters
 {
     Eax,
     Ebx,
-    Esp
+    Esp,
+    Ebp
 }
 
 public enum Format
@@ -61,9 +62,10 @@ public static class GeneratorConstants
     
     public static Dictionary<IndirectAssemblerRegisters, string> IndirectRegisters { get; } = new()
     {
-        {IndirectAssemblerRegisters.Eax, "[eax]"},
-        {IndirectAssemblerRegisters.Ebx, "[ebx]"},
-        {IndirectAssemblerRegisters.Esp, "[esp]"}
+        {IndirectAssemblerRegisters.Eax, "eax"},
+        {IndirectAssemblerRegisters.Ebx, "ebx]"},
+        {IndirectAssemblerRegisters.Esp, "esp"},
+        {IndirectAssemblerRegisters.Ebp, "ebp"}
     };
 
     public static Dictionary<Format, string> Formats { get; } = new()

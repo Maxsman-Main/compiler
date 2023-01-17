@@ -1,13 +1,17 @@
 ﻿var
     x : integer;
 
-procedure abc();
+procedure abc(i : integer; j : integer);
+    var b : integer;
+    var c : integer;
     begin
-        write(4 - 2);
+        b := 3;
+        c := 5;
+        write(5 + c + c);
     end;
 
 begin
-    x := 11;
+    x := 12;
     write(3 + 7 + x);
-    abc();
+    abc(12, 5);
 end.

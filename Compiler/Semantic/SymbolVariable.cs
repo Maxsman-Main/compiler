@@ -20,14 +20,14 @@ public class SymbolVariable : Symbol, IVariable
     }
 
 
-    public SymbolVariableLocal ConvertToLocal(SymbolTableStack stack)
+    public SymbolVariableLocal ConvertToLocal()
     {
-        return new SymbolVariableLocal(Name, Type, Value, stack);
+        return new SymbolVariableLocal(Name, Type, Value);
     }
 
-    public SymbolVariableParameter ConvertToParameter(SymbolTableStack stack)
+    public SymbolVariableParameter ConvertToParameter()
     {
-        return new SymbolVariableParameter(Name, Type, Value, stack);
+        return new SymbolVariableParameter(Name, Type, Value);
     }
 
     public override string GetPrint(int level)

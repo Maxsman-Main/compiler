@@ -6,22 +6,13 @@ _x resd 1
 section .text
 integer_format:
 db "%d", 10, 0
-double_format: 
+double_format:
 db "%f", 10, 0
 _abc:
 push ebp
 mov ebp, esp
-push 3
-pop dword [ebp - 0]
-push 5
-pop dword [ebp - 4]
-push 5
-push dword [ebp - 4]
-pop ebx
-pop eax
-add eax, ebx
-push eax
-push dword [ebp - 4]
+push 4
+push dword [ebp + 8]
 pop ebx
 pop eax
 add eax, ebx
@@ -49,7 +40,6 @@ push eax
 push integer_format
 call _printf
 add esp, 8
-push 12
-push 5
+push 7
 call _abc
-add esp, 8
+add esp, 4

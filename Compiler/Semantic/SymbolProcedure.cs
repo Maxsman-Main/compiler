@@ -11,37 +11,30 @@ public class SymbolProcedure : Symbol
 
     public SymbolTable Parameters { get; }
 
-    public SymbolProcedure(string name, SymbolTable parameters, SymbolTable locals, INodeStatement body, SymbolTableStack stack) : base(name)
+    public SymbolProcedure(string name, SymbolTable parameters, SymbolTable locals, INodeStatement body) : base(name)
     {
-        var dictionary = new OrderedDictionary();
-        foreach (var parameter in parameters.Data.Values)
-        {
-            var symbol = (SymbolVariable) parameter;
-            var symbolParameter = symbol.ConvertToParameter(stack);
-            dictionary.Add(symbolParameter.Name, symbolParameter);
-        }
-        Parameters = new SymbolTable(dictionary);
-
-        dictionary = new OrderedDictionary();
-        foreach (var local in locals.Data.Values)
-        {
-            var symbol = (SymbolVariable) local;
-            var symbolLocal = symbol.ConvertToLocal(stack);
-            dictionary.Add(symbolLocal.Name, symbolLocal); 
-        }
-        Locals = new SymbolTable(dictionary);
-
+        Parameters = parameters;
+        Locals = locals;
         Body = body;
         
     }
 
     public override void Generate(Generator.Generator generator)
     {
-        generator.Add(this);
-        if (Body is CompoundStatement)
+        foreach (var parameter in Parameters.Data.Values)
         {
-            Body.Generate(generator);
+            var parameterVariable = (SymbolVariableParameter) parameter;
+            parameterVariable.Generate(Parameters);
         }
+        foreach (var local in Locals.Data.Values)
+        {
+            var localVariable = (SymbolVariableLocal) local;
+            localVariable.Generate(Locals);
+        }
+        generator.Add(this);
+        generator.AddProLog();
+        Body.Generate(generator);
+        generator.AddIterLog();
         generator.Add(AssemblerCommand.Ret);
     }
 

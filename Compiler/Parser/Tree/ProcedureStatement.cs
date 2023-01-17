@@ -24,7 +24,12 @@ public class ProcedureStatement : INodeStatement
 
     public void Generate(Generator.Generator generator)
     {
+        foreach (var parameter in _parameters)
+        {
+            parameter.Generate(generator);
+        }
         generator.Add(AssemblerCommand.Call, _identifier);
+        generator.Add(AssemblerCommand.Add, AssemblerRegisters.Esp, 4 * _parameters.Count);
     }
 
     public string GetPrint(int level)

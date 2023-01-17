@@ -10,12 +10,12 @@ public class SymbolTableStack
     private List<SymbolTable> Tables { get; }
     private int _head = -1;
     
-    public int Offset { get; set; }
+    public int Size { get; set; }
 
     public SymbolTableStack()
     {
         Tables = new List<SymbolTable>();
-        Offset = 0;
+        Size = 0;
         InitializeStack();
     }
 
@@ -78,9 +78,9 @@ public class SymbolTableStack
         var dictionary = new OrderedDictionary();
         var nullBlock = new CompoundStatement(new List<INodeStatement>());
         var writeProcedure = new SymbolProcedure("write", new SymbolTable(new OrderedDictionary()),
-            new SymbolTable(new OrderedDictionary()), nullBlock, this);
+            new SymbolTable(new OrderedDictionary()), nullBlock);
         var readProcedure = new SymbolProcedure("read", new SymbolTable(new OrderedDictionary()),
-            new SymbolTable(new OrderedDictionary()), nullBlock, this);
+            new SymbolTable(new OrderedDictionary()), nullBlock);
         dictionary.Add("write", writeProcedure);
         dictionary.Add("read", readProcedure);
         Tables.Add(new SymbolTable(dictionary));
