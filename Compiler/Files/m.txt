@@ -1,6 +1,48 @@
-﻿procedure abc(a : integer; b : integer);
+﻿var
+    x : integer;
+
+procedure abc(i : integer; j : integer);
+    var c : integer;
+    var b : integer;
+    var k : integer;
+    var p : integer;
     begin
+        c := 6;
+        b := 1;
+        p := 1;
+        k := 2;           
+        write(b + c + p + k);
     end;
+    
+function bca(i : integer; j : integer) : integer;
+    var c : integer;
+    var b : integer;
+    var k : integer;
+    var p : integer;
+    begin
+        c := 6;
+        b := 1;
+        p := 1;
+        k := 2;           
+        write(b + c + p + k);
+    end;
+    return 1;
+    
+procedure o(i : integer; j : integer);
+    var c : integer;
+    var b : integer;
+    var k : integer;
+    var p : integer;
+    begin
+        c := 6;
+        b := 1;
+        p := 1;
+        k := 2;           
+        write(b + c + p + k);
+    end;
+
 begin
-    abc(1);
+    abc(5, 10);
+    write(bca(5, 10));
+    o(5, 10);
 end.

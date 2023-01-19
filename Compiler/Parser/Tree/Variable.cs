@@ -82,7 +82,7 @@ public class Variable : INodeExpression
 
         if (_symbol is SymbolVariableLocal local)
         {
-            generator.AddLeft(AssemblerCommand.Push, IndirectAssemblerRegisters.Ebp, local.Offset);
+            generator.AddLeft(AssemblerCommand.Push, IndirectAssemblerRegisters.Ebp, 4 + local.Offset);
             return;
         }
         generator.Add(AssemblerCommand.Push, AssemblerCommand.Dword, this);

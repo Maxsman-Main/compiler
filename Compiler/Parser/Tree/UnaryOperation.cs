@@ -27,7 +27,11 @@ public class UnaryOperation : INodeExpression
 
     public void Generate(Generator.Generator generator)
     {
-        throw new NotImplementedException();
+        _argument.Generate(generator);
+        if (_operation is not OperatorValue.Minus) return;
+        generator.Add(AssemblerCommand.Pop, AssemblerRegisters.Eax);
+        generator.Add(AssemblerCommand.IMul, AssemblerRegisters.Eax, -1);
+        generator.Add(AssemblerCommand.Push, AssemblerRegisters.Eax);
     }
 
     public string GetPrint(int level)

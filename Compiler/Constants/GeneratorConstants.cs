@@ -13,14 +13,25 @@ public enum AssemblerCommand
     DD,
     Dword,
     Ret,
-    Resd
+    Resd,
+    Cmp,
+    Eq,
+    Ne,
+    Jmp,
+    Je,
+    Mul,
+    Div,
+    IMul,
+    IDiv,
+    Cdq,
 }
 
 public enum AssemblerRegisters
 {
     Eax,
     Ebx,
-    Esp
+    Esp,
+    Ecx
 }
 
 public enum IndirectAssemblerRegisters
@@ -50,14 +61,25 @@ public static class GeneratorConstants
         {AssemblerCommand.DD, "dd"},
         {AssemblerCommand.Dword, "dword"},
         {AssemblerCommand.Ret, "ret"},
-        {AssemblerCommand.Resd, "resd"}
+        {AssemblerCommand.Resd, "resd"},
+        {AssemblerCommand.Cmp, "cmp"},
+        {AssemblerCommand.Eq, "eq"},
+        {AssemblerCommand.Ne, "ne"},
+        {AssemblerCommand.Jmp, "jmp"},
+        {AssemblerCommand.Je, "je"},
+        {AssemblerCommand.Mul, "mul"},
+        {AssemblerCommand.Div, "div"},
+        {AssemblerCommand.IMul, "imul"},
+        {AssemblerCommand.IDiv, "idiv"},
+        {AssemblerCommand.Cdq, "cdq"}
     };
 
     public static Dictionary<AssemblerRegisters, string> Registers { get; } = new()
     {
         {AssemblerRegisters.Eax, "eax"},
         {AssemblerRegisters.Ebx, "ebx"},
-        {AssemblerRegisters.Esp, "esp"}
+        {AssemblerRegisters.Esp, "esp"},
+        {AssemblerRegisters.Ecx, "ecx"}
     };
     
     public static Dictionary<IndirectAssemblerRegisters, string> IndirectRegisters { get; } = new()

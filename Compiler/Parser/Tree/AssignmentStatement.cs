@@ -29,10 +29,17 @@ public class AssignmentStatement : INodeStatement
         {
             case SymbolVariableParameter parameter:
                 generator.AddRight(AssemblerCommand.Pop, IndirectAssemblerRegisters.Ebp, 8 + parameter.Offset);
-                return;
+                break;
             case SymbolVariableLocal local:
-                generator.AddLeft(AssemblerCommand.Pop, IndirectAssemblerRegisters.Ebp, local.Offset);
-                return;
+                generator.AddLeft(AssemblerCommand.Pop, IndirectAssemblerRegisters.Ebp, 4 + local.Offset);
+                var offset = 0;
+                if (local.Offset - generator.EspHead >= 0)
+                {
+                    offset = (local.Offset - generator.EspHead) + 4;
+                    generator.EspHead = local.Offset - generator.EspHead;
+                }
+                generator.Add(AssemblerCommand.Sub, AssemblerRegisters.Esp, offset);
+                break;
             default:
                 generator.Add(AssemblerCommand.Pop, _identifier);
                 break;

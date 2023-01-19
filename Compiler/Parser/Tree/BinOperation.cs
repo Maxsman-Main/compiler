@@ -66,6 +66,17 @@ public class BinOperation : INodeExpression
             case OperatorValue.Minus:
                 generator.Add(AssemblerCommand.Sub, AssemblerRegisters.Eax, AssemblerRegisters.Ebx);
                 break;
+            case OperatorValue.Multiplication:
+                generator.Add(AssemblerCommand.IMul, AssemblerRegisters.Eax, AssemblerRegisters.Ebx);
+                break;
+            case OperatorValue.Div:
+                generator.Add(AssemblerCommand.Cdq);
+                generator.Add(AssemblerCommand.IDiv, AssemblerRegisters.Ebx);
+                break;  
+            case OperatorValue.Equal:
+                var command = $"{GeneratorConstants.Registers[AssemblerRegisters.Eax]} {GeneratorConstants.Commands[AssemblerCommand.Eq]} {GeneratorConstants.Registers[AssemblerRegisters.Ebx]}";
+                generator.Add(AssemblerCommand.Mov, AssemblerRegisters.Eax, command);
+                break;
         }
 
         generator.Add(AssemblerCommand.Push, AssemblerRegisters.Eax);

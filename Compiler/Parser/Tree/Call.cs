@@ -1,4 +1,5 @@
-﻿using Compiler.Exceptions;
+﻿using Compiler.Constants;
+using Compiler.Exceptions;
 using Compiler.Semantic;
 
 namespace Compiler.Parser.Tree;
@@ -32,7 +33,12 @@ public class Call : INodeExpression
 
     public void Generate(Generator.Generator generator)
     {
-        throw new NotImplementedException();
+        foreach (var argument in _arguments)
+        {
+            argument.Generate(generator);
+        }
+        generator.Add(AssemblerCommand.Call, $"_{_name}");
+        generator.Add(AssemblerCommand.Push, AssemblerRegisters.Ecx);
     }
 
     public string GetPrint(int level)

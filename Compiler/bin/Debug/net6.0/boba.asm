@@ -6,7 +6,7 @@ _a resd 1
 section .text
 integer_format:
 db "%d", 10, 0
-double_format: 
+double_format:
 db "%f", 10, 0
 _main:
 push 3

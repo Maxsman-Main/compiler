@@ -7,10 +7,18 @@ namespace Compiler.Generator;
 public class Generator
 {
     public List<string> Commands { get; private set; }
+    public int EspHead { get; set; }
+    public int IfCounter { get; set; }
+    public int WhileCounter { get; set; }
+    public int ForCounter { get; set; }
 
     public Generator()
     {
         Commands = new List<string>();
+        EspHead = 0;
+        IfCounter = 0;
+        WhileCounter = 0;
+        ForCounter = 0;
         Initialize();
     }
 
@@ -18,6 +26,13 @@ public class Generator
     {
         var assemblerCommand =
             $"{GeneratorConstants.Commands[command]} {GeneratorConstants.Registers[register]}";
+        Commands.Add(assemblerCommand);
+    }
+
+    public void AddPopInRegister(AssemblerRegisters register)
+    {
+        var assemblerCommand =
+            $"pop {GeneratorConstants.Registers[register]}";
         Commands.Add(assemblerCommand);
     }
 
@@ -115,6 +130,13 @@ public class Generator
             $"{GeneratorConstants.Commands[command]} {GeneratorConstants.Registers[firstRegister]}, {GeneratorConstants.Registers[secondRegister]}";
         Commands.Add(assemblerCommand);
     }
+
+    public void Add(AssemblerCommand command, AssemblerRegisters register, string commandString)
+    {
+        var assemblerCommand =
+            $"{GeneratorConstants.Commands[command]} {GeneratorConstants.Registers[register]}, {commandString}";
+        Commands.Add(assemblerCommand);
+    }
     
     public void Add(AssemblerCommand command, SymbolVariable left, AssemblerRegisters right)
     {
@@ -199,7 +221,7 @@ public class Generator
     public void AddIterLog()
     {
         Commands.Add("mov esp, ebp");
-        Commands.Add("push ebp");
+        Commands.Add("pop ebp");
     }
 
     public void Add(SymbolProcedure procedure)

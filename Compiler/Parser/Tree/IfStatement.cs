@@ -1,5 +1,4 @@
-﻿using Compiler.Exceptions;
-using Compiler.Semantic;
+﻿using Compiler.Constants;
 
 namespace Compiler.Parser.Tree;
 
@@ -8,17 +7,30 @@ public class IfStatement : INodeStatement
     private readonly INodeExpression _condition;
     private readonly INodeStatement? _body;
     private readonly INodeStatement? _elsePart;
+
+    private int _ifCount;
     
     public IfStatement(INodeExpression condition, INodeStatement body, INodeStatement? elsePart)
     {
         _condition = condition;
         _body = body is NullStatement ? null : body;
         _elsePart = elsePart is NullStatement ? null : elsePart;
+        _ifCount = 0;
     }
 
     public void Generate(Generator.Generator generator)
     {
-        throw new NotImplementedException();
+        generator.IfCounter += 1;
+        _ifCount = generator.IfCounter;
+        _condition.Generate(generator);
+        generator.Add(AssemblerCommand.Pop, AssemblerRegisters.Eax);
+        generator.Add(AssemblerCommand.Cmp, AssemblerRegisters.Eax, 0);
+        generator.Add(AssemblerCommand.Je, $"elseOfIf{_ifCount}");
+        _body?.Generate(generator);
+        generator.Add(AssemblerCommand.Jmp, $"endOfIf{_ifCount}");
+        generator.Add($"elseOfIf{_ifCount}:");
+        _elsePart?.Generate(generator);
+        generator.Add($"endOfIf{_ifCount}:");
     }
 
     public string GetPrint(int level)

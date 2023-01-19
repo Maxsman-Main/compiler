@@ -21,21 +21,25 @@ public class SymbolProcedure : Symbol
 
     public override void Generate(Generator.Generator generator)
     {
-        foreach (var parameter in Parameters.Data.Values)
+        
+        for (var i = Parameters.Data.Count - 1; i >= 0; i--)
         {
-            var parameterVariable = (SymbolVariableParameter) parameter;
+            var parameterVariable = (SymbolVariableParameter) Parameters.Data[i]!;
             parameterVariable.Generate(Parameters);
         }
+
         foreach (var local in Locals.Data.Values)
         {
             var localVariable = (SymbolVariableLocal) local;
             localVariable.Generate(Locals);
         }
+        
         generator.Add(this);
         generator.AddProLog();
         Body.Generate(generator);
         generator.AddIterLog();
-        generator.Add(AssemblerCommand.Ret);
+        generator.Add(AssemblerCommand.Ret, Parameters.Count * 4);
+        generator.EspHead = 0;
     }
 
     public override string GetPrint(int level)

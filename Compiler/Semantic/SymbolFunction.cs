@@ -1,4 +1,5 @@
-﻿using Compiler.Parser.Tree;
+﻿using Compiler.Constants;
+using Compiler.Parser.Tree;
 
 namespace Compiler.Semantic;
 
@@ -17,6 +18,30 @@ public class SymbolFunction : SymbolProcedure
     {
         ReturnType = returnType;
         ReturnValue = returnValue;
+    }
+
+    public override void Generate(Generator.Generator generator)
+    {
+        for (var i = Parameters.Data.Count - 1; i >= 0; i--)
+        {
+            var parameterVariable = (SymbolVariableParameter) Parameters.Data[i]!;
+            parameterVariable.Generate(Parameters);
+        }
+
+        foreach (var local in Locals.Data.Values)
+        {
+            var localVariable = (SymbolVariableLocal) local;
+            localVariable.Generate(Locals);
+        }
+        
+        generator.Add(this);
+        generator.AddProLog();
+        Body.Generate(generator);
+        ReturnValue?.Generate(generator);
+        generator.AddPopInRegister(AssemblerRegisters.Ecx);
+        generator.AddIterLog();
+        generator.Add(AssemblerCommand.Ret, Parameters.Count * 4);
+        generator.EspHead = 0;
     }
 
     public override string GetPrint(int level)
