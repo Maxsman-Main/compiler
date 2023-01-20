@@ -11,6 +11,7 @@ public class Generator
     public int IfCounter { get; set; }
     public int WhileCounter { get; set; }
     public int ForCounter { get; set; }
+    public int LogicCounter { get; set; }
 
     public Generator()
     {
@@ -19,6 +20,7 @@ public class Generator
         IfCounter = 0;
         WhileCounter = 0;
         ForCounter = 0;
+        LogicCounter = 0;
         Initialize();
     }
 
@@ -141,7 +143,14 @@ public class Generator
     public void Add(AssemblerCommand command, SymbolVariable left, AssemblerRegisters right)
     {
         var assemblerCommand =
-            $"{GeneratorConstants.Commands[command]} _{left.Name}, {GeneratorConstants.Registers[right]}";
+            $"{GeneratorConstants.Commands[command]} [_{left.Name}], {GeneratorConstants.Registers[right]}";
+        Commands.Add(assemblerCommand);
+    }
+    
+    public void Add(AssemblerCommand command, SymbolVariable left, int value)
+    {
+        var assemblerCommand =
+            $"{GeneratorConstants.Commands[command]} [_{left.Name}], dword {value}";
         Commands.Add(assemblerCommand);
     }
     

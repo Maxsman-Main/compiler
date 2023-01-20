@@ -15,6 +15,7 @@ public class WriteStatement : INodeStatement
     public void Generate(Generator.Generator generator)
     {
         if (_parameters is null) return;
+        generator.Add(AssemblerCommand.Push, AssemblerRegisters.Ecx);
         foreach (var parameter in _parameters)
         {
             if (parameter.GetExpressionType() is SymbolInteger)
@@ -33,6 +34,7 @@ public class WriteStatement : INodeStatement
                 generator.Add(AssemblerCommand.Add, AssemblerRegisters.Esp, 8);
             }
         }
+        generator.Add(AssemblerCommand.Pop, AssemblerRegisters.Ecx);
     }
     
     public string GetPrint(int level)

@@ -18,7 +18,7 @@ CompoundStatement
             CompoundStatement
     ForStatement
         Identifier
-            i
+            i Integer
         LeftBound
             1
         RightBound

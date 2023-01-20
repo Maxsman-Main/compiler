@@ -1,2 +1,2 @@
-@cd ./test
-@test.exe
+@cd ./m
+@m.exe

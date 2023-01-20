@@ -38,7 +38,7 @@ public class SymbolFunction : SymbolProcedure
         generator.AddProLog();
         Body.Generate(generator);
         ReturnValue?.Generate(generator);
-        generator.AddPopInRegister(AssemblerRegisters.Ecx);
+        generator.AddPopInRegister(AssemblerRegisters.Edx);
         generator.AddIterLog();
         generator.Add(AssemblerCommand.Ret, Parameters.Count * 4);
         generator.EspHead = 0;

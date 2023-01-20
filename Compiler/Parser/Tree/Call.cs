@@ -33,12 +33,15 @@ public class Call : INodeExpression
 
     public void Generate(Generator.Generator generator)
     {
+        generator.Add(AssemblerCommand.Push, AssemblerRegisters.Ecx);
         foreach (var argument in _arguments)
         {
             argument.Generate(generator);
         }
         generator.Add(AssemblerCommand.Call, $"_{_name}");
-        generator.Add(AssemblerCommand.Push, AssemblerRegisters.Ecx);
+        generator.Add(AssemblerCommand.Push, AssemblerRegisters.Edx);
+        generator.Add(AssemblerCommand.Add, $"{GeneratorConstants.Registers[AssemblerRegisters.Esp]}, {_arguments.Count * 4}");
+        generator.Add(AssemblerCommand.Pop, AssemblerRegisters.Ecx);
     }
 
     public string GetPrint(int level)

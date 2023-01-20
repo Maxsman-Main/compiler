@@ -1,5 +1,5 @@
-nasm -f win32 test.asm
-gcc -m32 -mconsole test.obj -o test
-move ./test.asm ./test
-move ./test.obj ./test
-move ./test.exe ./test
+nasm -f win32 m.asm
+gcc -m32 -mconsole m.obj -o m
+move ./m.asm ./m
+move ./m.obj ./m
+move ./m.exe ./m

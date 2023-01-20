@@ -664,15 +664,21 @@ public class Parser
         RequireOperator(OperatorValue.Assignment);
         var startExpression = ParseExpression();
         CheckConditionAccuracy(startExpression, KeyWordValue.For);
-        RequireKeyWord(KeyWordValue.To);
+        var lexeme = _lexer.CurrentLexeme;
+        var direction = lexeme switch
+        {
+            KeyWordLexeme {Value: KeyWordValue.To} => KeyWordValue.To,
+            KeyWordLexeme {Value: KeyWordValue.DownTo} => KeyWordValue.DownTo,
+            _ => throw new CompilerException(_lexer.Coordinate + "  to was expected")
+        };
+
+        _lexer.GetLexeme();
         var endExpression = ParseExpression();
         CheckConditionAccuracy(endExpression, KeyWordValue.For);
         RequireKeyWord(KeyWordValue.Do);
         var statement = ParseStatement();
 
-        var variable = new Variable(variableSymbol);
-        
-        return new ForStatement(variable, startExpression, endExpression, statement);
+        return new ForStatement(variableSymbol, startExpression, endExpression, statement, direction);
     }
 
     private INodeStatement ParseIfStatement()
@@ -933,7 +939,7 @@ public class Parser
 
         _lexer.GetLexeme();
     }
-
+    
     private void RequireKeyWord(KeyWordValue keyWordValue)
     {
         var lexeme = _lexer.CurrentLexeme;

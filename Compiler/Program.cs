@@ -12,7 +12,7 @@ namespace Compiler
         {
             args = new string[10];
             args[0] = "-c";
-            args[1] = "test.txt";
+            args[1] = "m.txt";
             switch (args[0])
             {
                 case "-a" when args[1] == "-t":

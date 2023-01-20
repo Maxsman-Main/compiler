@@ -74,8 +74,40 @@ public class BinOperation : INodeExpression
                 generator.Add(AssemblerCommand.IDiv, AssemblerRegisters.Ebx);
                 break;  
             case OperatorValue.Equal:
-                var command = $"{GeneratorConstants.Registers[AssemblerRegisters.Eax]} {GeneratorConstants.Commands[AssemblerCommand.Eq]} {GeneratorConstants.Registers[AssemblerRegisters.Ebx]}";
-                generator.Add(AssemblerCommand.Mov, AssemblerRegisters.Eax, command);
+                GenerateLogicOperatorCode(generator, AssemblerCommand.Je);
+                break;
+            case OperatorValue.Less:
+                GenerateLogicOperatorCode(generator, AssemblerCommand.Jl);
+                break;
+            case OperatorValue.More:
+                GenerateLogicOperatorCode(generator, AssemblerCommand.Jg);
+                break;
+            case OperatorValue.LessEqual:
+                GenerateLogicOperatorCode(generator, AssemblerCommand.Jle);
+                break;
+            case OperatorValue.MoreEqual:
+                GenerateLogicOperatorCode(generator, AssemblerCommand.Jge);
+                break;
+            case OperatorValue.And:
+                generator.LogicCounter += 1;
+                generator.Add(AssemblerCommand.Cmp, AssemblerRegisters.Eax, 0);
+                generator.Add(AssemblerCommand.Je, $"endOfLogic{generator.LogicCounter}");
+                generator.Add(AssemblerCommand.Mov, AssemblerRegisters.Eax, 0);
+                generator.Add(AssemblerCommand.Cmp, AssemblerRegisters.Ebx, 0);
+                generator.Add(AssemblerCommand.Je, $"endOfLogic{generator.LogicCounter}");
+                generator.Add(AssemblerCommand.Mov, AssemblerRegisters.Eax, 1);
+                generator.Add($"endOfLogic{generator.LogicCounter}:");
+                break;
+            case OperatorValue.Or:
+                generator.LogicCounter += 1;
+                generator.Add(AssemblerCommand.Cmp, AssemblerRegisters.Eax, 0);
+                generator.Add(AssemblerCommand.Mov, AssemblerRegisters.Eax, 1);
+                generator.Add(AssemblerCommand.Jne, $"endOfLogic{generator.LogicCounter}");
+                generator.Add(AssemblerCommand.Mov, AssemblerRegisters.Eax, 0);
+                generator.Add(AssemblerCommand.Cmp, AssemblerRegisters.Ebx, 0);
+                generator.Add(AssemblerCommand.Je, $"endOfLogic{generator.LogicCounter}");
+                generator.Add(AssemblerCommand.Mov, AssemblerRegisters.Eax, 1);
+                generator.Add($"endOfLogic{generator.LogicCounter}:");
                 break;
         }
 
@@ -96,5 +128,17 @@ public class BinOperation : INodeExpression
         value += "\n";
         value += _right.GetPrint(level + 1);
         return value;
+    }
+
+    private void GenerateLogicOperatorCode(Generator.Generator generator, AssemblerCommand jump)
+    {
+        generator.LogicCounter += 1;
+        generator.Add(AssemblerCommand.Cmp, AssemblerRegisters.Eax, AssemblerRegisters.Ebx);
+        generator.Add(jump, $"logic{generator.LogicCounter}");
+        generator.Add(AssemblerCommand.Mov, AssemblerRegisters.Eax, 0);
+        generator.Add(AssemblerCommand.Jmp, $"endOfLogic{generator.LogicCounter}");
+        generator.Add($"logic{generator.LogicCounter}:");
+        generator.Add(AssemblerCommand.Mov, AssemblerRegisters.Eax, 1);
+        generator.Add($"endOfLogic{generator.LogicCounter}:");
     }
 }

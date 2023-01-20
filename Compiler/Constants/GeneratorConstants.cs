@@ -24,6 +24,11 @@ public enum AssemblerCommand
     IMul,
     IDiv,
     Cdq,
+    Jl,
+    Jg,
+    Jle,
+    Jge,
+    Jne
 }
 
 public enum AssemblerRegisters
@@ -31,7 +36,8 @@ public enum AssemblerRegisters
     Eax,
     Ebx,
     Esp,
-    Ecx
+    Ecx,
+    Edx
 }
 
 public enum IndirectAssemblerRegisters
@@ -71,7 +77,12 @@ public static class GeneratorConstants
         {AssemblerCommand.Div, "div"},
         {AssemblerCommand.IMul, "imul"},
         {AssemblerCommand.IDiv, "idiv"},
-        {AssemblerCommand.Cdq, "cdq"}
+        {AssemblerCommand.Cdq, "cdq"},
+        {AssemblerCommand.Jl, "jl"},
+        {AssemblerCommand.Jg, "jg"},
+        {AssemblerCommand.Jle, "jle"},
+        {AssemblerCommand.Jge, "jge"},
+        {AssemblerCommand.Jne, "jne"}
     };
 
     public static Dictionary<AssemblerRegisters, string> Registers { get; } = new()
@@ -79,7 +90,8 @@ public static class GeneratorConstants
         {AssemblerRegisters.Eax, "eax"},
         {AssemblerRegisters.Ebx, "ebx"},
         {AssemblerRegisters.Esp, "esp"},
-        {AssemblerRegisters.Ecx, "ecx"}
+        {AssemblerRegisters.Ecx, "ecx"},
+        {AssemblerRegisters.Edx, "edx"}
     };
     
     public static Dictionary<IndirectAssemblerRegisters, string> IndirectRegisters { get; } = new()

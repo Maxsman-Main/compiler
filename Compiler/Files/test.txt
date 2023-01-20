@@ -1,6 +1,12 @@
 ﻿var a : integer;
+var b : integer;
 
 begin
-    a := 3;
-    write(a = 3);
+    b := 10;
+    for a := 0 to b do
+        begin
+            write(10);
+            write(b);
+        end;
+    write(10);
 end.
