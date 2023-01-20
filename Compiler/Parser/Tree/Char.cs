@@ -1,4 +1,5 @@
-﻿using Compiler.Semantic;
+﻿using Compiler.Constants;
+using Compiler.Semantic;
 
 namespace Compiler.Parser.Tree;
 
@@ -18,7 +19,7 @@ public class Char : INodeExpression
 
     public void Generate(Generator.Generator generator)
     {
-        throw new NotImplementedException();
+        generator.Add(AssemblerCommand.Push, $"\'{_value}\'");
     }
 
     public string GetPrint(int level)

@@ -1,4 +1,5 @@
-﻿using Compiler.Exceptions;
+﻿using Compiler.Constants;
+using Compiler.Exceptions;
 using Compiler.Semantic;
 
 namespace Compiler.Parser.Tree;
@@ -23,7 +24,8 @@ public class CastToDouble : INodeExpression
 
     public void Generate(Generator.Generator generator)
     {
-        throw new NotImplementedException();
+        _expression.Generate(generator);
+        generator.Add(AssemblerCommand.Pop, AssemblerRegisters.Eax);
     }
 
     public string GetPrint(int level)

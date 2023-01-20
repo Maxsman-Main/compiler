@@ -3,8 +3,5 @@ var b : integer;
 
 begin
     b := 10;
-    for a := 1 to b do
-        begin
-            write(a);
-        end;
+    write('!' + 'B');
 end.

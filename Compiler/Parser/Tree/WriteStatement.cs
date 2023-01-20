@@ -33,6 +33,21 @@ public class WriteStatement : INodeStatement
                 generator.Add(AssemblerCommand.Call, "_printf");
                 generator.Add(AssemblerCommand.Add, AssemblerRegisters.Esp, 8);
             }
+
+            if (parameter.GetExpressionType() is SymbolString)
+            {
+                parameter.Generate(generator);
+                generator.Add(AssemblerCommand.Call, "_printf");
+                generator.Add(AssemblerCommand.Add, AssemblerRegisters.Esp, 4);
+            }
+            
+            if (parameter.GetExpressionType() is SymbolChar)
+            {
+                parameter.Generate(generator);
+                generator.Add(AssemblerCommand.Push, Format.Char);
+                generator.Add(AssemblerCommand.Call, "_printf");
+                generator.Add(AssemblerCommand.Add, AssemblerRegisters.Esp, 4);
+            }
         }
         generator.Add(AssemblerCommand.Pop, AssemblerRegisters.Ecx);
     }

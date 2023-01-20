@@ -44,6 +44,9 @@ public class BinOperation : INodeExpression
                 _left = new CastToDouble(_left);
                 _type = new SymbolDouble("Double");
                 break;
+            case SymbolChar when rightType is SymbolChar:
+                _type = new SymbolChar("Char");
+                break;
             default:
                 throw new CompilerException("can't use bin operation for " + _left.GetExpressionType().Name + " and " +
                                             _right.GetExpressionType().Name);

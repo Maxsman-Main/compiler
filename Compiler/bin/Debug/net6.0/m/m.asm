@@ -9,22 +9,21 @@ integer_format:
 db "%d", 10, 0
 double_format: 
 db "%f", 10, 0
+char_format:   
+db "%c", 10, 0
+string_format: 
+db "%s", 10, 0
 _main:
 push 10
 pop dword [_b]
-push 1
-pop dword [_a]
-push dword [_b]
-pop ecx
-for1:
-cmp [_a], ecx
-jg endOfFor1
 push ecx
-push dword [_a]
-push integer_format
+push '!'
+push 'B'
+pop ebx
+pop eax
+add eax, ebx
+push eax
+push char_format
 call _printf
-add esp, 8
+add esp, 4
 pop ecx
-add [_a], dword 1
-jmp for1
-endOfFor1:

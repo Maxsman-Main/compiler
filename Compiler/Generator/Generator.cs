@@ -261,6 +261,8 @@ public class Generator
         Add("section .text");
         Add("integer_format:\ndb \"%d\", 10, 0");
         Add("double_format: \ndb \"%f\", 10, 0");
+        Add("char_format:   \ndb \"%c\", 10, 0");
+        Add("string_format: \ndb \"%s\", 10, 0");
     }
 
     public void AddMain()

@@ -20,7 +20,9 @@ public class DoubleNumber : INodeExpression
 
     public void Generate(Generator.Generator generator)
     {
-        generator.Add(AssemblerCommand.Push, _value);
+        var valueString = _value.ToString(CultureInfo.CurrentCulture);
+        var replace = valueString.Replace(",", ".");
+        generator.Add(AssemblerCommand.Push, replace);
     }
 
     public string GetPrint(int level)

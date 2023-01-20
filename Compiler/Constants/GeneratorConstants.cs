@@ -11,6 +11,7 @@ public enum AssemblerCommand
     Pop,
     Call,
     DD,
+    DB,
     Dword,
     Ret,
     Resd,
@@ -28,7 +29,10 @@ public enum AssemblerCommand
     Jg,
     Jle,
     Jge,
-    Jne
+    Jne,
+    Fild,
+    Fadd,
+    Fstp,
 }
 
 public enum AssemblerRegisters
@@ -51,7 +55,9 @@ public enum IndirectAssemblerRegisters
 public enum Format
 {
     Integer,
-    Double
+    Double,
+    String,
+    Char
 }
 
 public static class GeneratorConstants
@@ -105,6 +111,7 @@ public static class GeneratorConstants
     public static Dictionary<Format, string> Formats { get; } = new()
     {
         {Format.Integer, "integer_format"},
-        {Format.Double, "double_format"}
+        {Format.Double, "double_format"},
+        {Format.Char, "char_format"}
     };
 }

@@ -1,5 +1,4 @@
-﻿using Compiler.Exceptions;
-using Compiler.Semantic;
+﻿using Compiler.Constants;
 
 namespace Compiler.Parser.Tree;
 
@@ -47,6 +46,14 @@ public class WhileStatement : INodeStatement
 
     public void Generate(Generator.Generator generator)
     {
-        throw new NotImplementedException();
+        generator.WhileCounter += 1;
+        generator.Add($"while{generator.WhileCounter}:");
+        _condition.Generate(generator);
+        generator.Add(AssemblerCommand.Pop, AssemblerRegisters.Eax);
+        generator.Add(AssemblerCommand.Cmp, AssemblerRegisters.Eax, 0);
+        generator.Add(AssemblerCommand.Je, $"whileEnd{generator.WhileCounter}");
+        _body?.Generate(generator);
+        generator.Add(AssemblerCommand.Jmp, $"while{generator.WhileCounter}");
+        generator.Add($"whileEnd{generator.WhileCounter}:");
     }
 }
