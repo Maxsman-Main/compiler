@@ -12,7 +12,10 @@ public class Generator
     public int WhileCounter { get; set; }
     public int ForCounter { get; set; }
     public int LogicCounter { get; set; }
+    public int StringCounter { get; set; }
 
+    public List<string> StringUsingCommand;
+    
     public Generator()
     {
         Commands = new List<string>();
@@ -21,6 +24,8 @@ public class Generator
         WhileCounter = 0;
         ForCounter = 0;
         LogicCounter = 0;
+        StringCounter = 0;
+        StringUsingCommand = new List<string>();
         Initialize();
     }
 
@@ -263,6 +268,15 @@ public class Generator
         Add("double_format: \ndb \"%f\", 10, 0");
         Add("char_format:   \ndb \"%c\", 10, 0");
         Add("string_format: \ndb \"%s\", 10, 0");
+    }
+
+    public void AddSectionData()
+    {
+        Add("section .data");
+        foreach (var stringUsing in StringUsingCommand)
+        {
+            Add(stringUsing);
+        }
     }
 
     public void AddMain()

@@ -111,6 +111,7 @@ namespace Compiler
                         program.Stack.GenerateForProcedures(generator);
                         generator.AddMain();
                         program.MainBlock.Generate(generator);
+                        generator.AddSectionData();
                         directoryMaker.MakeDirectory(args[1]);
                         assemblerMaker.MakeFile(args[1], generator.Commands);
                         assemblerCodeExecutor.RunAssemblerCode(args[1]);

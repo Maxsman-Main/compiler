@@ -1,14 +1,16 @@
 ﻿var a : integer;
-var b : integer;
+var b : string;
 
-function abc(a : integer; b : integer;) : integer;
+function abc(a : integer; b : string;) : integer;
     begin
+        write(b);
         write(a);
         write(b);
+        write(a);
     end;
     return 1;
 
 begin
-    b := 10;
+    b := 'mama!';
     write(abc(12, b));
 end.

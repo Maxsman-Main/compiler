@@ -17,6 +17,11 @@ _abc:
 push ebp
 mov ebp, esp
 push ecx
+push dword [ebp + 8]
+call _printf
+add esp, 4
+pop ecx
+push ecx
 push dword [ebp + 12]
 push integer_format
 call _printf
@@ -24,6 +29,11 @@ add esp, 8
 pop ecx
 push ecx
 push dword [ebp + 8]
+call _printf
+add esp, 4
+pop ecx
+push ecx
+push dword [ebp + 12]
 push integer_format
 call _printf
 add esp, 8
@@ -34,7 +44,7 @@ mov esp, ebp
 pop ebp
 ret
 _main:
-push 10
+push stringValue1
 pop dword [_b]
 push ecx
 push ecx
@@ -48,3 +58,11 @@ push integer_format
 call _printf
 add esp, 8
 pop ecx
+push ecx
+push stringValue2
+call _printf
+add esp, 4
+pop ecx
+section .data
+stringValue1: db "mama!", 10, 0
+stringValue2: db "bitch!", 10, 0

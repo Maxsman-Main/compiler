@@ -19,8 +19,9 @@ public class String : INodeExpression
 
     public void Generate(Generator.Generator generator)
     {
-        generator.Add($"_str: db \"{_value}\", 10, 0");
-        generator.Add(AssemblerCommand.Push, "_str");
+        generator.StringCounter += 1;
+        generator.Add(AssemblerCommand.Push, $"stringValue{generator.StringCounter}");
+        generator.StringUsingCommand.Add($"stringValue{generator.StringCounter}: db \"{_value}\", 10, 0");
     }
 
     public string GetPrint(int level)
