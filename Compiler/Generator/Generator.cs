@@ -13,8 +13,12 @@ public class Generator
     public int ForCounter { get; set; }
     public int LogicCounter { get; set; }
     public int StringCounter { get; set; }
+    public int DoubleCounter { get; set; }
 
-    public List<string> StringUsingCommand;
+    public readonly List<string> StringUsingCommand;
+
+    public readonly List<string> DoubleUsingCommand;
+
     
     public Generator()
     {
@@ -25,7 +29,9 @@ public class Generator
         ForCounter = 0;
         LogicCounter = 0;
         StringCounter = 0;
+        DoubleCounter = 0;
         StringUsingCommand = new List<string>();
+        DoubleUsingCommand = new List<string>();
         Initialize();
     }
 
@@ -268,6 +274,7 @@ public class Generator
         Add("double_format: \ndb \"%f\", 10, 0");
         Add("char_format:   \ndb \"%c\", 10, 0");
         Add("string_format: \ndb \"%s\", 10, 0");
+        Add("double_minus_multiplier: \ndq -1.0");
     }
 
     public void AddSectionData()
@@ -276,6 +283,10 @@ public class Generator
         foreach (var stringUsing in StringUsingCommand)
         {
             Add(stringUsing);
+        }
+        foreach (var doubleUsing in DoubleUsingCommand)
+        {
+            Add(doubleUsing);
         }
     }
 

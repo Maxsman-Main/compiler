@@ -1,16 +1,5 @@
-﻿var a : integer;
-var b : string;
-
-function abc(a : integer; b : string;) : integer;
-    begin
-        write(b);
-        write(a);
-        write(b);
-        write(a);
-    end;
-    return 1;
-
+﻿var a : double;
 begin
-    b := 'mama!';
-    write(abc(12, b));
+    a := 5 / 10;
+    write(a);
 end.

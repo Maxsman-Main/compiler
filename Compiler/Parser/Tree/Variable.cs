@@ -74,18 +74,40 @@ public class Variable : INodeExpression
 
     public void Generate(Generator.Generator generator)
     {
-        if (_symbol is SymbolVariableParameter parameter)
+        if (_symbol.Type is not SymbolDouble)
         {
-            generator.AddRight(AssemblerCommand.Push, IndirectAssemblerRegisters.Ebp, 8 + parameter.Offset);
-            return;
-        }
+            if (_symbol is SymbolVariableParameter parameter)
+            {
+                generator.AddRight(AssemblerCommand.Push, IndirectAssemblerRegisters.Ebp, 8 + parameter.Offset);
+                return;
+            }
 
-        if (_symbol is SymbolVariableLocal local)
-        {
-            generator.AddLeft(AssemblerCommand.Push, IndirectAssemblerRegisters.Ebp, 4 + local.Offset);
-            return;
+            if (_symbol is SymbolVariableLocal local)
+            {
+                generator.AddLeft(AssemblerCommand.Push, IndirectAssemblerRegisters.Ebp, 4 + local.Offset);
+                return;
+            }
+
+            generator.Add(AssemblerCommand.Push, AssemblerCommand.Dword, this);
         }
-        generator.Add(AssemblerCommand.Push, AssemblerCommand.Dword, this);
+        else
+        {
+            if (_symbol is SymbolVariableParameter parameter)
+            {
+                generator.AddRight(AssemblerCommand.Push, IndirectAssemblerRegisters.Ebp, 8 + parameter.Offset);
+                return;
+            }
+
+            if (_symbol is SymbolVariableLocal local)
+            {
+                generator.AddLeft(AssemblerCommand.Push, IndirectAssemblerRegisters.Ebp, 4 + local.Offset);
+                return;
+            }
+
+            generator.Add(AssemblerCommand.Sub, AssemblerRegisters.Esp, 8);
+            generator.Add($"movsd xmm0, qword [_{_symbol.Name}]");
+            generator.Add($"movsd qword [esp], xmm0");
+        }
     }
 
     public string GetPrint(int level)

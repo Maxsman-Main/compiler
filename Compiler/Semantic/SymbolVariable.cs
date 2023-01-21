@@ -16,7 +16,7 @@ public class SymbolVariable : Symbol, IVariable
 
     public override void Generate(Generator.Generator generator)
     {
-        generator.Add(this, AssemblerCommand.Resd);
+        generator.Add(this, Type is not SymbolDouble ? AssemblerCommand.Resd : AssemblerCommand.Resq);
     }
 
 

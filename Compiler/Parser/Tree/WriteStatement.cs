@@ -31,7 +31,7 @@ public class WriteStatement : INodeStatement
                 parameter.Generate(generator);
                 generator.Add(AssemblerCommand.Push, Format.Double);
                 generator.Add(AssemblerCommand.Call, "_printf");
-                generator.Add(AssemblerCommand.Add, AssemblerRegisters.Esp, 8);
+                generator.Add(AssemblerCommand.Add, AssemblerRegisters.Esp, 12);
             }
 
             if (parameter.GetExpressionType() is SymbolString)

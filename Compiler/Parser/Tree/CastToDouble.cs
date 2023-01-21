@@ -25,7 +25,9 @@ public class CastToDouble : INodeExpression
     public void Generate(Generator.Generator generator)
     {
         _expression.Generate(generator);
-        generator.Add(AssemblerCommand.Pop, AssemblerRegisters.Eax);
+        generator.Add(AssemblerCommand.Cvtsi2sd, AssemblerRegisters.Xmm0, "[esp]");
+        generator.Add(AssemblerCommand.Sub, AssemblerRegisters.Esp, 4);
+        generator.Add("movsd qword [esp], xmm0");
     }
 
     public string GetPrint(int level)

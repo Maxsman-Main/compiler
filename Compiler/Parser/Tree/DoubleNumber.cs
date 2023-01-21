@@ -20,10 +20,14 @@ public class DoubleNumber : INodeExpression
 
     public void Generate(Generator.Generator generator)
     {
+        generator.DoubleCounter += 1;
         var valueString = _value.ToString(CultureInfo.CurrentCulture);
         var replace = valueString.Replace(",", ".");
-        generator.Add(AssemblerCommand.Push, replace);
-    }
+        generator.DoubleUsingCommand.Add($"doubleValue{generator.DoubleCounter}: dq {replace}");
+        generator.Add($"movsd xmm0, qword [doubleValue{generator.DoubleCounter}]");
+        generator.Add(AssemblerCommand.Sub, AssemblerRegisters.Esp, 8);
+        generator.Add("movsd qword [esp], xmm0");
+    }   
 
     public string GetPrint(int level)
     {

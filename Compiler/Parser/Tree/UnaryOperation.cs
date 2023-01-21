@@ -29,9 +29,18 @@ public class UnaryOperation : INodeExpression
     {
         _argument.Generate(generator);
         if (_operation is not OperatorValue.Minus) return;
-        generator.Add(AssemblerCommand.Pop, AssemblerRegisters.Eax);
-        generator.Add(AssemblerCommand.IMul, AssemblerRegisters.Eax, -1);
-        generator.Add(AssemblerCommand.Push, AssemblerRegisters.Eax);
+        if (_argument.GetExpressionType() is not SymbolDouble)
+        {
+            generator.Add(AssemblerCommand.Pop, AssemblerRegisters.Eax);
+            generator.Add(AssemblerCommand.IMul, AssemblerRegisters.Eax, -1);
+            generator.Add(AssemblerCommand.Push, AssemblerRegisters.Eax);
+        }
+        else
+        {
+            generator.Add("movsd xmm0, qword [esp]");
+            generator.Add("mulsd xmm0, qword [double_minus_multiplier]");
+            generator.Add("movsd qword [esp], xmm0");
+        }
     }
 
     public string GetPrint(int level)

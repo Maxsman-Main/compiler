@@ -30,9 +30,14 @@ public enum AssemblerCommand
     Jle,
     Jge,
     Jne,
-    Fild,
-    Fadd,
-    Fstp,
+    Cvtsi2sd,
+    Movsd,
+    Addsd,
+    Subsd,
+    Mulsd,
+    Divsd,
+    Resq,
+    Qword
 }
 
 public enum AssemblerRegisters
@@ -41,7 +46,9 @@ public enum AssemblerRegisters
     Ebx,
     Esp,
     Ecx,
-    Edx
+    Edx,
+    Xmm0,
+    Xmm1
 }
 
 public enum IndirectAssemblerRegisters
@@ -49,7 +56,7 @@ public enum IndirectAssemblerRegisters
     Eax,
     Ebx,
     Esp,
-    Ebp
+    Ebp,
 }
 
 public enum Format
@@ -88,7 +95,15 @@ public static class GeneratorConstants
         {AssemblerCommand.Jg, "jg"},
         {AssemblerCommand.Jle, "jle"},
         {AssemblerCommand.Jge, "jge"},
-        {AssemblerCommand.Jne, "jne"}
+        {AssemblerCommand.Jne, "jne"},
+        {AssemblerCommand.Cvtsi2sd, "cvtsi2sd"},
+        {AssemblerCommand.Movsd, "movsd"},
+        {AssemblerCommand.Addsd, "addsd"},
+        {AssemblerCommand.Subsd, "subsd"},
+        {AssemblerCommand.Mulsd, "mulsd"},
+        {AssemblerCommand.Divsd, "divsd"},
+        {AssemblerCommand.Resq, "resq"},
+        {AssemblerCommand.Qword, "qword"}
     };
 
     public static Dictionary<AssemblerRegisters, string> Registers { get; } = new()
@@ -97,7 +112,9 @@ public static class GeneratorConstants
         {AssemblerRegisters.Ebx, "ebx"},
         {AssemblerRegisters.Esp, "esp"},
         {AssemblerRegisters.Ecx, "ecx"},
-        {AssemblerRegisters.Edx, "edx"}
+        {AssemblerRegisters.Edx, "edx"},
+        {AssemblerRegisters.Xmm0, "xmm0"},
+        {AssemblerRegisters.Xmm1, "xmm1"}
     };
     
     public static Dictionary<IndirectAssemblerRegisters, string> IndirectRegisters { get; } = new()

@@ -2,8 +2,7 @@ global _main
 extern _printf
 extern _scanf
 section .bss
-_a resd 1
-_b resd 1
+_a resq 1
 section .text
 integer_format:
 db "%d", 10, 0
@@ -13,56 +12,28 @@ char_format:
 db "%c", 10, 0
 string_format: 
 db "%s", 10, 0
-_abc:
-push ebp
-mov ebp, esp
-push ecx
-push dword [ebp + 8]
-call _printf
-add esp, 4
-pop ecx
-push ecx
-push dword [ebp + 12]
-push integer_format
-call _printf
-add esp, 8
-pop ecx
-push ecx
-push dword [ebp + 8]
-call _printf
-add esp, 4
-pop ecx
-push ecx
-push dword [ebp + 12]
-push integer_format
-call _printf
-add esp, 8
-pop ecx
-push 1
-pop edx
-mov esp, ebp
-pop ebp
-ret
+double_minus_multiplier: 
+dq -1.0
 _main:
-push stringValue1
-pop dword [_b]
-push ecx
-push ecx
-push 12
-push dword [_b]
-call _abc
+push 5
+push 10
+pop ebx
+pop eax
+cdq
+idiv ebx
+push eax
+cvtsi2sd xmm0, [esp]
+sub esp, 4
+movsd qword [esp], xmm0
+movsd xmm0, qword [esp]
 add esp, 8
-pop ecx
-push edx
-push integer_format
-call _printf
-add esp, 8
-pop ecx
+movsd qword [_a], xmm0
 push ecx
-push stringValue2
+sub esp, 8
+movsd xmm0, qword [_a]
+movsd qword [esp], xmm0
+push double_format
 call _printf
-add esp, 4
+add esp, 12
 pop ecx
 section .data
-stringValue1: db "mama!", 10, 0
-stringValue2: db "bitch!", 10, 0

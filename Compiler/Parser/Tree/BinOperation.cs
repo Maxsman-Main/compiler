@@ -58,63 +58,89 @@ public class BinOperation : INodeExpression
     {
         _left.Generate(generator);
         _right.Generate(generator);
-        generator.Add(AssemblerCommand.Pop, AssemblerRegisters.Ebx);
-        generator.Add(AssemblerCommand.Pop, AssemblerRegisters.Eax);
-
-        switch (_operation)
+        if (_left.GetExpressionType() is not SymbolDouble)
         {
-            case OperatorValue.Plus:
-                generator.Add(AssemblerCommand.Add, AssemblerRegisters.Eax, AssemblerRegisters.Ebx);
-                break;
-            case OperatorValue.Minus:
-                generator.Add(AssemblerCommand.Sub, AssemblerRegisters.Eax, AssemblerRegisters.Ebx);
-                break;
-            case OperatorValue.Multiplication:
-                generator.Add(AssemblerCommand.IMul, AssemblerRegisters.Eax, AssemblerRegisters.Ebx);
-                break;
-            case OperatorValue.Div:
-                generator.Add(AssemblerCommand.Cdq);
-                generator.Add(AssemblerCommand.IDiv, AssemblerRegisters.Ebx);
-                break;  
-            case OperatorValue.Equal:
-                GenerateLogicOperatorCode(generator, AssemblerCommand.Je);
-                break;
-            case OperatorValue.Less:
-                GenerateLogicOperatorCode(generator, AssemblerCommand.Jl);
-                break;
-            case OperatorValue.More:
-                GenerateLogicOperatorCode(generator, AssemblerCommand.Jg);
-                break;
-            case OperatorValue.LessEqual:
-                GenerateLogicOperatorCode(generator, AssemblerCommand.Jle);
-                break;
-            case OperatorValue.MoreEqual:
-                GenerateLogicOperatorCode(generator, AssemblerCommand.Jge);
-                break;
-            case OperatorValue.And:
-                generator.LogicCounter += 1;
-                generator.Add(AssemblerCommand.Cmp, AssemblerRegisters.Eax, 0);
-                generator.Add(AssemblerCommand.Je, $"endOfLogic{generator.LogicCounter}");
-                generator.Add(AssemblerCommand.Mov, AssemblerRegisters.Eax, 0);
-                generator.Add(AssemblerCommand.Cmp, AssemblerRegisters.Ebx, 0);
-                generator.Add(AssemblerCommand.Je, $"endOfLogic{generator.LogicCounter}");
-                generator.Add(AssemblerCommand.Mov, AssemblerRegisters.Eax, 1);
-                generator.Add($"endOfLogic{generator.LogicCounter}:");
-                break;
-            case OperatorValue.Or:
-                generator.LogicCounter += 1;
-                generator.Add(AssemblerCommand.Cmp, AssemblerRegisters.Eax, 0);
-                generator.Add(AssemblerCommand.Mov, AssemblerRegisters.Eax, 1);
-                generator.Add(AssemblerCommand.Jne, $"endOfLogic{generator.LogicCounter}");
-                generator.Add(AssemblerCommand.Mov, AssemblerRegisters.Eax, 0);
-                generator.Add(AssemblerCommand.Cmp, AssemblerRegisters.Ebx, 0);
-                generator.Add(AssemblerCommand.Je, $"endOfLogic{generator.LogicCounter}");
-                generator.Add(AssemblerCommand.Mov, AssemblerRegisters.Eax, 1);
-                generator.Add($"endOfLogic{generator.LogicCounter}:");
-                break;
-        }
+            generator.Add(AssemblerCommand.Pop, AssemblerRegisters.Ebx);
+            generator.Add(AssemblerCommand.Pop, AssemblerRegisters.Eax);
+            switch (_operation)
+            {
+                case OperatorValue.Plus:
+                    generator.Add(AssemblerCommand.Add, AssemblerRegisters.Eax, AssemblerRegisters.Ebx);
+                    break;
+                case OperatorValue.Minus:
+                    generator.Add(AssemblerCommand.Sub, AssemblerRegisters.Eax, AssemblerRegisters.Ebx);
+                    break;
+                case OperatorValue.Multiplication:
+                    generator.Add(AssemblerCommand.IMul, AssemblerRegisters.Eax, AssemblerRegisters.Ebx);
+                    break;
+                case OperatorValue.Div:
+                    generator.Add(AssemblerCommand.Cdq);
+                    generator.Add(AssemblerCommand.IDiv, AssemblerRegisters.Ebx);
+                    break;
+                case OperatorValue.Equal:
+                    GenerateLogicOperatorCode(generator, AssemblerCommand.Je);
+                    break;
+                case OperatorValue.Less:
+                    GenerateLogicOperatorCode(generator, AssemblerCommand.Jl);
+                    break;
+                case OperatorValue.More:
+                    GenerateLogicOperatorCode(generator, AssemblerCommand.Jg);
+                    break;
+                case OperatorValue.LessEqual:
+                    GenerateLogicOperatorCode(generator, AssemblerCommand.Jle);
+                    break;
+                case OperatorValue.MoreEqual:
+                    GenerateLogicOperatorCode(generator, AssemblerCommand.Jge);
+                    break;
+                case OperatorValue.And:
+                    generator.LogicCounter += 1;
+                    generator.Add(AssemblerCommand.Cmp, AssemblerRegisters.Eax, 0);
+                    generator.Add(AssemblerCommand.Je, $"endOfLogic{generator.LogicCounter}");
+                    generator.Add(AssemblerCommand.Mov, AssemblerRegisters.Eax, 0);
+                    generator.Add(AssemblerCommand.Cmp, AssemblerRegisters.Ebx, 0);
+                    generator.Add(AssemblerCommand.Je, $"endOfLogic{generator.LogicCounter}");
+                    generator.Add(AssemblerCommand.Mov, AssemblerRegisters.Eax, 1);
+                    generator.Add($"endOfLogic{generator.LogicCounter}:");
+                    break;
+                case OperatorValue.Or:
+                    generator.LogicCounter += 1;
+                    generator.Add(AssemblerCommand.Cmp, AssemblerRegisters.Eax, 0);
+                    generator.Add(AssemblerCommand.Mov, AssemblerRegisters.Eax, 1);
+                    generator.Add(AssemblerCommand.Jne, $"endOfLogic{generator.LogicCounter}");
+                    generator.Add(AssemblerCommand.Mov, AssemblerRegisters.Eax, 0);
+                    generator.Add(AssemblerCommand.Cmp, AssemblerRegisters.Ebx, 0);
+                    generator.Add(AssemblerCommand.Je, $"endOfLogic{generator.LogicCounter}");
+                    generator.Add(AssemblerCommand.Mov, AssemblerRegisters.Eax, 1);
+                    generator.Add($"endOfLogic{generator.LogicCounter}:");
+                    break;
+            }
 
-        generator.Add(AssemblerCommand.Push, AssemblerRegisters.Eax);
+            generator.Add(AssemblerCommand.Push, AssemblerRegisters.Eax);
+        }
+        else
+        {
+            generator.Add("movsd xmm1, qword [esp]");
+            generator.Add(AssemblerCommand.Add, AssemblerRegisters.Esp, 8);
+            generator.Add("movsd xmm0, qword [esp]");
+            generator.Add(AssemblerCommand.Add, AssemblerRegisters.Esp, 8);
+            switch (_operation)
+            {
+                case OperatorValue.Plus:
+                    generator.Add(AssemblerCommand.Addsd, AssemblerRegisters.Xmm0, AssemblerRegisters.Xmm1);
+                    break;
+                case OperatorValue.Minus:
+                    generator.Add(AssemblerCommand.Subsd, AssemblerRegisters.Xmm0, AssemblerRegisters.Xmm1);
+                    break;
+                case OperatorValue.Multiplication:
+                    generator.Add(AssemblerCommand.Mulsd, AssemblerRegisters.Xmm0, AssemblerRegisters.Xmm1);
+                    break;
+                case OperatorValue.Div:
+                    generator.Add(AssemblerCommand.Divsd, AssemblerRegisters.Xmm0, AssemblerRegisters.Xmm1);
+                    break;
+            }
+            generator.Add(AssemblerCommand.Sub, AssemblerRegisters.Esp, 8);
+            generator.Add("movsd qword [esp], xmm0");
+        }
     }
 
     public string GetPrint(int level)
