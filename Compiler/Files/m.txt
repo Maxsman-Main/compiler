@@ -1,7 +1,14 @@
 ﻿var a : integer;
 var b : integer;
 
+function abc(a : integer; b : integer;) : integer;
+    begin
+        write(a);
+        write(b);
+    end;
+    return 1;
+
 begin
     b := 10;
-    write('!' + 'B');
+    write(abc(12, b));
 end.

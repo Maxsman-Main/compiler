@@ -40,7 +40,7 @@ public class SymbolFunction : SymbolProcedure
         ReturnValue?.Generate(generator);
         generator.AddPopInRegister(AssemblerRegisters.Edx);
         generator.AddIterLog();
-        generator.Add(AssemblerCommand.Ret, Parameters.Count * 4);
+        generator.Add(AssemblerCommand.Ret);
         generator.EspHead = 0;
     }
 
