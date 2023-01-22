@@ -53,7 +53,8 @@ public enum AssemblerRegisters
     Ecx,
     Edx,
     Xmm0,
-    Xmm1
+    Xmm1,
+    Xmm2
 }
 
 public enum IndirectAssemblerRegisters
@@ -113,7 +114,7 @@ public static class GeneratorConstants
         {AssemblerCommand.Ja, "ja"},
         {AssemblerCommand.Jae, "jae"},
         {AssemblerCommand.Jb, "jb"},
-        {AssemblerCommand.Jbe, "jbe"}
+        {AssemblerCommand.Jbe, "jbe"},
     };
 
     public static Dictionary<AssemblerRegisters, string> Registers { get; } = new()
@@ -124,7 +125,8 @@ public static class GeneratorConstants
         {AssemblerRegisters.Ecx, "ecx"},
         {AssemblerRegisters.Edx, "edx"},
         {AssemblerRegisters.Xmm0, "xmm0"},
-        {AssemblerRegisters.Xmm1, "xmm1"}
+        {AssemblerRegisters.Xmm1, "xmm1"},
+        {AssemblerRegisters.Xmm2, "xmm2"}
     };
     
     public static Dictionary<IndirectAssemblerRegisters, string> IndirectRegisters { get; } = new()

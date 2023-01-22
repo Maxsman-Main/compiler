@@ -15,6 +15,6 @@ public class SymbolVariableLocal : SymbolVariable
     public void Generate(SymbolTable table)
     {
         Offset = table.Size;
-        table.Size += 4;
+        table.Size += Type.Size;
     }
 }

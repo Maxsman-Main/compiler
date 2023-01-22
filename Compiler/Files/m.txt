@@ -1,14 +1,37 @@
 ﻿var a : double;
 
-procedure abc(b : double);
+function abc(k : double; c : double) : double;
     var i : double;
+    var j : double;
+    var l : double;
     begin
-        i := 0.2;
-        write(b);
+        l := 0.7;
+        i := 0.5;
+        j := 0.6;
         write(i);
+        write(j);
+        write(l);
+        write(c);
+        write(k);
     end;
+    return 1.2341;
+    
+function qwe(k : integer) : integer;
+    var i : integer;
+    var j : integer;
+    var l : integer;
+    begin
+        l := 3;
+        i := 1;
+        j := 2;
+        write(i);
+        write(j);
+        write(l);
+        write(k);
+    end;
+    return 6;
 
 begin
-    abc(0.5);
-    write(1);
+    write(abc(0.9, 0.1));
+    write(qwe(4));
 end.

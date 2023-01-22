@@ -38,7 +38,14 @@ public class SymbolFunction : SymbolProcedure
         generator.AddProLog();
         Body.Generate(generator);
         ReturnValue?.Generate(generator);
-        generator.AddPopInRegister(AssemblerRegisters.Edx);
+        if (ReturnValue?.GetExpressionType() is SymbolDouble)
+        {
+            generator.AddPopInDoubleRegister(AssemblerRegisters.Xmm2);   
+        }
+        else
+        {
+            generator.AddPopInRegister(AssemblerRegisters.Edx);
+        }
         generator.AddIterLog();
         generator.Add(AssemblerCommand.Ret);
         generator.EspHead = 0;

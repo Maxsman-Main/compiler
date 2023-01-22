@@ -25,7 +25,7 @@ public class AssignmentStatement : INodeStatement
     public void Generate(Generator.Generator generator)
     {
         _expression.Generate(generator);
-        if (_variable.Type is not SymbolDouble)
+        if (_variable?.Type is not SymbolDouble)
         {
             switch (_variable)
             {
@@ -53,14 +53,16 @@ public class AssignmentStatement : INodeStatement
             switch (_variable)
             {
                 case SymbolVariableParameter parameter:
-                    generator.AddRight(AssemblerCommand.Pop, IndirectAssemblerRegisters.Ebp, 8 + parameter.Offset);
+                    generator.AddRight(AssemblerCommand.Pop, IndirectAssemblerRegisters.Ebp, 4 + parameter.Offset);
                     break;
                 case SymbolVariableLocal local:
-                    generator.AddLeft(AssemblerCommand.Pop, IndirectAssemblerRegisters.Ebp, 4 + local.Offset);
+                    generator.Add($"movsd xmm0, qword [esp]");
+                    generator.Add(AssemblerCommand.Add, AssemblerRegisters.Esp, 8);
+                    generator.Add($"movsd qword [ebp - {local.Offset + 8}], xmm0");
                     var offset = 0;
                     if (local.Offset - generator.EspHead >= 0)
                     {
-                        offset = (local.Offset - generator.EspHead) + 4;
+                        offset = (local.Offset - generator.EspHead) + 8;
                         generator.EspHead = local.Offset - generator.EspHead;
                     }
 

@@ -42,6 +42,14 @@ public class Generator
         Commands.Add(assemblerCommand);
     }
 
+    public void AddPopInDoubleRegister(AssemblerRegisters register)
+    {
+        var assemblerCommand =
+            $"movsd {GeneratorConstants.Registers[register]}, qword [esp]";
+        Commands.Add(assemblerCommand);
+        Add(AssemblerCommand.Add, AssemblerRegisters.Esp, 8);
+    }
+    
     public void AddPopInRegister(AssemblerRegisters register)
     {
         var assemblerCommand =

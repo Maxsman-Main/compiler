@@ -74,34 +74,35 @@ public class Variable : INodeExpression
 
     public void Generate(Generator.Generator generator)
     {
-        if (_symbol.Type is not SymbolDouble)
+        if (_symbol?.Type is not SymbolDouble)
         {
-            if (_symbol is SymbolVariableParameter parameter)
+            switch (_symbol)
             {
-                generator.AddRight(AssemblerCommand.Push, IndirectAssemblerRegisters.Ebp, 8 + parameter.Offset);
-                return;
+                case SymbolVariableParameter parameter:
+                    generator.AddRight(AssemblerCommand.Push, IndirectAssemblerRegisters.Ebp, 8 + parameter.Offset);
+                    return;
+                case SymbolVariableLocal local:
+                    generator.AddLeft(AssemblerCommand.Push, IndirectAssemblerRegisters.Ebp, 4 + local.Offset);
+                    return;
+                default:
+                    generator.Add(AssemblerCommand.Push, AssemblerCommand.Dword, this);
+                    break;
             }
-
-            if (_symbol is SymbolVariableLocal local)
-            {
-                generator.AddLeft(AssemblerCommand.Push, IndirectAssemblerRegisters.Ebp, 4 + local.Offset);
-                return;
-            }
-
-            generator.Add(AssemblerCommand.Push, AssemblerCommand.Dword, this);
         }
         else
         {
-            if (_symbol is SymbolVariableParameter parameter)
+            switch (_symbol)
             {
-                generator.AddRight(AssemblerCommand.Push, IndirectAssemblerRegisters.Ebp, 8 + parameter.Offset);
-                return;
-            }
-
-            if (_symbol is SymbolVariableLocal local)
-            {
-                generator.AddLeft(AssemblerCommand.Push, IndirectAssemblerRegisters.Ebp, 4 + local.Offset);
-                return;
+                case SymbolVariableParameter parameter:
+                    generator.Add(AssemblerCommand.Sub, AssemblerRegisters.Esp, 8);
+                    generator.Add($"movsd xmm0, qword [ebp + {parameter.Offset + 8}]");
+                    generator.Add($"movsd qword [esp], xmm0");
+                    return;
+                case SymbolVariableLocal local:
+                    generator.Add(AssemblerCommand.Sub, AssemblerRegisters.Esp, 8);
+                    generator.Add($"movsd xmm0, qword [ebp - {local.Offset + 8}]");
+                    generator.Add($"movsd qword [esp], xmm0");
+                    return;
             }
 
             generator.Add(AssemblerCommand.Sub, AssemblerRegisters.Esp, 8);
