@@ -34,15 +34,36 @@ public class BinOperation : INodeExpression
                 _type = new SymbolInteger("Integer");
                 break;
             case SymbolDouble when rightType is SymbolDouble:
-                _type = new SymbolDouble("Double");
+                if (_operation is OperatorValue.Equal or OperatorValue.Less or OperatorValue.More or OperatorValue.LessEqual or OperatorValue.MoreEqual)
+                {
+                    _type = new SymbolInteger("Integer");
+                }
+                else
+                {
+                    _type = new SymbolDouble("Double");
+                }
                 break;
             case SymbolDouble when rightType is SymbolInteger:
                 _right = new CastToDouble(_right);
-                _type = new SymbolDouble("Double");
+                if (_operation is OperatorValue.Equal or OperatorValue.Less or OperatorValue.More or OperatorValue.LessEqual or OperatorValue.MoreEqual)
+                {
+                    _type = new SymbolInteger("Integer");
+                }
+                else
+                {
+                    _type = new SymbolDouble("Double");
+                }
                 break;
             case SymbolInteger when rightType is SymbolDouble:
                 _left = new CastToDouble(_left);
-                _type = new SymbolDouble("Double");
+                if (_operation is OperatorValue.Equal or OperatorValue.Less or OperatorValue.More or OperatorValue.LessEqual or OperatorValue.MoreEqual)
+                {
+                    _type = new SymbolInteger("Integer");
+                }
+                else
+                {
+                    _type = new SymbolDouble("Double");
+                }
                 break;
             case SymbolChar when rightType is SymbolChar:
                 _type = new SymbolChar("Char");
@@ -127,19 +148,68 @@ public class BinOperation : INodeExpression
             {
                 case OperatorValue.Plus:
                     generator.Add(AssemblerCommand.Addsd, AssemblerRegisters.Xmm0, AssemblerRegisters.Xmm1);
+                    generator.Add(AssemblerCommand.Sub, AssemblerRegisters.Esp, 8);
+                    generator.Add("movsd qword [esp], xmm0");
                     break;
                 case OperatorValue.Minus:
                     generator.Add(AssemblerCommand.Subsd, AssemblerRegisters.Xmm0, AssemblerRegisters.Xmm1);
+                    generator.Add(AssemblerCommand.Sub, AssemblerRegisters.Esp, 8);
+                    generator.Add("movsd qword [esp], xmm0");
                     break;
                 case OperatorValue.Multiplication:
                     generator.Add(AssemblerCommand.Mulsd, AssemblerRegisters.Xmm0, AssemblerRegisters.Xmm1);
+                    generator.Add(AssemblerCommand.Sub, AssemblerRegisters.Esp, 8);
+                    generator.Add("movsd qword [esp], xmm0");
                     break;
                 case OperatorValue.Div:
                     generator.Add(AssemblerCommand.Divsd, AssemblerRegisters.Xmm0, AssemblerRegisters.Xmm1);
+                    generator.Add(AssemblerCommand.Sub, AssemblerRegisters.Esp, 8);
+                    generator.Add("movsd qword [esp], xmm0");
+                    break;
+                case OperatorValue.Equal:
+                    GenerateLogicOperatorCode(generator, AssemblerCommand.Je);
+                    generator.Add(AssemblerCommand.Push, AssemblerRegisters.Eax);
+                    break;
+                case OperatorValue.Less:
+                    GenerateLogicOperatorCode(generator, AssemblerCommand.Jb);
+                    generator.Add(AssemblerCommand.Push, AssemblerRegisters.Eax);
+                    break;
+                case OperatorValue.More:
+                    GenerateLogicOperatorCode(generator, AssemblerCommand.Ja);
+                    generator.Add(AssemblerCommand.Push, AssemblerRegisters.Eax);
+                    break;
+                case OperatorValue.LessEqual:
+                    GenerateLogicOperatorCode(generator, AssemblerCommand.Jbe);
+                    generator.Add(AssemblerCommand.Push, AssemblerRegisters.Eax);
+                    break;
+                case OperatorValue.MoreEqual:
+                    GenerateLogicOperatorCode(generator, AssemblerCommand.Jae);
+                    generator.Add(AssemblerCommand.Push, AssemblerRegisters.Eax);
+                    break;
+                case OperatorValue.And:
+                    generator.LogicCounter += 1;
+                    generator.Add(AssemblerCommand.Comisd, AssemblerRegisters.Eax, 0);
+                    generator.Add(AssemblerCommand.Je, $"endOfLogic{generator.LogicCounter}");
+                    generator.Add(AssemblerCommand.Mov, AssemblerRegisters.Eax, 0);
+                    generator.Add(AssemblerCommand.Cmp, AssemblerRegisters.Ebx, 0);
+                    generator.Add(AssemblerCommand.Je, $"endOfLogic{generator.LogicCounter}");
+                    generator.Add(AssemblerCommand.Mov, AssemblerRegisters.Eax, 1);
+                    generator.Add($"endOfLogic{generator.LogicCounter}:");
+                    generator.Add(AssemblerCommand.Push, AssemblerRegisters.Eax);
+                    break;
+                case OperatorValue.Or:
+                    generator.LogicCounter += 1;
+                    generator.Add(AssemblerCommand.Comisd, AssemblerRegisters.Eax, 0);
+                    generator.Add(AssemblerCommand.Mov, AssemblerRegisters.Eax, 1);
+                    generator.Add(AssemblerCommand.Jne, $"endOfLogic{generator.LogicCounter}");
+                    generator.Add(AssemblerCommand.Mov, AssemblerRegisters.Eax, 0);
+                    generator.Add(AssemblerCommand.Cmp, AssemblerRegisters.Ebx, 0);
+                    generator.Add(AssemblerCommand.Je, $"endOfLogic{generator.LogicCounter}");
+                    generator.Add(AssemblerCommand.Mov, AssemblerRegisters.Eax, 1);
+                    generator.Add($"endOfLogic{generator.LogicCounter}:");
+                    generator.Add(AssemblerCommand.Push, AssemblerRegisters.Eax);
                     break;
             }
-            generator.Add(AssemblerCommand.Sub, AssemblerRegisters.Esp, 8);
-            generator.Add("movsd qword [esp], xmm0");
         }
     }
 
@@ -161,8 +231,17 @@ public class BinOperation : INodeExpression
 
     private void GenerateLogicOperatorCode(Generator.Generator generator, AssemblerCommand jump)
     {
+        var command = AssemblerCommand.Cmp;
+        var leftRegister = AssemblerRegisters.Eax;
+        var rightRegister = AssemblerRegisters.Ebx;
+        if (_left.GetExpressionType() is SymbolDouble || _right.GetExpressionType() is SymbolDouble)
+        {
+            command = AssemblerCommand.Comisd;
+            leftRegister = AssemblerRegisters.Xmm0;
+            rightRegister = AssemblerRegisters.Xmm1;
+        }
         generator.LogicCounter += 1;
-        generator.Add(AssemblerCommand.Cmp, AssemblerRegisters.Eax, AssemblerRegisters.Ebx);
+        generator.Add(command,leftRegister, rightRegister);
         generator.Add(jump, $"logic{generator.LogicCounter}");
         generator.Add(AssemblerCommand.Mov, AssemblerRegisters.Eax, 0);
         generator.Add(AssemblerCommand.Jmp, $"endOfLogic{generator.LogicCounter}");

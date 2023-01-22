@@ -2,6 +2,8 @@
 
 public class SymbolType : Symbol
 {
+    public int Size { get; set; }
+
     protected SymbolType(string name) : base(name)
     {
     }

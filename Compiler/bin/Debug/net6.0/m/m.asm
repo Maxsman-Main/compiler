@@ -14,26 +14,41 @@ string_format:
 db "%s", 10, 0
 double_minus_multiplier: 
 dq -1.0
-_main:
-push 5
-push 10
-pop ebx
-pop eax
-cdq
-idiv ebx
-push eax
-cvtsi2sd xmm0, [esp]
-sub esp, 4
-movsd qword [esp], xmm0
-movsd xmm0, qword [esp]
-add esp, 8
-movsd qword [_a], xmm0
-push ecx
+_abc:
+push ebp
+mov ebp, esp
+movsd xmm0, qword [doubleValue1]
 sub esp, 8
-movsd xmm0, qword [_a]
 movsd qword [esp], xmm0
+pop dword [ebp - 4]
+sub esp, 4
+push ecx
+push dword [ebp + 8]
 push double_format
 call _printf
 add esp, 12
 pop ecx
+push ecx
+push dword [ebp - 4]
+push double_format
+call _printf
+add esp, 12
+pop ecx
+mov esp, ebp
+pop ebp
+ret
+_main:
+movsd xmm0, qword [doubleValue2]
+sub esp, 8
+movsd qword [esp], xmm0
+call _abc
+add esp, 4
+push ecx
+push 1
+push integer_format
+call _printf
+add esp, 8
+pop ecx
 section .data
+doubleValue1: dq 0.2
+doubleValue2: dq 0.5

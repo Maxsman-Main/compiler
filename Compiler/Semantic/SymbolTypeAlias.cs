@@ -7,6 +7,7 @@ public class SymbolTypeAlias : SymbolType, IAlias
     public SymbolTypeAlias(string name, SymbolType original) : base(name)
     {
         Original = original;
+        Size = original.Size;
     }
 
     public override string GetPrint(int level)

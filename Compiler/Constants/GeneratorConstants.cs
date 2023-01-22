@@ -37,7 +37,12 @@ public enum AssemblerCommand
     Mulsd,
     Divsd,
     Resq,
-    Qword
+    Qword,
+    Comisd,
+    Ja,
+    Jae,
+    Jb,
+    Jbe,
 }
 
 public enum AssemblerRegisters
@@ -103,7 +108,12 @@ public static class GeneratorConstants
         {AssemblerCommand.Mulsd, "mulsd"},
         {AssemblerCommand.Divsd, "divsd"},
         {AssemblerCommand.Resq, "resq"},
-        {AssemblerCommand.Qword, "qword"}
+        {AssemblerCommand.Qword, "qword"},
+        {AssemblerCommand.Comisd, "comisd"},
+        {AssemblerCommand.Ja, "ja"},
+        {AssemblerCommand.Jae, "jae"},
+        {AssemblerCommand.Jb, "jb"},
+        {AssemblerCommand.Jbe, "jbe"}
     };
 
     public static Dictionary<AssemblerRegisters, string> Registers { get; } = new()

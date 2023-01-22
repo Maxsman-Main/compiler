@@ -24,6 +24,7 @@ public class ProcedureStatement : INodeStatement
 
     public void Generate(Generator.Generator generator)
     {
+        var parametersSize = 0;
         foreach (var parameter in _parameters)
         {
             parameter.Generate(generator);

@@ -1,5 +1,14 @@
 ﻿var a : double;
+
+procedure abc(b : double);
+    var i : double;
+    begin
+        i := 0.2;
+        write(b);
+        write(i);
+    end;
+
 begin
-    a := 5 / 10;
-    write(a);
+    abc(0.5);
+    write(1);
 end.

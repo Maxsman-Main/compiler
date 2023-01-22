@@ -4,5 +4,6 @@ public class SymbolString : SymbolType
 {
     public SymbolString(string name) : base(name)
     {
+        Size = 4;
     }
 }
