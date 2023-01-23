@@ -1,0 +1,10 @@
+﻿function abc() : integer;
+    begin
+    end;
+    return 1;
+
+begin
+    write(abc());
+    write(1);
+    write(abc());
+end.

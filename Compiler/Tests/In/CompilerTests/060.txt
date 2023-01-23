@@ -1,0 +1,10 @@
+﻿procedure abc(a : integer);
+    begin
+        write(a);    
+    end;
+
+begin
+    abc(5);
+    write(1);
+    abc(6);
+end.

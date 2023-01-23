@@ -95,5 +95,10 @@ namespace Compiler.LexicalAnalyzerStateMachine
         {
             _reader.SetFile(filePath);
         }
+
+        public void CloseFile()
+        {
+            _reader.CloseFile();
+        }
     }
 }

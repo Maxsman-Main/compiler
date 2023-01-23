@@ -56,9 +56,7 @@ public class FileReader
     public void CloseFile()
     {
         _isOpened = false;
-        Console.WriteLine(_reader);
         _reader?.Close();
-        Console.WriteLine(_reader);
     }
     
     public void OpenFile()

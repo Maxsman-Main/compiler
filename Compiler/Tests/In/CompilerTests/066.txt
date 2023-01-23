@@ -1,0 +1,13 @@
+﻿var x : integer;
+
+function inc(a : integer) : integer;
+    begin
+    end;
+    return a + 1;
+
+begin
+    x := 1;
+    write(2 * inc(x));
+    write(7);
+    write(inc(x) / 2);
+end.

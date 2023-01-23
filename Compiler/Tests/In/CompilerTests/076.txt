@@ -1,0 +1,15 @@
+﻿var i : integer;
+
+begin
+    i := -1;
+    if i > 0 then
+        begin
+            write(i);
+            write('yes');
+        end
+    else
+        begin
+            write(i);
+            write('no');
+        end;
+end.

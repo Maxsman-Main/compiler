@@ -7,6 +7,8 @@ public class SymbolArray : SymbolType
     private int _leftBound;
     private int _rightBound;
 
+    public int Left => _leftBound;
+    public int Right => _rightBound;
     public SymbolType ItemsType { get; }
 
     public SymbolArray(string name, SymbolType type, int leftBound, int rightBound) : base(name)

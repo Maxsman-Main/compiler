@@ -64,6 +64,20 @@ public class Generator
         Commands.Add(assemblerCommand);
     }
 
+    public void AddArray(SymbolVariable variable, AssemblerCommand command, int size)
+    {
+        var assemblerCommand =
+            $"_{variable.Name} {GeneratorConstants.Commands[command]} {size} dup (?)";
+        Commands.Add(assemblerCommand);
+    }
+
+    public void AddPushArray(SymbolVariable variable, AssemblerCommand command, AssemblerRegisters register)
+    {
+        var assemblerCommand =
+            $"{GeneratorConstants.Commands[command]} _{variable.Name}[{GeneratorConstants.Registers[register]}]";
+        Add(assemblerCommand);
+    }
+
     public void Add(AssemblerCommand command1, AssemblerCommand command2, Variable variable)
     {
         var assemblerCommand =

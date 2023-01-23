@@ -1,4 +1,5 @@
 ﻿using Compiler.Exceptions;
+using Compiler.Generator;
 using Compiler.Lexeme;
 using Compiler.LexicalAnalyzerStateMachine;
 
@@ -10,6 +11,7 @@ public class TestSystem
     private const string ParserExpressionTestsPath = "../../../Tests/In/ParserExpressionTests";
     private const string ParserTestsPath = "../../../Tests/In/ParserTests";
     private const string SemanticTestsPath = "../../../Tests/In/SemanticTests";
+    private const string CompilerTestsPath = "../../../Tests/In/CompilerTests";
 
     private const string LexerOutPath = "../../../Tests/Out/LexerTests";
     private const string ParserExpressionOutPath = "../../../Tests/Out/ParserExpressionTests";
@@ -149,6 +151,59 @@ public class TestSystem
                 var program = parser.ParseProgram();
                 _writer.WriteLine(program.Stack.GetPrint() + program.MainBlock.GetPrint(0));
                 
+                _writer.CloseFile();
+                results.Add(CompareFiles(outFiles[i]));
+            }
+            catch (CompilerException exception)
+            {
+                _writer.WriteLine(exception.Message);
+                _writer.CloseFile();
+                results.Add(CompareFiles(outFiles[i]));
+            }
+        }
+        PrintResults(results, inFiles);
+    }
+
+    public void TestCompile()
+    {
+        List<string> inFiles = new();
+        List<string> outFiles = new();
+        List<bool> results = new();
+        
+        GetFilesFromOneDirectory(ref inFiles, ref outFiles, CompilerTestsPath);
+        
+        for (var i = 0; i < inFiles.Count; i++)
+        {
+            if (_writer.IsOpened == false)
+            {
+                _writer.OpenFile();
+            }
+
+            try
+            {
+                var lexer = new LexicalAnalyzer();
+                lexer.SetFile(inFiles[i]);
+                var parser = new Parser.Parser(lexer);
+                var program = parser.ParseProgram(); 
+                lexer.CloseFile();
+                var generator = new Generator.Generator();
+                var directoryMaker = new DirectoryMaker();
+                var assemblerMaker = new AssemblerFileMaker(); 
+                var assemblerCodeExecutor = new AssemblerCodeExecutor();
+                var name = inFiles[i].Split("\\")[1];
+                generator.AddSectionBss();
+                program.Stack.GenerateForVariables(generator);
+                generator.AddSectionText();
+                program.Stack.GenerateForProcedures(generator);
+                generator.AddMain();
+                program.MainBlock.Generate(generator);
+                generator.AddSectionData();
+                directoryMaker.MakeDirectory(name);
+                assemblerMaker.MakeFile(name, generator.Commands);
+                assemblerCodeExecutor.GenerateFiles(name);
+                var output = assemblerCodeExecutor.RunCodeFotTest(name);
+                
+                _writer.WriteLine(output);
                 _writer.CloseFile();
                 results.Add(CompareFiles(outFiles[i]));
             }

@@ -1,0 +1,4 @@
+﻿var s: string;
+begin
+    write(2 <= 3);
+end.

@@ -24,12 +24,22 @@ public class ProcedureStatement : INodeStatement
 
     public void Generate(Generator.Generator generator)
     {
+        var size = 0;
         foreach (var parameter in _parameters)
         {
             parameter.Generate(generator);
+            var type = parameter.GetExpressionType();
+            if (type is SymbolDouble)
+            {
+                size += 8;
+            }
+            else
+            {
+                size += 4;
+            }
         }
         generator.Add(AssemblerCommand.Call, _identifier);
-        generator.Add(AssemblerCommand.Add, AssemblerRegisters.Esp, 4 * _parameters.Count);
+        generator.Add(AssemblerCommand.Add, AssemblerRegisters.Esp, size);
     }
 
     public string GetPrint(int level)

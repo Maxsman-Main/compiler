@@ -1,0 +1,5 @@
+﻿var s: string;
+begin
+    s := 'Hello, world';
+    write(s);
+end.

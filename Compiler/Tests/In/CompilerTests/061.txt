@@ -1,0 +1,10 @@
+﻿procedure abc(a : string);
+    begin
+        write(a);    
+    end;
+
+begin
+    abc('hello');
+    write(1);
+    abc('hello');
+end.

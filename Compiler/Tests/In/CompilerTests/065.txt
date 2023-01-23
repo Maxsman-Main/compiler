@@ -1,0 +1,13 @@
+﻿function abc(a : integer) : integer;
+    var c : integer;
+    begin
+        c := a * 10;
+        write(c - 1);
+    end;
+    return a + 1;
+
+begin
+    write(abc(5));
+    write(7);
+    write(abc(7));
+end.

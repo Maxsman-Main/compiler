@@ -74,7 +74,24 @@ public class Variable : INodeExpression
 
     public void Generate(Generator.Generator generator)
     {
-        if (_symbol?.Type is not SymbolDouble)
+        if (_symbol?.Type is SymbolArray symbolArray)
+        {
+            switch (_symbol)
+            {
+                case SymbolVariableParameter parameter:
+                    generator.AddRight(AssemblerCommand.Push, IndirectAssemblerRegisters.Ebp, 8 + parameter.Offset);
+                    return;
+                case SymbolVariableLocal local:
+                    generator.AddLeft(AssemblerCommand.Push, IndirectAssemblerRegisters.Ebp, 4 + local.Offset);
+                    return;
+                default:
+                    _expressions[0].Generate(generator);
+                    generator.Add(AssemblerCommand.Pop, AssemblerRegisters.Eax);
+                    generator.AddPushArray(_symbol, AssemblerCommand.Push, AssemblerRegisters.Eax);
+                    break;
+            }
+        }
+        else if (_symbol?.Type is not SymbolDouble)
         {
             switch (_symbol)
             {

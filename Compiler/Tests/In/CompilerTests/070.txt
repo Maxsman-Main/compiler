@@ -1,0 +1,10 @@
+﻿function abc(k : double) : double;
+    var c : double;
+    begin
+        c := 1.1;
+    end;
+    return c + 1.1 + k;
+
+begin
+    write(abc(5.1));
+end.

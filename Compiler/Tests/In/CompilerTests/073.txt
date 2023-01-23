@@ -1,0 +1,7 @@
+﻿var i : integer;
+
+begin
+    for i := 0 downto -10 do
+        write(i);
+    write(i);
+end.

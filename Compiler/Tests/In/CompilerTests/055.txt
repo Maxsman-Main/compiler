@@ -1,0 +1,5 @@
+﻿var a : double;
+begin
+    a := 1.125;
+    write(a);
+end.

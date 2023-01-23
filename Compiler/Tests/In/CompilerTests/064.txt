@@ -1,0 +1,10 @@
+﻿function abc(a : integer) : integer;
+    begin
+    end;
+    return a + 1;
+
+begin
+    write(abc(5));
+    write(7);
+    write(abc(7));
+end.

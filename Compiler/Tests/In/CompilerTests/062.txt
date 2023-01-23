@@ -1,0 +1,19 @@
+﻿var x : integer;
+
+procedure abc(a : integer; b : integer);
+    var c : integer;
+    var k : integer;
+    begin
+        k := 1;
+        c := 2;
+        write(a + k);
+        write(b + c);
+        write(x);  
+    end;
+
+begin
+    x := 5;
+    abc(5, 6);
+    write(1);
+    abc(7, 8);
+end.

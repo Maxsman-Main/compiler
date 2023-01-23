@@ -16,12 +16,12 @@ public class AssemblerCodeExecutor
     public void RunAssemblerCode(string name)
     {
         var onlyName = GetNameWithoutFormat(name);
-        GenerateFiles(onlyName);
         RunExe(onlyName);
     }
-
-    private void GenerateFiles(string onlyName)
+    
+    public void GenerateFiles(string name)
     {
+        var onlyName = GetNameWithoutFormat(name);
         File.WriteAllText("./generate.cmd",
             $"nasm -f win32 {onlyName}.asm\n" +
             $"gcc -m32 -mconsole {onlyName}.obj -o {onlyName}\n" +
@@ -35,6 +35,24 @@ public class AssemblerCodeExecutor
         process.StartInfo.CreateNoWindow = true;
         process.Start();
         process.WaitForExit();
+    }
+
+    public string RunCodeFotTest(string name)
+    {
+        var onlyName = GetNameWithoutFormat(name);
+        File.WriteAllText("./run.cmd",
+            $"@cd ./{onlyName}\n" +
+            $"@{onlyName}.exe\n"
+        );
+        var process = new Process();
+        process.StartInfo.FileName = "run.cmd";
+        process.StartInfo.RedirectStandardOutput = true;
+        process.StartInfo.UseShellExecute = false;
+        process.Start();
+        process.WaitForExit();
+        var stream = process.StandardOutput;
+        var output = stream.ReadToEnd();
+        return output;
     }
 
     private void RunExe(string onlyName)

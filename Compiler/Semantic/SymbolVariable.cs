@@ -17,9 +17,16 @@ public class SymbolVariable : Symbol, IVariable
 
     public override void Generate(Generator.Generator generator)
     {
-        generator.Add(this, Type is not SymbolDouble ? AssemblerCommand.Resd : AssemblerCommand.Resq);
+        if (Type is not SymbolArray symbolArray)
+        {
+            generator.Add(this, Type is not SymbolDouble ? AssemblerCommand.Resd : AssemblerCommand.Resq);
+        }
+        else
+        {
+            var size = symbolArray.Right - symbolArray.Left + 1;
+            generator.AddArray(this, AssemblerCommand.DD, size);
+        }
     }
-
 
     public SymbolVariableLocal ConvertToLocal()
     {

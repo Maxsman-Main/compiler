@@ -1,0 +1,8 @@
+﻿function abc() : double;
+    begin
+    end;
+    return 1.1;
+
+begin
+    write(abc());
+end.

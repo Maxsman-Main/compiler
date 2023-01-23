@@ -34,12 +34,22 @@ public class Call : INodeExpression
     public void Generate(Generator.Generator generator)
     {
         generator.Add(AssemblerCommand.Push, AssemblerRegisters.Ecx);
+        var size = 0;
         foreach (var argument in _arguments)
         {
             argument.Generate(generator);
+            var type = argument.GetExpressionType();
+            if (type is SymbolDouble)
+            {
+                size += 8;
+            }
+            else
+            {
+                size += 4;
+            }
         }
         generator.Add(AssemblerCommand.Call, $"_{_name}");
-        generator.Add(AssemblerCommand.Add, $"{GeneratorConstants.Registers[AssemblerRegisters.Esp]}, {_arguments.Count * 4}");
+        generator.Add(AssemblerCommand.Add, $"{GeneratorConstants.Registers[AssemblerRegisters.Esp]}, {size}");
         generator.Add(AssemblerCommand.Pop, AssemblerRegisters.Ecx);
         if (GetExpressionType() is SymbolDouble)
         {

@@ -10,9 +10,6 @@ namespace Compiler
     {
         public static void Main(string[] args)
         {
-            args = new string[10];
-            args[0] = "-c";
-            args[1] = "m.txt";
             switch (args[0])
             {
                 case "-a" when args[1] == "-t":
@@ -93,6 +90,42 @@ namespace Compiler
                     }
                     break;
                 }
+                case "-c" when args[1] == "-t":
+                {
+                    var testSystemForParser = new TestSystem();
+                    testSystemForParser.TestCompile();
+                    break;
+                }
+                case "-c" when args[1] == "-w":
+                {
+                    var lexer = new LexicalAnalyzer();
+                    lexer.SetFile("../../../Files/" + args[2]);
+                    var parser = new Parser.Parser(lexer);
+                    try
+                    {
+                        var program = parser.ParseProgram();
+                        var generator = new Generator.Generator();
+                        var directoryMaker = new DirectoryMaker();
+                        var assemblerMaker = new AssemblerFileMaker();
+                        var assemblerCodeExecutor = new AssemblerCodeExecutor();
+                        generator.AddSectionBss();
+                        program.Stack.GenerateForVariables(generator);
+                        generator.AddSectionText();
+                        program.Stack.GenerateForProcedures(generator);
+                        generator.AddMain();
+                        program.MainBlock.Generate(generator);
+                        generator.AddSectionData();
+                        directoryMaker.MakeDirectory(args[2]);
+                        assemblerMaker.MakeFile(args[2], generator.Commands);
+                        assemblerCodeExecutor.GenerateFiles(args[2]);
+                        assemblerCodeExecutor.RunAssemblerCode(args[2]);
+                    }
+                    catch (CompilerException exception)
+                    {
+                        Console.WriteLine(exception.Message);
+                    }
+                    break;
+                }
                 case "-c":
                 {
                     var lexer = new LexicalAnalyzer();
@@ -114,14 +147,14 @@ namespace Compiler
                         generator.AddSectionData();
                         directoryMaker.MakeDirectory(args[1]);
                         assemblerMaker.MakeFile(args[1], generator.Commands);
-                        assemblerCodeExecutor.RunAssemblerCode(args[1]);
+                        assemblerCodeExecutor.GenerateFiles(args[1]);
                     }
                     catch (CompilerException exception)
                     {
                         Console.WriteLine(exception.Message);
                     }
                     break;
-                }    
+                }
                 default:
                 {
                     Console.WriteLine("No right keys");
