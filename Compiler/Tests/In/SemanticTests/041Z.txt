@@ -1,0 +1,19 @@
+﻿write
+    CompoundStatement
+read
+    CompoundStatement
+
+a alias array of Integer
+abc
+    b array of Integer
+    c Integer
+    CompoundStatement
+arr array of Integer
+
+CompoundStatement
+    ProcedureStatement
+        Identifier
+            abc
+        arguments
+            arr
+            5

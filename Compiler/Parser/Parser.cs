@@ -618,7 +618,7 @@ public class Parser
         RequireSeparator(SeparatorValue.RightBracket);
 
 
-        CheckProcedureCallAccuracy(procedure, expressionList);
+        CheckProcedureCall(procedure, expressionList);
 
         return new ProcedureStatement(procedure, expressionList);
     }
@@ -642,10 +642,10 @@ public class Parser
         switch (flag)
         {
             case 0:
-                CheckAssigmentAccuracy(variableSymbol, ref expression);
+                CheckAssigment(variableSymbol, ref expression);
                 return new AssignmentStatement(variableSymbol, expression);
             case 1:
-                CheckArrayAssigment(variableSymbol, indexes, ref expression);
+                CheckArray(variableSymbol, indexes, ref expression);
                 return new ArrayAssignment(variableSymbol, indexes, expression);
             default:
                 return new AssignmentStatement(variableSymbol, expression);
@@ -681,7 +681,7 @@ public class Parser
         var expression = ParseExpression();
         RequireKeyWord(KeyWordValue.Do);
         var statement = ParseStatement();
-        CheckConditionAccuracy(expression, KeyWordValue.While);
+        CheckCondition(expression, KeyWordValue.While);
 
         return new WhileStatement(expression, statement);
     }
@@ -694,7 +694,7 @@ public class Parser
         var variableSymbol = GetSymbolVariable(identifierLexeme.Value);
         RequireOperator(OperatorValue.Assignment);
         var startExpression = ParseExpression();
-        CheckConditionAccuracy(startExpression, KeyWordValue.For);
+        CheckCondition(startExpression, KeyWordValue.For);
         var lexeme = _lexer.CurrentLexeme;
         var direction = lexeme switch
         {
@@ -705,7 +705,7 @@ public class Parser
 
         _lexer.GetLexeme();
         var endExpression = ParseExpression();
-        CheckConditionAccuracy(endExpression, KeyWordValue.For);
+        CheckCondition(endExpression, KeyWordValue.For);
         RequireKeyWord(KeyWordValue.Do);
         var statement = ParseStatement();
 
@@ -719,7 +719,7 @@ public class Parser
         INodeStatement? elsePart = null;
 
         var expression = ParseExpression();
-        CheckConditionAccuracy(expression, KeyWordValue.If);
+        CheckCondition(expression, KeyWordValue.If);
         RequireKeyWord(KeyWordValue.Then);
         var statement = ParseStatement();
 
@@ -892,7 +892,7 @@ public class Parser
                 {
                     _lexer.GetLexeme();
                     procedure = GetSymbolProcedure(identifierLexeme.Value);
-                    CheckProcedureCallAccuracy(procedure, new List<INodeExpression>());
+                    CheckProcedureCall(procedure, new List<INodeExpression>());
                     return new Call(procedure, new List<INodeExpression>());
                 }
 
@@ -907,7 +907,7 @@ public class Parser
 
                 RequireSeparator(SeparatorValue.RightBracket);
                 procedure = GetSymbolProcedure(identifierLexeme.Value);
-                CheckProcedureCallAccuracy(procedure, expressions);
+                CheckProcedureCall(procedure, expressions);
                 return new Call(procedure, expressions);
             default:
                 try
@@ -1086,7 +1086,7 @@ public class Parser
         throw new CompilerException(variable.Name + " can't initialize " + expressionType.Name + " type");
     }
 
-    private void CheckProcedureCallAccuracy(SymbolProcedure procedure, IReadOnlyList<INodeExpression> expressions)
+    private void CheckProcedureCall(SymbolProcedure procedure, IReadOnlyList<INodeExpression> expressions)
     {
         if (procedure.Parameters.Count != expressions.Count)
         {
@@ -1107,7 +1107,7 @@ public class Parser
         }
     }
 
-    private void CheckArrayAssigment(SymbolVariable variable, List<INodeExpression> indexes, ref INodeExpression expression)
+    private void CheckArray(SymbolVariable variable, List<INodeExpression> indexes, ref INodeExpression expression)
     {
         var variableType = variable.Type;
         var expressionType = expression.GetExpressionType();
@@ -1123,7 +1123,7 @@ public class Parser
         }
     }
 
-    private void CheckAssigmentAccuracy(SymbolVariable variable, ref INodeExpression expression)
+    private void CheckAssigment(SymbolVariable variable, ref INodeExpression expression)
     {
         var variableType = variable.Type;
         var expressionType = expression.GetExpressionType();
@@ -1138,7 +1138,7 @@ public class Parser
         }
     }
 
-    private void CheckConditionAccuracy(INodeExpression expression, KeyWordValue cycleName)
+    private void CheckCondition(INodeExpression expression, KeyWordValue cycleName)
     {
         if (expression.GetExpressionType() is not SymbolInteger)
         {

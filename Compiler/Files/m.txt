@@ -1,32 +1,7 @@
-﻿procedure abc(k : double);
-    var i : double;
-    var j : double;
-    var l : double;
-    begin
-        l := 0.7;
-        i := 0.5;
-        j := 0.6;
-        write(i);
-        write(j);
-        write(l);
-        write(k);
-    end;
-    
-procedure qwe(k : integer);
-    var i : integer;
-    var j : integer;
-    var l : integer;
-    begin
-        l := 3;
-        i := 1;
-        j := 2;
-        write(i);
-        write(j);
-        write(l);
-        write(k);
-    end;
-
+﻿var a: integer; b: integer;
 begin
-    abc(0.8);
-    qwe(4);
+a := 10;
+write(a);
+b := 123;
+write(a);
 end.

@@ -1,0 +1,11 @@
+﻿type a = array[1..10] of integer;
+
+procedure abc(b : a; c : integer);
+    begin
+    end;
+
+var arr : a;
+
+begin
+    abc(arr, arr);
+end.

@@ -68,6 +68,13 @@ public class BinOperation : INodeExpression
             case SymbolChar when rightType is SymbolChar:
                 _type = new SymbolChar("Char");
                 break;
+            case SymbolString when rightType is SymbolString:
+                if (_operation is not OperatorValue.Plus)
+                {
+                    throw new CompilerException("can't not sum strings");
+                }
+                _type = new SymbolString("String");
+                break;
             default:
                 throw new CompilerException("can't use bin operation for " + _left.GetExpressionType().Name + " and " +
                                             _right.GetExpressionType().Name);
